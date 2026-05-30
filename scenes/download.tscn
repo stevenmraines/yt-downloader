@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://c1xppqd8kjw73"]
+
+[ext_resource type="Script" uid="uid://c7aqcob4hjuvr" path="res://scripts/download.gd" id="1_rnbfk"]
+
+[node name="Download" type="Control" unique_id=1419142408]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_rnbfk")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=513845941]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="NameLabel" type="Label" parent="VBoxContainer" unique_id=1021812378]
+layout_mode = 2
+
+[node name="UrlLabel" type="Label" parent="VBoxContainer" unique_id=225727785]
+layout_mode = 2

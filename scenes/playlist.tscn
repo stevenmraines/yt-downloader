@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://dphx1q4napqyu"]
+
+[ext_resource type="Script" uid="uid://qdtd4q6msy7k" path="res://scripts/playlist.gd" id="1_6qq0t"]
+
+[node name="Playlist" type="Control" unique_id=678382639]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_6qq0t")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=336436764]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="VBoxContainer" unique_id=846318188]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+
+[node name="QueuedVideosContainer" type="VBoxContainer" parent="VBoxContainer" unique_id=1193915359]
+layout_mode = 2
+size_flags_vertical = 3
