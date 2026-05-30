@@ -2,7 +2,7 @@ extends Control
 
 @export var yt_dlp_path := ""
 
-@onready var yt_dlp_path_input := $VSplitContainer/YtDlpConfig/HBoxContainer/MarginContainer2/LineEdit
+@onready var yt_dlp_path_input := $Panel/MarginContainer/VSplitContainer/YtDlpConfig/HBoxContainer/MarginContainer/LineEdit
 @onready var yt_dlp_input_timer := $YtDlpInputTimer
 
 var typing := false

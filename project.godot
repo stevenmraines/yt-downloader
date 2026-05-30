@@ -15,6 +15,10 @@ run/main_scene="uid://2866mpf2bn32"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="res://icon.svg"
 
+[gui]
+
+theme/custom="uid://caoko0ccr20cy"
+
 [input]
 
 Escape={
