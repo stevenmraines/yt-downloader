@@ -4,6 +4,7 @@ extends Control
 
 @onready var yt_dlp_path_input := $Panel/MarginContainer/VSplitContainer/YtDlpConfig/HBoxContainer/MarginContainer/LineEdit
 @onready var yt_dlp_input_timer := $YtDlpInputTimer
+@onready var console_text_input := $Panel/MarginContainer/VSplitContainer/MarginContainer/Console/MarginContainer/ConsoleText
 
 var typing := false
 
@@ -21,4 +22,4 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _on_yt_dlp_input_timer_timeout() -> void:
-	print("write to file ", yt_dlp_path)
+	console_text_input.text = console_text_input.text + "write to file " + yt_dlp_path + "\n"

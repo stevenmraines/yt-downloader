@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://c1xppqd8kjw73"]
 
 [ext_resource type="Script" uid="uid://c7aqcob4hjuvr" path="res://scripts/download.gd" id="1_rnbfk"]
+[ext_resource type="StyleBox" uid="uid://bxkt7pmv0cb7i" path="res://styles/download_panel.tres" id="2_7jy67"]
 
 [node name="Download" type="Control" unique_id=1419142408]
 layout_mode = 3
@@ -11,16 +12,127 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_rnbfk")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=513845941]
+[node name="Panel" type="Panel" parent="." unique_id=1922404779]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = ExtResource("2_7jy67")
 
-[node name="NameLabel" type="Label" parent="VBoxContainer" unique_id=1021812378]
+[node name="MarginContainer" type="MarginContainer" parent="Panel" unique_id=114728221]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/MarginContainer" unique_id=513845941]
 layout_mode = 2
 
-[node name="UrlLabel" type="Label" parent="VBoxContainer" unique_id=225727785]
+[node name="NameLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer" unique_id=1021812378]
 layout_mode = 2
+
+[node name="UrlLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer" unique_id=225727785]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer" unique_id=1966010020]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer" unique_id=899983844]
+layout_mode = 2
+text = "Cookies From Browser:"
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer" unique_id=177983252]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 10
+
+[node name="CookiesFromBrowserInput" type="LineEdit" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer/MarginContainer" unique_id=177799838]
+layout_mode = 2
+text = "firefox"
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer" unique_id=77346259]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer5" unique_id=1434401381]
+layout_mode = 2
+text = "Upload To Backup:"
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer5" unique_id=1936329936]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 10
+
+[node name="UploadToBackupInput" type="CheckBox" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer5/MarginContainer" unique_id=1557872509]
+layout_mode = 2
+button_pressed = true
+
+[node name="HBoxContainer6" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer" unique_id=1845173290]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer6" unique_id=1984054054]
+layout_mode = 2
+text = "Upload To Remote:"
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer6" unique_id=246839091]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 10
+
+[node name="UploadToRemoteInput" type="CheckBox" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer6/MarginContainer" unique_id=2101790904]
+layout_mode = 2
+button_pressed = true
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer" unique_id=1532422406]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer2" unique_id=422141416]
+layout_mode = 2
+text = "Delete After Upload:"
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer2" unique_id=850913646]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 10
+
+[node name="DeleteAfterUploadInput" type="CheckBox" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer2/MarginContainer" unique_id=374218111]
+layout_mode = 2
+button_pressed = true
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer" unique_id=1084520072]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer3" unique_id=1171981602]
+layout_mode = 2
+text = "No Playlist:"
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer3" unique_id=2139315469]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 10
+
+[node name="NoPlaylistInput" type="CheckBox" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer3/MarginContainer" unique_id=926624929]
+layout_mode = 2
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer" unique_id=441034059]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer4" unique_id=1438308187]
+layout_mode = 2
+text = "Restrict Filename:"
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer4" unique_id=102962255]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 10
+
+[node name="RestrictFilenameInput" type="CheckBox" parent="Panel/MarginContainer/VBoxContainer/HBoxContainer4/MarginContainer" unique_id=1935372579]
+layout_mode = 2
+button_pressed = true

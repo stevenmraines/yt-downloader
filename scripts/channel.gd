@@ -13,8 +13,8 @@ extends Control
 			playlist_node.queue_free()
 		for playlist in playlists:
 			var scene = playlist_scene.instantiate()
-			scene.playlist_title = playlist
 			playlist_container.add_child(scene)
+			scene.playlist_title = playlist
 
 @onready var label := $VBoxContainer/Label
 @onready var playlist_container := $VBoxContainer/PlaylistContainer
@@ -25,5 +25,5 @@ func _ready() -> void:
 	label.text = channel_name
 	for playlist in playlists:
 		var scene = playlist_scene.instantiate()
-		scene.playlist_name = playlist
 		playlist_container.add_child(scene)
+		scene.playlist_name = playlist

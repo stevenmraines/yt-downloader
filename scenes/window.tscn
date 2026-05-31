@@ -34,7 +34,8 @@ theme_override_constants/margin_bottom = 10
 
 [node name="VSplitContainer" type="VSplitContainer" parent="Panel/MarginContainer" unique_id=1350764089]
 layout_mode = 2
-split_offsets = PackedInt32Array(0, 0)
+split_offsets = PackedInt32Array(-1, -1)
+split_offset = -1
 
 [node name="YtDlpConfig" type="Control" parent="Panel/MarginContainer/VSplitContainer" unique_id=1254325716]
 layout_mode = 2
@@ -58,7 +59,7 @@ text = "yt-dlp Executable Path:"
 [node name="MarginContainer" type="MarginContainer" parent="Panel/MarginContainer/VSplitContainer/YtDlpConfig/HBoxContainer" unique_id=1510585866]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/margin_left = 15
+theme_override_constants/margin_left = 10
 
 [node name="LineEdit" type="LineEdit" parent="Panel/MarginContainer/VSplitContainer/YtDlpConfig/HBoxContainer/MarginContainer" unique_id=1220911714]
 layout_mode = 2
@@ -77,11 +78,18 @@ size_flags_horizontal = 3
 layout_mode = 1
 channel_name = "Astrogoblin"
 
-[node name="Console" type="Control" parent="Panel/MarginContainer/VSplitContainer" unique_id=63083943]
+[node name="MarginContainer" type="MarginContainer" parent="Panel/MarginContainer/VSplitContainer" unique_id=2130779480]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = -10
+theme_override_constants/margin_right = -10
+theme_override_constants/margin_bottom = -10
+
+[node name="Console" type="Control" parent="Panel/MarginContainer/VSplitContainer/MarginContainer" unique_id=63083943]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="ColorRect" type="ColorRect" parent="Panel/MarginContainer/VSplitContainer/Console" unique_id=1957696869]
+[node name="ColorRect" type="ColorRect" parent="Panel/MarginContainer/VSplitContainer/MarginContainer/Console" unique_id=1957696869]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -89,6 +97,20 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.5019608)
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel/MarginContainer/VSplitContainer/MarginContainer/Console" unique_id=1115192893]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_right = 10
+
+[node name="ConsoleText" type="TextEdit" parent="Panel/MarginContainer/VSplitContainer/MarginContainer/Console/MarginContainer" unique_id=145959039]
+layout_mode = 2
+editable = false
 
 [node name="YtDlpInputTimer" type="Timer" parent="." unique_id=1410984030]
 one_shot = true
