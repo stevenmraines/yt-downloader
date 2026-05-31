@@ -46,6 +46,8 @@ extends Control
 		if upload_to_remote_input:
 			upload_to_remote_input.button_pressed = upload_to_remote
 
+@onready var download_panel_stylebox := load("res://styles/download_panel.tres")
+
 
 @onready var name_label := $Panel/MarginContainer/VBoxContainer/NameLabel
 @onready var url_label := $Panel/MarginContainer/VBoxContainer/UrlLabel
@@ -60,3 +62,4 @@ extends Control
 func _ready() -> void:
 	name_label.text = video_name
 	url_label.text = url
+	add_theme_stylebox_override("panel", download_panel_stylebox)

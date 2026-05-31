@@ -9,6 +9,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 script = ExtResource("1_6qq0t")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=336436764]
@@ -23,6 +25,41 @@ grow_vertical = 2
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 
-[node name="QueuedVideosContainer" type="VBoxContainer" parent="VBoxContainer" unique_id=1193915359]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=662479240]
 layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer" unique_id=2046659951]
+layout_mode = 2
+text = "Backup Path:"
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/HBoxContainer" unique_id=1645719558]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 10
+
+[node name="BackupPathInput" type="LineEdit" parent="VBoxContainer/HBoxContainer/MarginContainer" unique_id=82656825]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer" unique_id=1884939731]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer2" unique_id=960508437]
+layout_mode = 2
+text = "Remote Path:"
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/HBoxContainer2" unique_id=619235763]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 10
+
+[node name="RemotePathInput" type="LineEdit" parent="VBoxContainer/HBoxContainer2/MarginContainer" unique_id=407623150]
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer" unique_id=334417810]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="QueuedVideosContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer" unique_id=1193915359]
+layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 3

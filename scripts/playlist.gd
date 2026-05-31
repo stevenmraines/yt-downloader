@@ -13,11 +13,22 @@ extends Control
 @export var downloaded_videos_file_path := ""
 
 @onready var label := $VBoxContainer/Label
-@onready var queued_videos_container := $VBoxContainer/QueuedVideosContainer
+@onready var backup_path_input := $VBoxContainer/HBoxContainer/MarginContainer/BackupPathInput
+@onready var remote_path_input := $VBoxContainer/HBoxContainer2/MarginContainer/RemotePathInput
+@onready var queued_videos_container := $VBoxContainer/ScrollContainer/QueuedVideosContainer
 @onready var download_scene := load("res://scenes/download.tscn")
 
 var downloaded_videos := []
-var queued_videos := [{ "name": "The Comment 'Shop - Episode 103", "url": "https://www.youtube.com/watch?v=Ih3JDtDJAfE&t=4480s&pp=0gcJCQ0LAYcqIYzv"}]
+var queued_videos := [
+	{
+		"name": "The Comment 'Shop - Episode 102",
+		"url": "https://www.youtube.com/watch?v=Ih3JDtDJAfE&t=4480s&pp=0gcJCQ0LAYcqIYzv"
+	},
+	{
+		"name": "The Comment 'Shop - Episode 103",
+		"url": "https://www.youtube.com/watch?v=Ih3JDtDJAfE&t=4480s&pp=0gcJCQ0LAYcqIYzv"
+	}
+]
 
 
 func _ready() -> void:
