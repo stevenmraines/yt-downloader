@@ -4,7 +4,7 @@ extends Control
 
 @onready var yt_dlp_path_input := $Panel/MarginContainer/VSplitContainer/YtDlpConfig/HBoxContainer/MarginContainer/LineEdit
 @onready var yt_dlp_input_timer := $YtDlpInputTimer
-@onready var channel_container := $Panel/MarginContainer/VSplitContainer/HBoxContainer/ChannelContainer
+@onready var channel_container := $Panel/MarginContainer/VSplitContainer/VBoxContainer/ChannelContainer
 @onready var console_text_input := $Panel/MarginContainer/VSplitContainer/MarginContainer/Console/MarginContainer/ConsoleText
 @onready var channel_scene := load("res://scenes/channel.tscn")
 
@@ -17,6 +17,7 @@ func _ready() -> void:
 	for config_path in config["paths"]:
 		if config_path.name == "yt-dlp":
 			yt_dlp_path = config_path.path
+			yt_dlp_path_input.text = yt_dlp_path
 	_populate_channels()
 
 

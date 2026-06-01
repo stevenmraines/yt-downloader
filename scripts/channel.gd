@@ -1,20 +1,17 @@
-extends Control
+extends FoldableContainer
 
 @export var channel_name := "":
 	set(value):
 		channel_name = value
-		if label:
-			label.text = channel_name
+		title = channel_name
 
 @export var playlists : Array
 
-@onready var label := $VBoxContainer/Label
-@onready var playlist_container := $VBoxContainer/PlaylistContainer
+@onready var playlist_container := $ScrollContainer/PlaylistContainer
 @onready var playlist_scene := load("res://scenes/playlist.tscn")
 
 
 func _ready() -> void:
-	label.text = channel_name
 	for playlist in playlists:
 		var scene = playlist_scene.instantiate()
 		playlist_container.add_child(scene)
