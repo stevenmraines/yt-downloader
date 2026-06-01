@@ -6,15 +6,7 @@ extends Control
 		if label:
 			label.text = channel_name
 
-@export var playlists := ["Astrogoblin Comment Shops"]:
-	set(value):
-		playlists = value
-		for playlist_node in playlist_container.get_children():
-			playlist_node.queue_free()
-		for playlist in playlists:
-			var scene = playlist_scene.instantiate()
-			playlist_container.add_child(scene)
-			scene.playlist_title = playlist
+@export var playlists : Array
 
 @onready var label := $VBoxContainer/Label
 @onready var playlist_container := $VBoxContainer/PlaylistContainer
@@ -27,3 +19,21 @@ func _ready() -> void:
 		var scene = playlist_scene.instantiate()
 		playlist_container.add_child(scene)
 		scene.playlist_name = playlist
+
+
+func populate_playlists(config_playlists : Array) -> void:
+	playlists = config_playlists
+	for playlist in playlists:
+		if playlist.channel != channel_name:
+			continue
+		
+		var playlist_node = playlist_scene.instantiate()
+		playlist_container.add_child(playlist_node)
+		playlist_node.channel = channel_name
+		playlist_node.playlist = playlist.name
+		playlist_node.url = playlist.url
+		playlist_node.download_path = playlist.download_path
+		playlist_node.backup_upload_path = playlist.backup_upload_path
+		playlist_node.remote_upload_path = playlist.remote_upload_path
+		playlist_node.download_archive_file_path = playlist.download_archive_file_path
+		playlist_node.populate_download_queue(channel_name, playlist.name)

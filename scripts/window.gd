@@ -6,13 +6,18 @@ extends Control
 @onready var yt_dlp_input_timer := $YtDlpInputTimer
 @onready var channel_container := $Panel/MarginContainer/VSplitContainer/HBoxContainer/ChannelContainer
 @onready var console_text_input := $Panel/MarginContainer/VSplitContainer/MarginContainer/Console/MarginContainer/ConsoleText
+@onready var channel_scene := load("res://scenes/channel.tscn")
 
 var typing := false
+var config : Dictionary
 
 
 func _ready() -> void:
-	var config = ConfigLoader.config
-	var x = "fdsa"
+	config = ConfigLoader.config
+	for config_path in config["paths"]:
+		if config_path.name == "yt-dlp":
+			yt_dlp_path = config_path.path
+	_populate_channels()
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -29,22 +34,31 @@ func _unhandled_input(event: InputEvent) -> void:
 			yt_dlp_input_timer.start()
 			return
 		
+		# FIXME Gotta be a better way to do this
 		for channel in channel_container.get_children():
 			for playlist in channel.playlist_container.get_children():
-				if playlist.backup_path_input.has_focus():
-					write_to_console(playlist.backup_path_input.text)
+				if playlist.backup_upload_path_input.has_focus():
+					_write_to_console(playlist.backup_upload_path_input.text)
 					get_viewport().set_input_as_handled()
-				elif playlist.remote_path_input.has_focus():
-					write_to_console(playlist.remote_path_input.text)
+				elif playlist.remote_upload_path_input.has_focus():
+					_write_to_console(playlist.remote_upload_path_input.text)
 					get_viewport().set_input_as_handled()
 
 
 func _on_yt_dlp_input_timer_timeout() -> void:
-	write_to_console("write to file " + yt_dlp_path)
+	_write_to_console("write to file " + yt_dlp_path)
 
 
-func write_to_console(text : String) -> void:
+func _write_to_console(text : String) -> void:
 	console_text_input.text = console_text_input.text + text + "\n"
 	var total_lines = console_text_input.get_line_count()
 	console_text_input.set_caret_line(total_lines - 1)
 	console_text_input.set_caret_column(console_text_input.get_line_width(total_lines - 1))
+
+
+func _populate_channels() -> void:
+	for channel in config["channels"]:
+		var channel_node = channel_scene.instantiate()
+		channel_container.add_child(channel_node)
+		channel_node.channel_name = channel
+		channel_node.populate_playlists(config["playlists"])

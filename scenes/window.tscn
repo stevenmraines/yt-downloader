@@ -1,6 +1,5 @@
 [gd_scene format=3 uid="uid://2866mpf2bn32"]
 
-[ext_resource type="PackedScene" uid="uid://dw5wfnwni8q3t" path="res://scenes/channel.tscn" id="1_oya5r"]
 [ext_resource type="Script" uid="uid://bbh3xqmfw1vbe" path="res://scripts/window.gd" id="1_to7fh"]
 
 [node name="Window" type="Control" unique_id=2034944651]
@@ -11,7 +10,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_to7fh")
-yt_dlp_path = null
 
 [node name="Panel" type="Panel" parent="." unique_id=1417721787]
 layout_mode = 1
@@ -74,10 +72,6 @@ size_flags_stretch_ratio = 3.0
 [node name="ChannelContainer" type="Control" parent="Panel/MarginContainer/VSplitContainer/HBoxContainer" unique_id=1922842007]
 layout_mode = 2
 size_flags_horizontal = 3
-
-[node name="Channel" parent="Panel/MarginContainer/VSplitContainer/HBoxContainer/ChannelContainer" unique_id=399772040 instance=ExtResource("1_oya5r")]
-layout_mode = 1
-channel_name = "Astrogoblin"
 
 [node name="MarginContainer" type="MarginContainer" parent="Panel/MarginContainer/VSplitContainer" unique_id=2130779480]
 layout_mode = 2
