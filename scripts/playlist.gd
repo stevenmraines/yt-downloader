@@ -8,9 +8,9 @@ extends Control
 
 @export var playlist_url := ""
 @export var download_path := ""
-@export var upload_backup_path := ""
-@export var upload_remote_path := ""
-@export var downloaded_videos_file_path := ""
+@export var backup_upload_path := ""
+@export var remote_upload_path := ""
+@export var download_archive_file_path := ""
 
 @onready var label := $VBoxContainer/Label
 @onready var backup_path_input := $VBoxContainer/HBoxContainer/MarginContainer/BackupPathInput

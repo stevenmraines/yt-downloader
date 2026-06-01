@@ -20,8 +20,8 @@ static func _load_config() -> void:
 	}
 	
 	# Copy default config to user:// if it doesn't exist yet
-	if ! FileAccess.file_exists(config_path):
-		DirAccess.copy_absolute(default_config_path, config_path)
+	#if ! FileAccess.file_exists(config_path):
+	DirAccess.copy_absolute(default_config_path, config_path)
 	
 	var config_file = ConfigFile.new()
 	var err = config_file.load(config_path)
@@ -46,5 +46,9 @@ static func _load_config() -> void:
 			config["playlists"].append({
 				"channel": config_file.get_value(section, "channel"),
 				"name": config_file.get_value(section, "name"),
-				"url": config_file.get_value(section, "url")
+				"url": config_file.get_value(section, "url"),
+				"download_path": config_file.get_value(section, "download_path"),
+				"backup_upload_path": config_file.get_value(section, "backup_upload_path"),
+				"remote_upload_path": config_file.get_value(section, "remote_upload_path"),
+				"download_archive_file_path": config_file.get_value(section, "download_archive_file_path")
 			})
