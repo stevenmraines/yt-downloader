@@ -10,6 +10,11 @@ extends Control
 var typing := false
 
 
+func _ready() -> void:
+	var config = ConfigLoader.config
+	var x = "fdsa"
+
+
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("Escape"):
 		get_viewport().set_input_as_handled()
