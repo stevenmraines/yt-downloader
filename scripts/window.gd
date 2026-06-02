@@ -4,7 +4,7 @@ extends Control
 
 @onready var yt_dlp_path_input := $Panel/MarginContainer/VSplitContainer/YtDlpConfig/HBoxContainer/MarginContainer/LineEdit
 @onready var yt_dlp_input_timer := $YtDlpInputTimer
-@onready var channel_container := $Panel/MarginContainer/VSplitContainer/VBoxContainer/ChannelContainer
+@onready var channel_container := $Panel/MarginContainer/VSplitContainer/ChannelContainer
 @onready var console_text_input := $Panel/MarginContainer/VSplitContainer/MarginContainer/Console/MarginContainer/ConsoleText
 @onready var channel_scene := load("res://scenes/channel.tscn")
 
@@ -62,4 +62,4 @@ func _populate_channels() -> void:
 		var channel_node = channel_scene.instantiate()
 		channel_container.add_child(channel_node)
 		channel_node.channel_name = channel
-		channel_node.populate_playlists(config["playlists"])
+		channel_node.playlists = config["playlists"]

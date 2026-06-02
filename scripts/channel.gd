@@ -5,21 +5,19 @@ extends FoldableContainer
 		channel_name = value
 		title = channel_name
 
-@export var playlists : Array
+@export var playlists : Array:
+	set(value):
+		playlists = value
+		_populate_playlists()
 
 @onready var playlist_container := $ScrollContainer/PlaylistContainer
 @onready var playlist_scene := load("res://scenes/playlist.tscn")
 
 
-func _ready() -> void:
-	for playlist in playlists:
-		var scene = playlist_scene.instantiate()
-		playlist_container.add_child(scene)
-		scene.playlist_name = playlist
-
-
-func populate_playlists(config_playlists : Array) -> void:
-	playlists = config_playlists
+func _populate_playlists() -> void:
+	for child in playlist_container.get_children():
+		child.queue_free()
+	
 	for playlist in playlists:
 		if playlist.channel != channel_name:
 			continue
