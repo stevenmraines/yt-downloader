@@ -3,11 +3,12 @@ extends PanelContainer
 @export var yt_dlp_path := ""
 
 @onready var yt_dlp_path_input := $MarginContainer/VSplitContainer/YtDlpConfig/HBoxContainer/MarginContainer/YtDlpPathInput
-@onready var yt_dlp_input_timer := $YtDlpInputTimer
 @onready var channel_container := $MarginContainer/VSplitContainer/ChannelContainer
 @onready var console_text_input := $MarginContainer/VSplitContainer/MarginContainer/Console/MarginContainer/ConsoleTextInput
+@onready var yt_dlp_input_timer := $YtDlpInputTimer
 @onready var console_signal_bus := $ConsoleSignalBus
 @onready var config_loader := $ConfigLoader
+@onready var yt_dlp_wrapper := $YtDlpWrapper
 @onready var channel_scene := load("res://scenes/channel.tscn")
 
 var config : Dictionary
@@ -20,8 +21,11 @@ func _ready() -> void:
 		if config_path.name == "yt-dlp":
 			yt_dlp_path = config_path.path
 			yt_dlp_path_input.text = yt_dlp_path
+			yt_dlp_wrapper.yt_dlp_path = yt_dlp_path
 	_populate_channels()
 	_create_archive_files()
+	for playlist in config["playlists"]:
+		yt_dlp_wrapper.mark_playlist_as_archived(playlist)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -80,3 +84,7 @@ func _create_archive_files() -> void:
 			console_signal_bus.add_line("Creating archive file " + archive_file_path)
 			var archive_file = FileAccess.open(archive_file_path, FileAccess.WRITE)
 			archive_file.close()
+
+
+func _on_update_yt_dlp_button_button_up():
+	yt_dlp_wrapper.update()
