@@ -1,6 +1,9 @@
 [gd_scene format=3 uid="uid://dphx1q4napqyu"]
 
 [ext_resource type="Script" uid="uid://qdtd4q6msy7k" path="res://scripts/playlist.gd" id="1_6qq0t"]
+[ext_resource type="StyleBox" uid="uid://8kxj1vqhxwsv" path="res://styles/secondary_button_normal.tres" id="2_fjyi4"]
+[ext_resource type="StyleBox" uid="uid://3i0ogs0x15df" path="res://styles/secondary_button_pressed.tres" id="3_5oyxb"]
+[ext_resource type="StyleBox" uid="uid://binch188kfmsf" path="res://styles/secondary_button_hover.tres" id="3_66bny"]
 
 [node name="Playlist" type="Control" unique_id=678382639]
 custom_minimum_size = Vector2(0, 250)
@@ -22,9 +25,25 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Label" type="Label" parent="VBoxContainer" unique_id=846318188]
+[node name="HBoxContainer7" type="HBoxContainer" parent="VBoxContainer" unique_id=238082756]
 layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer7" unique_id=846318188]
+layout_mode = 2
+size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 24
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/HBoxContainer7" unique_id=255390769]
+layout_mode = 2
+theme_override_constants/margin_right = 10
+
+[node name="MarkAsArchivedButton" type="Button" parent="VBoxContainer/HBoxContainer7/MarginContainer" unique_id=1828369531]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/normal = ExtResource("2_fjyi4")
+theme_override_styles/pressed = ExtResource("3_5oyxb")
+theme_override_styles/hover = ExtResource("3_66bny")
+text = "Mark Playlist As Archived"
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer" unique_id=968633641]
 layout_mode = 2
@@ -124,3 +143,5 @@ size_flags_vertical = 3
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+
+[connection signal="button_up" from="VBoxContainer/HBoxContainer7/MarginContainer/MarkAsArchivedButton" to="." method="_on_mark_as_archived_button_button_up"]

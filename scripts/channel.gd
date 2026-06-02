@@ -1,5 +1,7 @@
 extends FoldableContainer
 
+signal playlist_marked_as_archived(list : Dictionary)
+
 @export var channel_name := "":
 	set(value):
 		channel_name = value
@@ -24,12 +26,10 @@ func _populate_playlists() -> void:
 		
 		var playlist_node = playlist_scene.instantiate()
 		playlist_container.add_child(playlist_node)
-		playlist_node.channel = channel_name
-		playlist_node.playlist = playlist.name
-		playlist_node.url = playlist.url
-		playlist_node.download_path = playlist.download_path
-		playlist_node.backup_upload_path = playlist.backup_upload_path
-		playlist_node.remote_upload_path = playlist.remote_upload_path
-		playlist_node.download_archive_file_name = playlist.download_archive_file_name
-		playlist_node.cookies_from_browser = playlist.cookies_from_browser
-		playlist_node.populate_download_queue(channel_name, playlist.name)
+		playlist_node.playlist = playlist
+		playlist_node.mark_as_archived_clicked.connect(_on_playlist_mark_as_archived_clicked)
+		#playlist_node.populate_download_queue()
+
+
+func _on_playlist_mark_as_archived_clicked(list : Dictionary) -> void:
+	playlist_marked_as_archived.emit(list)

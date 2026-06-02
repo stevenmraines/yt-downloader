@@ -24,9 +24,6 @@ func _ready() -> void:
 			yt_dlp_wrapper.yt_dlp_path = yt_dlp_path
 	_populate_channels()
 	_create_archive_files()
-	#for playlist in config["playlists"]:
-		#if playlist.name == "Repair Shops":
-			#yt_dlp_wrapper.mark_playlist_as_archived(playlist)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -64,6 +61,7 @@ func _populate_channels() -> void:
 		channel_container.add_child(channel_node)
 		channel_node.channel_name = channel
 		channel_node.playlists = config["playlists"]
+		channel_node.playlist_marked_as_archived.connect(_on_playlist_marked_as_archived)
 
 
 func _create_archive_files() -> void:
@@ -89,3 +87,7 @@ func _create_archive_files() -> void:
 
 func _on_update_yt_dlp_button_button_up():
 	yt_dlp_wrapper.update()
+
+
+func _on_playlist_marked_as_archived(playlist : Dictionary) -> void:
+	yt_dlp_wrapper.mark_playlist_as_archived(playlist)
