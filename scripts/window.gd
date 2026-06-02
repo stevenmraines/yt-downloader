@@ -1,19 +1,21 @@
-extends Control
+extends PanelContainer
 
 @export var yt_dlp_path := ""
 
-@onready var yt_dlp_path_input := $Panel/MarginContainer/VSplitContainer/YtDlpConfig/HBoxContainer/MarginContainer/LineEdit
+@onready var yt_dlp_path_input := $MarginContainer/VSplitContainer/YtDlpConfig/HBoxContainer/MarginContainer/YtDlpPathInput
 @onready var yt_dlp_input_timer := $YtDlpInputTimer
-@onready var channel_container := $Panel/MarginContainer/VSplitContainer/ChannelContainer
-@onready var console_text_input := $Panel/MarginContainer/VSplitContainer/MarginContainer/Console/MarginContainer/ConsoleText
+@onready var channel_container := $MarginContainer/VSplitContainer/ChannelContainer
+@onready var console_text_input := $MarginContainer/VSplitContainer/MarginContainer/Console/MarginContainer/ConsoleTextInput
+@onready var console_signal_bus := $ConsoleSignalBus
+@onready var config_loader := $ConfigLoader
 @onready var channel_scene := load("res://scenes/channel.tscn")
 
-var typing := false
 var config : Dictionary
+var typing := false
 
 
 func _ready() -> void:
-	config = ConfigLoader.config
+	config = config_loader.config
 	for config_path in config["paths"]:
 		if config_path.name == "yt-dlp":
 			yt_dlp_path = config_path.path
@@ -39,22 +41,15 @@ func _unhandled_input(event: InputEvent) -> void:
 		for channel in channel_container.get_children():
 			for playlist in channel.playlist_container.get_children():
 				if playlist.backup_upload_path_input.has_focus():
-					_write_to_console(playlist.backup_upload_path_input.text)
+					console_signal_bus.add_line(playlist.backup_upload_path_input.text)
 					get_viewport().set_input_as_handled()
 				elif playlist.remote_upload_path_input.has_focus():
-					_write_to_console(playlist.remote_upload_path_input.text)
+					console_signal_bus.add_line(playlist.remote_upload_path_input.text)
 					get_viewport().set_input_as_handled()
 
 
 func _on_yt_dlp_input_timer_timeout() -> void:
-	_write_to_console("write to file " + yt_dlp_path)
-
-
-func _write_to_console(text : String) -> void:
-	console_text_input.text = console_text_input.text + text + "\n"
-	var total_lines = console_text_input.get_line_count()
-	console_text_input.set_caret_line(total_lines - 1)
-	console_text_input.set_caret_column(console_text_input.get_line_width(total_lines - 1))
+	console_signal_bus.add_line("write to file " + yt_dlp_path)
 
 
 func _populate_channels() -> void:

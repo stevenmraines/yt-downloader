@@ -1,16 +1,24 @@
-class_name ConfigLoader
+class_name ConfigLoader extends Node
 
-static var loaded := false
-static var config_path := "user://config.cfg"
-static var default_config_path := "res://config.cfg"
-static var config : Dictionary:
+var config : Dictionary:
 	get():
 		if ! loaded:
 			_load_config()
 		return config
+var loaded := false
+var console_signal_bus : ConsoleSignalBus
+
+const DEFAULT_CONFIG_PATH := "res://config.cfg"
+const CONFIG_PATH := "user://config.cfg"
 
 
-static func _load_config() -> void:
+func _ready() -> void:
+	console_signal_bus = get_tree().get_nodes_in_group("console_signal_bus")[0]
+
+
+func _load_config() -> void:
+	console_signal_bus.add_line("Loading config")
+	
 	loaded = true
 	
 	config = {
@@ -20,35 +28,50 @@ static func _load_config() -> void:
 	}
 	
 	# Copy default config to user:// if it doesn't exist yet
-	#if ! FileAccess.file_exists(config_path):
-	DirAccess.copy_absolute(default_config_path, config_path)
+	# TODO Turn this back on when app is ready
+	#if ! FileAccess.file_exists(CONFIG_PATH):
+	console_signal_bus.add_line("Copying config to " + OS.get_user_data_dir() + "/config.cfg")
+	DirAccess.copy_absolute(DEFAULT_CONFIG_PATH, CONFIG_PATH)
 	
 	var config_file = ConfigFile.new()
-	var err = config_file.load(config_path)
-	# TODO Should print this to the console
-	print(OS.get_user_data_dir())
+	var err = config_file.load(CONFIG_PATH)
 	
 	if err != OK:
-		# TODO Print an error message or something
-		push_error("Failed to parse config file, error code: %d" % err)
+		console_signal_bus.add_error("Failed to parse config file, error code: %d" % err)
 		return
 	
-	# FIXME Still getting some weird parse errors
 	for section in config_file.get_sections():
 		if section.begins_with("path"):
+			var path_name = config_file.get_value(section, "name")
+			var path = config_file.get_value(section, "path")
+			console_signal_bus.add_line("Adding path " + path_name + ": " + path)
 			config["paths"].append({
-				"name": config_file.get_value(section, "name"),
-				"path": config_file.get_value(section, "path")
+				"name": path_name,
+				"path": path
 			})
 		elif section.begins_with("channel"):
-			config["channels"].append(config_file.get_value(section, "name"))
+			var channel_name = config_file.get_value(section, "name")
+			console_signal_bus.add_line("Adding channel " + channel_name)
+			config["channels"].append(channel_name)
 		elif section.begins_with("playlist"):
+			var channel = config_file.get_value(section, "channel")
+			var playlist_name = config_file.get_value(section, "name")
+			var url = config_file.get_value(section, "url")
+			var download_path = config_file.get_value(section, "download_path")
+			var backup_upload_path = config_file.get_value(section, "backup_upload_path")
+			var remote_upload_path = config_file.get_value(section, "remote_upload_path")
+			var download_archive_file_path = config_file.get_value(section, "download_archive_file_path")
+			console_signal_bus.add_line("Adding playlist " + playlist_name + " to channel " + channel)
 			config["playlists"].append({
-				"channel": config_file.get_value(section, "channel"),
-				"name": config_file.get_value(section, "name"),
-				"url": config_file.get_value(section, "url"),
-				"download_path": config_file.get_value(section, "download_path"),
-				"backup_upload_path": config_file.get_value(section, "backup_upload_path"),
-				"remote_upload_path": config_file.get_value(section, "remote_upload_path"),
-				"download_archive_file_path": config_file.get_value(section, "download_archive_file_path")
+				"channel": channel,
+				"name": playlist_name,
+				"url": url,
+				"download_path": download_path,
+				"backup_upload_path": backup_upload_path,
+				"remote_upload_path": remote_upload_path,
+				"download_archive_file_path": download_archive_file_path 
 			})
+		else:
+			console_signal_bus.add_warning("Unrecognized config section found: " + section)
+	
+	console_signal_bus.add_line("Config loaded")

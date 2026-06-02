@@ -1,46 +1,41 @@
 [gd_scene format=3 uid="uid://2866mpf2bn32"]
 
 [ext_resource type="Script" uid="uid://bbh3xqmfw1vbe" path="res://scripts/window.gd" id="1_to7fh"]
+[ext_resource type="Script" uid="uid://cq6rkpt6rlx77" path="res://scenes/console_text_input.gd" id="2_qvkcj"]
+[ext_resource type="Script" uid="uid://bsefncd1fxkyf" path="res://scripts/console_signal_bus.gd" id="2_to7fh"]
+[ext_resource type="Script" uid="uid://djom14jyh6cwn" path="res://scripts/config_loader.gd" id="4_qnju7"]
 
-[node name="Window" type="Control" unique_id=2034944651]
-layout_mode = 3
+[node name="Window" type="PanelContainer" unique_id=1668980773]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 script = ExtResource("1_to7fh")
 
-[node name="Panel" type="Panel" parent="." unique_id=1417721787]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="ColorRect" type="ColorRect" parent="." unique_id=133703748]
+layout_mode = 2
+color = Color(0.07200002, 0.35280007, 0.72, 0.21176471)
 
-[node name="MarginContainer" type="MarginContainer" parent="Panel" unique_id=1479611663]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1479611663]
+layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="VSplitContainer" type="VSplitContainer" parent="Panel/MarginContainer" unique_id=1350764089]
+[node name="VSplitContainer" type="VSplitContainer" parent="MarginContainer" unique_id=1350764089]
 layout_mode = 2
 split_offsets = PackedInt32Array(0, 102)
 drag_area_highlight_in_editor = true
 
-[node name="YtDlpConfig" type="Control" parent="Panel/MarginContainer/VSplitContainer" unique_id=1254325716]
+[node name="YtDlpConfig" type="Control" parent="MarginContainer/VSplitContainer" unique_id=1254325716]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Panel/MarginContainer/VSplitContainer/YtDlpConfig" unique_id=291929810]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VSplitContainer/YtDlpConfig" unique_id=291929810]
 layout_mode = 1
 anchors_preset = 14
 anchor_top = 0.5
@@ -51,46 +46,43 @@ offset_bottom = 15.5
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Label" type="Label" parent="Panel/MarginContainer/VSplitContainer/YtDlpConfig/HBoxContainer" unique_id=333003297]
+[node name="Label" type="Label" parent="MarginContainer/VSplitContainer/YtDlpConfig/HBoxContainer" unique_id=333003297]
 layout_mode = 2
 text = "yt-dlp Executable Path:"
 
-[node name="MarginContainer" type="MarginContainer" parent="Panel/MarginContainer/VSplitContainer/YtDlpConfig/HBoxContainer" unique_id=1510585866]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VSplitContainer/YtDlpConfig/HBoxContainer" unique_id=1510585866]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/margin_left = 10
 
-[node name="LineEdit" type="LineEdit" parent="Panel/MarginContainer/VSplitContainer/YtDlpConfig/HBoxContainer/MarginContainer" unique_id=1220911714]
+[node name="YtDlpPathInput" type="LineEdit" parent="MarginContainer/VSplitContainer/YtDlpConfig/HBoxContainer/MarginContainer" unique_id=1220911714]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="ChannelContainer" type="VBoxContainer" parent="Panel/MarginContainer/VSplitContainer" unique_id=1767764382]
+[node name="ChannelContainer" type="VBoxContainer" parent="MarginContainer/VSplitContainer" unique_id=1767764382]
 layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 8.0
 
-[node name="MarginContainer" type="MarginContainer" parent="Panel/MarginContainer/VSplitContainer" unique_id=2130779480]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VSplitContainer" unique_id=2130779480]
 layout_mode = 2
 size_flags_vertical = 3
-size_flags_stretch_ratio = 2.0
-theme_override_constants/margin_left = -10
-theme_override_constants/margin_right = -10
-theme_override_constants/margin_bottom = -10
+size_flags_stretch_ratio = 3.0
 
-[node name="Console" type="Control" parent="Panel/MarginContainer/VSplitContainer/MarginContainer" unique_id=63083943]
+[node name="Console" type="Control" parent="MarginContainer/VSplitContainer/MarginContainer" unique_id=63083943]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="ColorRect" type="ColorRect" parent="Panel/MarginContainer/VSplitContainer/MarginContainer/Console" unique_id=1957696869]
+[node name="ColorRect" type="ColorRect" parent="MarginContainer/VSplitContainer/MarginContainer/Console" unique_id=1957696869]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0, 0, 0, 0.5019608)
+color = Color(0, 0, 0, 1)
 
-[node name="MarginContainer" type="MarginContainer" parent="Panel/MarginContainer/VSplitContainer/MarginContainer/Console" unique_id=1115192893]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VSplitContainer/MarginContainer/Console" unique_id=1115192893]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -100,11 +92,24 @@ grow_vertical = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_right = 10
 
-[node name="ConsoleText" type="TextEdit" parent="Panel/MarginContainer/VSplitContainer/MarginContainer/Console/MarginContainer" unique_id=145959039]
+[node name="ConsoleTextInput" type="RichTextLabel" parent="MarginContainer/VSplitContainer/MarginContainer/Console/MarginContainer" unique_id=1672509452]
 layout_mode = 2
-editable = false
+focus_mode = 2
+selection_enabled = true
+script = ExtResource("2_qvkcj")
 
 [node name="YtDlpInputTimer" type="Timer" parent="." unique_id=1410984030]
 one_shot = true
 
+[node name="ConsoleSignalBus" type="Node" parent="." unique_id=1967930258 groups=["console_signal_bus"]]
+script = ExtResource("2_to7fh")
+metadata/_custom_type_script = "uid://bsefncd1fxkyf"
+
+[node name="ConfigLoader" type="Node" parent="." unique_id=1487822122]
+script = ExtResource("4_qnju7")
+metadata/_custom_type_script = "uid://djom14jyh6cwn"
+
 [connection signal="timeout" from="YtDlpInputTimer" to="." method="_on_yt_dlp_input_timer_timeout"]
+[connection signal="error_added" from="ConsoleSignalBus" to="MarginContainer/VSplitContainer/MarginContainer/Console/MarginContainer/ConsoleTextInput" method="_on_console_signal_bus_error_added"]
+[connection signal="line_added" from="ConsoleSignalBus" to="MarginContainer/VSplitContainer/MarginContainer/Console/MarginContainer/ConsoleTextInput" method="_on_console_signal_bus_line_added"]
+[connection signal="warning_added" from="ConsoleSignalBus" to="MarginContainer/VSplitContainer/MarginContainer/Console/MarginContainer/ConsoleTextInput" method="_on_console_signal_bus_warning_added"]
