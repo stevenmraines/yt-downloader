@@ -30,5 +30,5 @@ func _populate_playlists() -> void:
 		playlist_node.download_path = playlist.download_path
 		playlist_node.backup_upload_path = playlist.backup_upload_path
 		playlist_node.remote_upload_path = playlist.remote_upload_path
-		playlist_node.download_archive_file_path = playlist.download_archive_file_path
+		playlist_node.download_archive_file_name = playlist.download_archive_file_name
 		playlist_node.populate_download_queue(channel_name, playlist.name)

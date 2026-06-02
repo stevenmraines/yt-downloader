@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://2866mpf2bn32"]
 
 [ext_resource type="Script" uid="uid://bbh3xqmfw1vbe" path="res://scripts/window.gd" id="1_to7fh"]
-[ext_resource type="Script" uid="uid://cq6rkpt6rlx77" path="res://scenes/console_text_input.gd" id="2_qvkcj"]
+[ext_resource type="Script" uid="uid://cq6rkpt6rlx77" path="res://scripts/console_text_input.gd" id="2_qnju7"]
 [ext_resource type="Script" uid="uid://bsefncd1fxkyf" path="res://scripts/console_signal_bus.gd" id="2_to7fh"]
 [ext_resource type="Script" uid="uid://djom14jyh6cwn" path="res://scripts/config_loader.gd" id="4_qnju7"]
 
@@ -96,7 +96,7 @@ theme_override_constants/margin_right = 10
 layout_mode = 2
 focus_mode = 2
 selection_enabled = true
-script = ExtResource("2_qvkcj")
+script = ExtResource("2_qnju7")
 
 [node name="YtDlpInputTimer" type="Timer" parent="." unique_id=1410984030]
 one_shot = true

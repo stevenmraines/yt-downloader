@@ -21,6 +21,7 @@ func _ready() -> void:
 			yt_dlp_path = config_path.path
 			yt_dlp_path_input.text = yt_dlp_path
 	_populate_channels()
+	_create_archive_files()
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -58,3 +59,24 @@ func _populate_channels() -> void:
 		channel_container.add_child(channel_node)
 		channel_node.channel_name = channel
 		channel_node.playlists = config["playlists"]
+
+
+func _create_archive_files() -> void:
+	for playlist in config["playlists"]:
+		var archive_dir = OS.get_user_data_dir() + "/archived"
+		var channel_archive_dir = archive_dir + "/" + playlist.channel
+		
+		if ! DirAccess.dir_exists_absolute(archive_dir):
+			console_signal_bus.add_line("Creating archive directory " + archive_dir)
+			DirAccess.make_dir_absolute(archive_dir)
+		
+		if ! DirAccess.dir_exists_absolute(channel_archive_dir):
+			console_signal_bus.add_line("Creating channel archive directory " + channel_archive_dir)
+			DirAccess.make_dir_absolute(channel_archive_dir)
+		
+		var archive_file_path = channel_archive_dir + "/" + playlist.download_archive_file_name
+		
+		if ! FileAccess.file_exists(archive_file_path):
+			console_signal_bus.add_line("Creating archive file " + archive_file_path)
+			var archive_file = FileAccess.open(archive_file_path, FileAccess.WRITE)
+			archive_file.close()

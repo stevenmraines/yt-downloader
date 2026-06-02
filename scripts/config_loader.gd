@@ -60,7 +60,7 @@ func _load_config() -> void:
 			var download_path = config_file.get_value(section, "download_path")
 			var backup_upload_path = config_file.get_value(section, "backup_upload_path")
 			var remote_upload_path = config_file.get_value(section, "remote_upload_path")
-			var download_archive_file_path = config_file.get_value(section, "download_archive_file_path")
+			var download_archive_file_name = config_file.get_value(section, "download_archive_file_name")
 			console_signal_bus.add_line("Adding playlist " + playlist_name + " to channel " + channel)
 			config["playlists"].append({
 				"channel": channel,
@@ -69,7 +69,7 @@ func _load_config() -> void:
 				"download_path": download_path,
 				"backup_upload_path": backup_upload_path,
 				"remote_upload_path": remote_upload_path,
-				"download_archive_file_path": download_archive_file_path 
+				"download_archive_file_name": download_archive_file_name 
 			})
 		else:
 			console_signal_bus.add_warning("Unrecognized config section found: " + section)
