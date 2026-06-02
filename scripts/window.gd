@@ -24,8 +24,9 @@ func _ready() -> void:
 			yt_dlp_wrapper.yt_dlp_path = yt_dlp_path
 	_populate_channels()
 	_create_archive_files()
-	for playlist in config["playlists"]:
-		yt_dlp_wrapper.mark_playlist_as_archived(playlist)
+	#for playlist in config["playlists"]:
+		#if playlist.name == "Repair Shops":
+			#yt_dlp_wrapper.mark_playlist_as_archived(playlist)
 
 
 func _unhandled_input(event: InputEvent) -> void:

@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://qdtd4q6msy7k" path="res://scripts/playlist.gd" id="1_6qq0t"]
 
 [node name="Playlist" type="Control" unique_id=678382639]
-custom_minimum_size = Vector2(0, 225)
+custom_minimum_size = Vector2(0, 250)
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -99,6 +99,21 @@ size_flags_horizontal = 3
 theme_override_constants/margin_left = 10
 
 [node name="DownloadArchiveFilePathInput" type="LineEdit" parent="VBoxContainer/HBoxContainer5/MarginContainer" unique_id=552058923]
+layout_mode = 2
+
+[node name="HBoxContainer6" type="HBoxContainer" parent="VBoxContainer" unique_id=679281164]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer6" unique_id=1294731165]
+layout_mode = 2
+text = "Cookies From Browser:"
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/HBoxContainer6" unique_id=893870646]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 10
+
+[node name="CookiesFromBrowserInput" type="LineEdit" parent="VBoxContainer/HBoxContainer6/MarginContainer" unique_id=1112940403]
 layout_mode = 2
 
 [node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer" unique_id=334417810]
