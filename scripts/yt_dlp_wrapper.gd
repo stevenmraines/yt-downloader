@@ -9,6 +9,7 @@ const opts := {
 	"flat" : "--flat-playlist",
 	"format" : "--format",
 	"get_id" : "--get-id",
+	"no_playlist" : "--no-playlist",
 	"output" : "--output",
 	"output_format" : "--merge-output-format",
 	"restrict" : "--restrict-filenames",
@@ -42,6 +43,7 @@ func mark_playlist_as_archived(playlist : Dictionary) -> void:
 	var archive_file = _get_archive_file_path(playlist)
 	var video_ids = []
 	
+	# TODO See if there's a way to actually show the output in the terminal window
 	OS.execute(yt_dlp_path, [
 		playlist.url,
 		opts.archive, archive_file,
@@ -75,6 +77,25 @@ func download_playlist(playlist : Dictionary) -> void:
 		opts.output, output,
 		opts.output_format, "mp4",
 		opts.format, "bestvideo[height<=720][ext=mp4]+bestaudio[ext=m4a]/best[height<=720][ext=mp4]"
+	])
+
+
+func download_single_video(url : String, playlist : Dictionary) -> void:
+	var archive_file = _get_archive_file_path(playlist)
+	var output = playlist.download_path + "/%(upload_date>%Y-%m-%d)s %(title)s.%(ext)s\""
+	
+	console_signal_bus.add_line("Downloading single video")
+	
+	# TODO Try to find a way to keep the terminal window open
+	_run_command([
+		url,
+		opts.archive, archive_file,
+		opts.cookies, playlist.cookies_from_browser,
+		opts.restrict,
+		opts.output, output,
+		opts.output_format, "mp4",
+		opts.format, "bestvideo[height<=720][ext=mp4]+bestaudio[ext=m4a]/best[height<=720][ext=mp4]",
+		opts.no_playlist
 	])
 
 

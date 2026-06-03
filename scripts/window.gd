@@ -62,6 +62,7 @@ func _populate_channels() -> void:
 		channel_node.channel_name = channel
 		channel_node.playlists = config["playlists"]
 		channel_node.playlist_marked_as_archived.connect(_on_playlist_marked_as_archived)
+		channel_node.playlist_single_video_downloaded.connect(_on_playlist_single_video_downloaded)
 
 
 func _create_archive_files() -> void:
@@ -91,3 +92,7 @@ func _on_update_yt_dlp_button_button_up():
 
 func _on_playlist_marked_as_archived(playlist : Dictionary) -> void:
 	yt_dlp_wrapper.mark_playlist_as_archived(playlist)
+
+
+func _on_playlist_single_video_downloaded(url : String, playlist : Dictionary) -> void:
+	yt_dlp_wrapper.download_single_video(url, playlist)
