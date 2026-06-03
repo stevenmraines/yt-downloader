@@ -8,10 +8,10 @@ extends PanelContainer
 		console_signal_bus.add_line("yt-dlp path set to " + yt_dlp_path)
 		# TODO Update config if value there is different
 
-@onready var yt_dlp_path_input := $MarginContainer/VSplitContainer/YtDlpConfig/YtDlpPathInput
-@onready var yt_dlp_path_file_dialog := $MarginContainer/VSplitContainer/YtDlpConfig/YtDlpPathFileDialog
+@onready var yt_dlp_path_input := $MarginContainer/VSplitContainer/MarginContainer/YtDlpConfig/YtDlpPathInput
+@onready var yt_dlp_path_file_dialog := $MarginContainer/VSplitContainer/MarginContainer/YtDlpConfig/YtDlpPathFileDialog
 @onready var channel_container := $MarginContainer/VSplitContainer/ChannelContainer
-@onready var console_text_input := $MarginContainer/VSplitContainer/MarginContainer/Console/MarginContainer/ConsoleTextInput
+@onready var console_text_input := $MarginContainer/VSplitContainer/Console/MarginContainer/ConsoleTextInput
 @onready var console_signal_bus := $ConsoleSignalBus
 @onready var config_loader := $ConfigLoader
 @onready var yt_dlp_wrapper := $YtDlpWrapper
@@ -51,11 +51,13 @@ func _populate_channels() -> void:
 	for channel in config["channels"]:
 		var channel_node = channel_scene.instantiate()
 		channel_container.add_child(channel_node)
-		channel_node.channel_name = channel
+		channel_node.channel_name = channel.name
 		channel_node.playlists = config["playlists"]
 		channel_node.playlist_marked_as_archived.connect(_on_playlist_marked_as_archived)
 		channel_node.playlist_single_video_downloaded.connect(_on_playlist_single_video_downloaded)
 		channel_node.connect("folding_changed", _on_channel_folding_changed.bind(channel_node))
+		if channel.start_collapsed:
+			channel_node.fold()
 
 
 func _create_archive_files() -> void:

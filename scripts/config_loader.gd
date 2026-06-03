@@ -51,8 +51,12 @@ func _load_config() -> void:
 			})
 		elif section.begins_with("channel"):
 			var channel_name = config_file.get_value(section, "name")
+			var start_collapsed = str_to_var(config_file.get_value(section, "start_collapsed", "false"))
 			console_signal_bus.add_line("Adding channel " + channel_name)
-			config["channels"].append(channel_name)
+			config["channels"].append({
+				"name" : channel_name,
+				"start_collapsed" : start_collapsed,
+			})
 		elif section.begins_with("playlist"):
 			var channel = config_file.get_value(section, "channel")
 			var playlist_name = config_file.get_value(section, "name")
@@ -61,7 +65,7 @@ func _load_config() -> void:
 			var backup_upload_path = config_file.get_value(section, "backup_upload_path")
 			var remote_upload_path = config_file.get_value(section, "remote_upload_path")
 			var download_archive_file_name = config_file.get_value(section, "download_archive_file_name")
-			var cookies_from_browser = config_file.get_value(section, "cookies_from_browser")
+			var cookies_from_browser = config_file.get_value(section, "cookies_from_browser", "firefox")
 			console_signal_bus.add_line("Adding playlist " + playlist_name + " to channel " + channel)
 			config["playlists"].append({
 				"channel": channel,
