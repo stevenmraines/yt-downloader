@@ -81,3 +81,22 @@ func _load_config() -> void:
 			console_signal_bus.add_warning("Unrecognized config section found: " + section)
 	
 	console_signal_bus.add_line("Config loaded")
+
+
+# TODO Figure out how to handle translating between the raw config structure and our config dictionary
+func save_changes(config_values : Dictionary) -> void:
+	console_signal_bus.add_line("Saving config changes")
+	
+	var config_file = ConfigFile.new()
+	var err = config_file.load(CONFIG_PATH)
+	
+	if err != OK:
+		console_signal_bus.add_error("Failed to parse config file, error code: %d" % err)
+		return
+	
+	for key in config_values:
+		var variable = config_values[key]
+		print(key, " ", variable)
+		#config_file.set_value("section", key, variable)
+	
+	#config_file.save(CONFIG_PATH)

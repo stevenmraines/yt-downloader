@@ -1,14 +1,17 @@
 [gd_scene format=3 uid="uid://2866mpf2bn32"]
 
 [ext_resource type="Script" uid="uid://bbh3xqmfw1vbe" path="res://scripts/window.gd" id="1_to7fh"]
+[ext_resource type="StyleBox" uid="uid://8kxj1vqhxwsv" path="res://styles/secondary_button_normal.tres" id="2_4hy5e"]
 [ext_resource type="Script" uid="uid://cq6rkpt6rlx77" path="res://scripts/console_text_input.gd" id="2_qnju7"]
 [ext_resource type="StyleBox" uid="uid://co4550p76db2k" path="res://styles/default_button_pressed.tres" id="2_shje2"]
 [ext_resource type="StyleBox" uid="uid://b5cwgpibw4xld" path="res://styles/success_button_normal.tres" id="2_syahi"]
 [ext_resource type="Script" uid="uid://bsefncd1fxkyf" path="res://scripts/console_signal_bus.gd" id="2_to7fh"]
+[ext_resource type="StyleBox" uid="uid://3i0ogs0x15df" path="res://styles/secondary_button_pressed.tres" id="3_cx3k0"]
 [ext_resource type="StyleBox" uid="uid://caorea2ay4rb4" path="res://styles/default_button_hover.tres" id="3_d8l8o"]
 [ext_resource type="StyleBox" uid="uid://cyjp84k0pbqf3" path="res://styles/success_button_pressed.tres" id="3_qncfr"]
 [ext_resource type="StyleBox" uid="uid://caep6kc0fjn86" path="res://styles/success_button_hover.tres" id="4_k52h1"]
 [ext_resource type="Script" uid="uid://djom14jyh6cwn" path="res://scripts/config_loader.gd" id="4_qnju7"]
+[ext_resource type="StyleBox" uid="uid://binch188kfmsf" path="res://styles/secondary_button_hover.tres" id="4_qsv56"]
 [ext_resource type="Script" uid="uid://sfh687fmx6ht" path="res://scripts/yt_dlp_wrapper.gd" id="5_ato5p"]
 
 [node name="Window" type="PanelContainer" unique_id=1668980773]
@@ -32,37 +35,51 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="VSplitContainer" type="VSplitContainer" parent="MarginContainer" unique_id=1350764089]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=114995756]
 layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="SaveConfigButton" type="Button" parent="MarginContainer/VBoxContainer" unique_id=1261245522]
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = ExtResource("2_4hy5e")
+theme_override_styles/pressed = ExtResource("3_cx3k0")
+theme_override_styles/hover = ExtResource("4_qsv56")
+text = "Save Config"
+
+[node name="VSplitContainer" type="VSplitContainer" parent="MarginContainer/VBoxContainer" unique_id=1350764089]
+layout_mode = 2
+size_flags_vertical = 3
 split_offsets = PackedInt32Array(0, -103)
 drag_area_highlight_in_editor = true
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VSplitContainer" unique_id=1315609519]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/VSplitContainer" unique_id=1315609519]
 layout_mode = 2
 theme_override_constants/margin_left = 3
 theme_override_constants/margin_right = 3
 
-[node name="YtDlpConfig" type="HBoxContainer" parent="MarginContainer/VSplitContainer/MarginContainer" unique_id=551422303]
+[node name="YtDlpConfig" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VSplitContainer/MarginContainer" unique_id=551422303]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 20
 
-[node name="Label" type="Label" parent="MarginContainer/VSplitContainer/MarginContainer/YtDlpConfig" unique_id=333003297]
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/VSplitContainer/MarginContainer/YtDlpConfig" unique_id=333003297]
 layout_mode = 2
 text = "yt-dlp Executable Path:"
 
-[node name="YtDlpBrowseFilesButton" type="Button" parent="MarginContainer/VSplitContainer/MarginContainer/YtDlpConfig" unique_id=192768295]
+[node name="YtDlpBrowseFilesButton" type="Button" parent="MarginContainer/VBoxContainer/VSplitContainer/MarginContainer/YtDlpConfig" unique_id=192768295]
 layout_mode = 2
 theme_override_styles/pressed = ExtResource("2_shje2")
 theme_override_styles/hover = ExtResource("3_d8l8o")
 text = "Browse"
 
-[node name="YtDlpPathInput" type="LineEdit" parent="MarginContainer/VSplitContainer/MarginContainer/YtDlpConfig" unique_id=1220911714]
+[node name="YtDlpPathInput" type="LineEdit" parent="MarginContainer/VBoxContainer/VSplitContainer/MarginContainer/YtDlpConfig" unique_id=1220911714]
 layout_mode = 2
 size_flags_horizontal = 3
 editable = false
 
-[node name="YtDlpPathFileDialog" type="FileDialog" parent="MarginContainer/VSplitContainer/MarginContainer/YtDlpConfig" unique_id=1484450864]
+[node name="YtDlpPathFileDialog" type="FileDialog" parent="MarginContainer/VBoxContainer/VSplitContainer/MarginContainer/YtDlpConfig" unique_id=1484450864]
 oversampling_override = 1.0
 title = "Select a File"
 initial_position = 2
@@ -72,24 +89,24 @@ file_mode = 0
 access = 2
 show_hidden_files = true
 
-[node name="UpdateYtDlpButton" type="Button" parent="MarginContainer/VSplitContainer/MarginContainer/YtDlpConfig" unique_id=1564146492]
+[node name="UpdateYtDlpButton" type="Button" parent="MarginContainer/VBoxContainer/VSplitContainer/MarginContainer/YtDlpConfig" unique_id=1564146492]
 layout_mode = 2
 theme_override_styles/normal = ExtResource("2_syahi")
 theme_override_styles/pressed = ExtResource("3_qncfr")
 theme_override_styles/hover = ExtResource("4_k52h1")
 text = "Update yt-dlp"
 
-[node name="ChannelContainer" type="VBoxContainer" parent="MarginContainer/VSplitContainer" unique_id=1767764382]
+[node name="ChannelContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/VSplitContainer" unique_id=1767764382]
 layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 38.0
 
-[node name="Console" type="Control" parent="MarginContainer/VSplitContainer" unique_id=63083943]
+[node name="Console" type="Control" parent="MarginContainer/VBoxContainer/VSplitContainer" unique_id=63083943]
 layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 2.0
 
-[node name="ColorRect" type="ColorRect" parent="MarginContainer/VSplitContainer/Console" unique_id=1957696869]
+[node name="ColorRect" type="ColorRect" parent="MarginContainer/VBoxContainer/VSplitContainer/Console" unique_id=1957696869]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -98,7 +115,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 1)
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VSplitContainer/Console" unique_id=1115192893]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/VSplitContainer/Console" unique_id=1115192893]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -108,7 +125,7 @@ grow_vertical = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_right = 10
 
-[node name="ConsoleTextInput" type="RichTextLabel" parent="MarginContainer/VSplitContainer/Console/MarginContainer" unique_id=1672509452]
+[node name="ConsoleTextInput" type="RichTextLabel" parent="MarginContainer/VBoxContainer/VSplitContainer/Console/MarginContainer" unique_id=1672509452]
 layout_mode = 2
 focus_mode = 2
 selection_enabled = true
@@ -126,9 +143,10 @@ metadata/_custom_type_script = "uid://djom14jyh6cwn"
 script = ExtResource("5_ato5p")
 metadata/_custom_type_script = "uid://sfh687fmx6ht"
 
-[connection signal="button_up" from="MarginContainer/VSplitContainer/MarginContainer/YtDlpConfig/YtDlpBrowseFilesButton" to="." method="_on_yt_dlp_browse_files_button_button_up"]
-[connection signal="file_selected" from="MarginContainer/VSplitContainer/MarginContainer/YtDlpConfig/YtDlpPathFileDialog" to="." method="_on_yt_dlp_path_file_dialog_file_selected"]
-[connection signal="button_up" from="MarginContainer/VSplitContainer/MarginContainer/YtDlpConfig/UpdateYtDlpButton" to="." method="_on_update_yt_dlp_button_button_up"]
-[connection signal="error_added" from="ConsoleSignalBus" to="MarginContainer/VSplitContainer/Console/MarginContainer/ConsoleTextInput" method="_on_console_signal_bus_error_added"]
-[connection signal="line_added" from="ConsoleSignalBus" to="MarginContainer/VSplitContainer/Console/MarginContainer/ConsoleTextInput" method="_on_console_signal_bus_line_added"]
-[connection signal="warning_added" from="ConsoleSignalBus" to="MarginContainer/VSplitContainer/Console/MarginContainer/ConsoleTextInput" method="_on_console_signal_bus_warning_added"]
+[connection signal="button_up" from="MarginContainer/VBoxContainer/SaveConfigButton" to="." method="_on_save_config_button_button_up"]
+[connection signal="button_up" from="MarginContainer/VBoxContainer/VSplitContainer/MarginContainer/YtDlpConfig/YtDlpBrowseFilesButton" to="." method="_on_yt_dlp_browse_files_button_button_up"]
+[connection signal="file_selected" from="MarginContainer/VBoxContainer/VSplitContainer/MarginContainer/YtDlpConfig/YtDlpPathFileDialog" to="." method="_on_yt_dlp_path_file_dialog_file_selected"]
+[connection signal="button_up" from="MarginContainer/VBoxContainer/VSplitContainer/MarginContainer/YtDlpConfig/UpdateYtDlpButton" to="." method="_on_update_yt_dlp_button_button_up"]
+[connection signal="error_added" from="ConsoleSignalBus" to="MarginContainer/VBoxContainer/VSplitContainer/Console/MarginContainer/ConsoleTextInput" method="_on_console_signal_bus_error_added"]
+[connection signal="line_added" from="ConsoleSignalBus" to="MarginContainer/VBoxContainer/VSplitContainer/Console/MarginContainer/ConsoleTextInput" method="_on_console_signal_bus_line_added"]
+[connection signal="warning_added" from="ConsoleSignalBus" to="MarginContainer/VBoxContainer/VSplitContainer/Console/MarginContainer/ConsoleTextInput" method="_on_console_signal_bus_warning_added"]

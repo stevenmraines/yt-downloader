@@ -8,10 +8,10 @@ extends PanelContainer
 		console_signal_bus.add_line("yt-dlp path set to " + yt_dlp_path)
 		# TODO Update config if value there is different
 
-@onready var yt_dlp_path_input := $MarginContainer/VSplitContainer/MarginContainer/YtDlpConfig/YtDlpPathInput
-@onready var yt_dlp_path_file_dialog := $MarginContainer/VSplitContainer/MarginContainer/YtDlpConfig/YtDlpPathFileDialog
-@onready var channel_container := $MarginContainer/VSplitContainer/ChannelContainer
-@onready var console_text_input := $MarginContainer/VSplitContainer/Console/MarginContainer/ConsoleTextInput
+@onready var yt_dlp_path_input := $MarginContainer/VBoxContainer/VSplitContainer/MarginContainer/YtDlpConfig/YtDlpPathInput
+@onready var yt_dlp_path_file_dialog := $MarginContainer/VBoxContainer/VSplitContainer/MarginContainer/YtDlpConfig/YtDlpPathFileDialog
+@onready var channel_container := $MarginContainer/VBoxContainer/VSplitContainer/ChannelContainer
+@onready var console_text_input := $MarginContainer/VBoxContainer/VSplitContainer/Console/MarginContainer/ConsoleTextInput
 @onready var console_signal_bus := $ConsoleSignalBus
 @onready var config_loader := $ConfigLoader
 @onready var yt_dlp_wrapper := $YtDlpWrapper
@@ -106,3 +106,7 @@ func _on_channel_folding_changed(is_folded : bool, container : FoldableContainer
 		container.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 	else:
 		container.size_flags_vertical = Control.SIZE_EXPAND_FILL
+
+
+func _on_save_config_button_button_up():
+	config_loader.save_changes(config)
