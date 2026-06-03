@@ -2,8 +2,10 @@
 
 [ext_resource type="Script" uid="uid://bbh3xqmfw1vbe" path="res://scripts/window.gd" id="1_to7fh"]
 [ext_resource type="Script" uid="uid://cq6rkpt6rlx77" path="res://scripts/console_text_input.gd" id="2_qnju7"]
+[ext_resource type="StyleBox" uid="uid://co4550p76db2k" path="res://styles/default_button_pressed.tres" id="2_shje2"]
 [ext_resource type="StyleBox" uid="uid://b5cwgpibw4xld" path="res://styles/success_button_normal.tres" id="2_syahi"]
 [ext_resource type="Script" uid="uid://bsefncd1fxkyf" path="res://scripts/console_signal_bus.gd" id="2_to7fh"]
+[ext_resource type="StyleBox" uid="uid://caorea2ay4rb4" path="res://styles/default_button_hover.tres" id="3_d8l8o"]
 [ext_resource type="StyleBox" uid="uid://cyjp84k0pbqf3" path="res://styles/success_button_pressed.tres" id="3_qncfr"]
 [ext_resource type="StyleBox" uid="uid://caep6kc0fjn86" path="res://styles/success_button_hover.tres" id="4_k52h1"]
 [ext_resource type="Script" uid="uid://djom14jyh6cwn" path="res://scripts/config_loader.gd" id="4_qnju7"]
@@ -60,9 +62,29 @@ size_flags_horizontal = 3
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_right = 15
 
-[node name="YtDlpPathInput" type="LineEdit" parent="MarginContainer/VSplitContainer/YtDlpConfig/HBoxContainer/MarginContainer" unique_id=1220911714]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VSplitContainer/YtDlpConfig/HBoxContainer/MarginContainer" unique_id=1336131803]
+layout_mode = 2
+
+[node name="YtDlpBrowseFilesButton" type="Button" parent="MarginContainer/VSplitContainer/YtDlpConfig/HBoxContainer/MarginContainer/HBoxContainer" unique_id=192768295]
+layout_mode = 2
+theme_override_styles/pressed = ExtResource("2_shje2")
+theme_override_styles/hover = ExtResource("3_d8l8o")
+text = "Browse"
+
+[node name="YtDlpPathInput" type="LineEdit" parent="MarginContainer/VSplitContainer/YtDlpConfig/HBoxContainer/MarginContainer/HBoxContainer" unique_id=1220911714]
 layout_mode = 2
 size_flags_horizontal = 3
+editable = false
+
+[node name="YtDlpPathFileDialog" type="FileDialog" parent="MarginContainer/VSplitContainer/YtDlpConfig/HBoxContainer/MarginContainer/HBoxContainer" unique_id=1484450864]
+oversampling_override = 1.0
+title = "Select a File"
+initial_position = 2
+size = Vector2i(1280, 720)
+ok_button_text = "Select"
+file_mode = 0
+access = 2
+show_hidden_files = true
 
 [node name="UpdateYtDlpButton" type="Button" parent="MarginContainer/VSplitContainer/YtDlpConfig/HBoxContainer" unique_id=1564146492]
 layout_mode = 2
@@ -110,9 +132,6 @@ focus_mode = 2
 selection_enabled = true
 script = ExtResource("2_qnju7")
 
-[node name="YtDlpInputTimer" type="Timer" parent="." unique_id=1410984030]
-one_shot = true
-
 [node name="ConsoleSignalBus" type="Node" parent="." unique_id=1967930258 groups=["console_signal_bus"]]
 script = ExtResource("2_to7fh")
 metadata/_custom_type_script = "uid://bsefncd1fxkyf"
@@ -125,8 +144,9 @@ metadata/_custom_type_script = "uid://djom14jyh6cwn"
 script = ExtResource("5_ato5p")
 metadata/_custom_type_script = "uid://sfh687fmx6ht"
 
+[connection signal="button_up" from="MarginContainer/VSplitContainer/YtDlpConfig/HBoxContainer/MarginContainer/HBoxContainer/YtDlpBrowseFilesButton" to="." method="_on_yt_dlp_browse_files_button_button_up"]
+[connection signal="file_selected" from="MarginContainer/VSplitContainer/YtDlpConfig/HBoxContainer/MarginContainer/HBoxContainer/YtDlpPathFileDialog" to="." method="_on_yt_dlp_path_file_dialog_file_selected"]
 [connection signal="button_up" from="MarginContainer/VSplitContainer/YtDlpConfig/HBoxContainer/UpdateYtDlpButton" to="." method="_on_update_yt_dlp_button_button_up"]
-[connection signal="timeout" from="YtDlpInputTimer" to="." method="_on_yt_dlp_input_timer_timeout"]
 [connection signal="error_added" from="ConsoleSignalBus" to="MarginContainer/VSplitContainer/MarginContainer/Console/MarginContainer/ConsoleTextInput" method="_on_console_signal_bus_error_added"]
 [connection signal="line_added" from="ConsoleSignalBus" to="MarginContainer/VSplitContainer/MarginContainer/Console/MarginContainer/ConsoleTextInput" method="_on_console_signal_bus_line_added"]
 [connection signal="warning_added" from="ConsoleSignalBus" to="MarginContainer/VSplitContainer/MarginContainer/Console/MarginContainer/ConsoleTextInput" method="_on_console_signal_bus_warning_added"]

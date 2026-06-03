@@ -1,11 +1,17 @@
 extends PanelContainer
 
-@export var yt_dlp_path := ""
+@export var yt_dlp_path := "":
+	set(value):
+		yt_dlp_path = value
+		yt_dlp_path_input.text = yt_dlp_path
+		yt_dlp_wrapper.yt_dlp_path = yt_dlp_path
+		console_signal_bus.add_line("yt-dlp path set to " + yt_dlp_path)
+		# TODO Update config if value there is different
 
-@onready var yt_dlp_path_input := $MarginContainer/VSplitContainer/YtDlpConfig/HBoxContainer/MarginContainer/YtDlpPathInput
+@onready var yt_dlp_path_input := $MarginContainer/VSplitContainer/YtDlpConfig/HBoxContainer/MarginContainer/HBoxContainer/YtDlpPathInput
+@onready var yt_dlp_path_file_dialog := $MarginContainer/VSplitContainer/YtDlpConfig/HBoxContainer/MarginContainer/HBoxContainer/YtDlpPathFileDialog
 @onready var channel_container := $MarginContainer/VSplitContainer/ChannelContainer
 @onready var console_text_input := $MarginContainer/VSplitContainer/MarginContainer/Console/MarginContainer/ConsoleTextInput
-@onready var yt_dlp_input_timer := $YtDlpInputTimer
 @onready var console_signal_bus := $ConsoleSignalBus
 @onready var config_loader := $ConfigLoader
 @onready var yt_dlp_wrapper := $YtDlpWrapper
@@ -20,8 +26,6 @@ func _ready() -> void:
 	for config_path in config["paths"]:
 		if config_path.name == "yt-dlp":
 			yt_dlp_path = config_path.path
-			yt_dlp_path_input.text = yt_dlp_path
-			yt_dlp_wrapper.yt_dlp_path = yt_dlp_path
 	_populate_channels()
 	_create_archive_files()
 
@@ -31,15 +35,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 		get_tree().quit(0)
 	
-	
 	if event is InputEventKey:
-		if yt_dlp_path_input.has_focus():
-			yt_dlp_path = yt_dlp_path_input.text
-			get_viewport().set_input_as_handled()
-			typing = true
-			yt_dlp_input_timer.start()
-			return
-		
 		# FIXME Gotta be a better way to do this
 		for channel in channel_container.get_children():
 			for playlist in channel.playlist_container.get_children():
@@ -49,10 +45,6 @@ func _unhandled_input(event: InputEvent) -> void:
 				elif playlist.remote_upload_path_input.has_focus():
 					console_signal_bus.add_line(playlist.remote_upload_path_input.text)
 					get_viewport().set_input_as_handled()
-
-
-func _on_yt_dlp_input_timer_timeout() -> void:
-	console_signal_bus.add_line("write to file " + yt_dlp_path)
 
 
 func _populate_channels() -> void:
@@ -96,3 +88,11 @@ func _on_playlist_marked_as_archived(playlist : Dictionary) -> void:
 
 func _on_playlist_single_video_downloaded(url : String, playlist : Dictionary) -> void:
 	yt_dlp_wrapper.download_single_video(url, playlist)
+
+
+func _on_yt_dlp_browse_files_button_button_up() -> void:
+	yt_dlp_path_file_dialog.visible = true
+
+
+func _on_yt_dlp_path_file_dialog_file_selected(path: String) -> void:
+	yt_dlp_path = path
