@@ -10,9 +10,8 @@
 [ext_resource type="StyleBox" uid="uid://cyjp84k0pbqf3" path="res://styles/success_button_pressed.tres" id="8_xais8"]
 [ext_resource type="StyleBox" uid="uid://caep6kc0fjn86" path="res://styles/success_button_hover.tres" id="9_8605i"]
 
-[node name="Playlist" type="Control" unique_id=678382639]
+[node name="Playlist" type="MarginContainer" unique_id=1021777078]
 custom_minimum_size = Vector2(0, 250)
-layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -20,29 +19,24 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
 script = ExtResource("1_6qq0t")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=336436764]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 2
 
 [node name="HBoxContainer7" type="HBoxContainer" parent="VBoxContainer" unique_id=238082756]
 layout_mode = 2
+theme_override_constants/separation = 20
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer7" unique_id=846318188]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 24
 
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/HBoxContainer7" unique_id=255390769]
-layout_mode = 2
-theme_override_constants/margin_right = 10
-
-[node name="DownloadSingleVideoButton" type="Button" parent="VBoxContainer/HBoxContainer7/MarginContainer" unique_id=1828369531]
+[node name="DownloadSingleVideoButton" type="Button" parent="VBoxContainer/HBoxContainer7" unique_id=1828369531]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_styles/normal = ExtResource("2_fjyi4")
@@ -50,12 +44,7 @@ theme_override_styles/pressed = ExtResource("3_5oyxb")
 theme_override_styles/hover = ExtResource("3_66bny")
 text = "Download Single Video"
 
-[node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer/HBoxContainer7" unique_id=2132073984]
-layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_right = 20
-
-[node name="MarkAsArchivedButton" type="Button" parent="VBoxContainer/HBoxContainer7/MarginContainer2" unique_id=1945299832]
+[node name="MarkAsArchivedButton" type="Button" parent="VBoxContainer/HBoxContainer7" unique_id=1945299832]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_styles/pressed = ExtResource("5_8votw")
@@ -67,6 +56,7 @@ layout_mode = 2
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer3" unique_id=1270830101]
 layout_mode = 2
+theme_override_font_sizes/font_size = 14
 text = "URL:"
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/HBoxContainer3" unique_id=414678136]
@@ -82,6 +72,7 @@ layout_mode = 2
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer4" unique_id=1582871873]
 layout_mode = 2
+theme_override_font_sizes/font_size = 14
 text = "Download Path:"
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/HBoxContainer4" unique_id=1805599289]
@@ -97,6 +88,7 @@ layout_mode = 2
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer" unique_id=2046659951]
 layout_mode = 2
+theme_override_font_sizes/font_size = 14
 text = "Backup Upload Path:"
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/HBoxContainer" unique_id=1645719558]
@@ -112,6 +104,7 @@ layout_mode = 2
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer2" unique_id=960508437]
 layout_mode = 2
+theme_override_font_sizes/font_size = 14
 text = "Remote Upload Path:"
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/HBoxContainer2" unique_id=619235763]
@@ -127,6 +120,7 @@ layout_mode = 2
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5" unique_id=31195103]
 layout_mode = 2
+theme_override_font_sizes/font_size = 14
 text = "Download Archive File Path:"
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/HBoxContainer5" unique_id=281987234]
@@ -142,6 +136,7 @@ layout_mode = 2
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer6" unique_id=1294731165]
 layout_mode = 2
+theme_override_font_sizes/font_size = 14
 text = "Cookies From Browser:"
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/HBoxContainer6" unique_id=893870646]
@@ -220,8 +215,8 @@ theme_override_styles/pressed = ExtResource("8_xais8")
 theme_override_styles/hover = ExtResource("9_8605i")
 text = "Download"
 
-[connection signal="pressed" from="VBoxContainer/HBoxContainer7/MarginContainer/DownloadSingleVideoButton" to="." method="_on_download_single_video_button_pressed"]
-[connection signal="button_up" from="VBoxContainer/HBoxContainer7/MarginContainer2/MarkAsArchivedButton" to="." method="_on_mark_as_archived_button_button_up"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer7/DownloadSingleVideoButton" to="." method="_on_download_single_video_button_pressed"]
+[connection signal="button_up" from="VBoxContainer/HBoxContainer7/MarkAsArchivedButton" to="." method="_on_mark_as_archived_button_button_up"]
 [connection signal="confirmed" from="ArchiveConfirmationDialog" to="." method="_on_archive_confirmation_dialog_confirmed"]
 [connection signal="close_requested" from="DownloadSingleVideoWindow" to="." method="_on_download_single_video_window_close_requested"]
 [connection signal="button_up" from="DownloadSingleVideoWindow/Control/MarginContainer/VBoxContainer/DownloadSingleVideoConfirmButton" to="." method="_on_download_single_video_confirm_button_button_up"]

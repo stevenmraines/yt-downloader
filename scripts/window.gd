@@ -8,8 +8,8 @@ extends PanelContainer
 		console_signal_bus.add_line("yt-dlp path set to " + yt_dlp_path)
 		# TODO Update config if value there is different
 
-@onready var yt_dlp_path_input := $MarginContainer/VSplitContainer/YtDlpConfig/HBoxContainer/MarginContainer/HBoxContainer/YtDlpPathInput
-@onready var yt_dlp_path_file_dialog := $MarginContainer/VSplitContainer/YtDlpConfig/HBoxContainer/MarginContainer/HBoxContainer/YtDlpPathFileDialog
+@onready var yt_dlp_path_input := $MarginContainer/VSplitContainer/YtDlpConfig/YtDlpPathInput
+@onready var yt_dlp_path_file_dialog := $MarginContainer/VSplitContainer/YtDlpConfig/YtDlpPathFileDialog
 @onready var channel_container := $MarginContainer/VSplitContainer/ChannelContainer
 @onready var console_text_input := $MarginContainer/VSplitContainer/MarginContainer/Console/MarginContainer/ConsoleTextInput
 @onready var console_signal_bus := $ConsoleSignalBus
@@ -55,6 +55,7 @@ func _populate_channels() -> void:
 		channel_node.playlists = config["playlists"]
 		channel_node.playlist_marked_as_archived.connect(_on_playlist_marked_as_archived)
 		channel_node.playlist_single_video_downloaded.connect(_on_playlist_single_video_downloaded)
+		channel_node.connect("folding_changed", _on_channel_folding_changed.bind(channel_node))
 
 
 func _create_archive_files() -> void:
@@ -96,3 +97,10 @@ func _on_yt_dlp_browse_files_button_button_up() -> void:
 
 func _on_yt_dlp_path_file_dialog_file_selected(path: String) -> void:
 	yt_dlp_path = path
+
+
+func _on_channel_folding_changed(is_folded : bool, container : FoldableContainer):
+	if is_folded:
+		container.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	else:
+		container.size_flags_vertical = Control.SIZE_EXPAND_FILL

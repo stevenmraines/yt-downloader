@@ -34,49 +34,31 @@ theme_override_constants/margin_bottom = 10
 
 [node name="VSplitContainer" type="VSplitContainer" parent="MarginContainer" unique_id=1350764089]
 layout_mode = 2
-split_offsets = PackedInt32Array(0, 102)
+split_offsets = PackedInt32Array(-689, -93)
 drag_area_highlight_in_editor = true
+split_offset = -689
 
-[node name="YtDlpConfig" type="Control" parent="MarginContainer/VSplitContainer" unique_id=1254325716]
+[node name="YtDlpConfig" type="HBoxContainer" parent="MarginContainer/VSplitContainer" unique_id=551422303]
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_constants/separation = 20
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VSplitContainer/YtDlpConfig" unique_id=291929810]
-layout_mode = 1
-anchors_preset = 14
-anchor_top = 0.5
-anchor_right = 1.0
-anchor_bottom = 0.5
-offset_top = -15.5
-offset_bottom = 15.5
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Label" type="Label" parent="MarginContainer/VSplitContainer/YtDlpConfig/HBoxContainer" unique_id=333003297]
+[node name="Label" type="Label" parent="MarginContainer/VSplitContainer/YtDlpConfig" unique_id=333003297]
 layout_mode = 2
 text = "yt-dlp Executable Path:"
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VSplitContainer/YtDlpConfig/HBoxContainer" unique_id=1510585866]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_right = 15
-
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VSplitContainer/YtDlpConfig/HBoxContainer/MarginContainer" unique_id=1336131803]
-layout_mode = 2
-
-[node name="YtDlpBrowseFilesButton" type="Button" parent="MarginContainer/VSplitContainer/YtDlpConfig/HBoxContainer/MarginContainer/HBoxContainer" unique_id=192768295]
+[node name="YtDlpBrowseFilesButton" type="Button" parent="MarginContainer/VSplitContainer/YtDlpConfig" unique_id=192768295]
 layout_mode = 2
 theme_override_styles/pressed = ExtResource("2_shje2")
 theme_override_styles/hover = ExtResource("3_d8l8o")
 text = "Browse"
 
-[node name="YtDlpPathInput" type="LineEdit" parent="MarginContainer/VSplitContainer/YtDlpConfig/HBoxContainer/MarginContainer/HBoxContainer" unique_id=1220911714]
+[node name="YtDlpPathInput" type="LineEdit" parent="MarginContainer/VSplitContainer/YtDlpConfig" unique_id=1220911714]
 layout_mode = 2
 size_flags_horizontal = 3
 editable = false
 
-[node name="YtDlpPathFileDialog" type="FileDialog" parent="MarginContainer/VSplitContainer/YtDlpConfig/HBoxContainer/MarginContainer/HBoxContainer" unique_id=1484450864]
+[node name="YtDlpPathFileDialog" type="FileDialog" parent="MarginContainer/VSplitContainer/YtDlpConfig" unique_id=1484450864]
 oversampling_override = 1.0
 title = "Select a File"
 initial_position = 2
@@ -86,7 +68,7 @@ file_mode = 0
 access = 2
 show_hidden_files = true
 
-[node name="UpdateYtDlpButton" type="Button" parent="MarginContainer/VSplitContainer/YtDlpConfig/HBoxContainer" unique_id=1564146492]
+[node name="UpdateYtDlpButton" type="Button" parent="MarginContainer/VSplitContainer/YtDlpConfig" unique_id=1564146492]
 layout_mode = 2
 theme_override_styles/normal = ExtResource("2_syahi")
 theme_override_styles/pressed = ExtResource("3_qncfr")
@@ -96,12 +78,12 @@ text = "Update yt-dlp"
 [node name="ChannelContainer" type="VBoxContainer" parent="MarginContainer/VSplitContainer" unique_id=1767764382]
 layout_mode = 2
 size_flags_vertical = 3
-size_flags_stretch_ratio = 8.0
+size_flags_stretch_ratio = 38.0
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VSplitContainer" unique_id=2130779480]
 layout_mode = 2
 size_flags_vertical = 3
-size_flags_stretch_ratio = 3.0
+size_flags_stretch_ratio = 2.0
 
 [node name="Console" type="Control" parent="MarginContainer/VSplitContainer/MarginContainer" unique_id=63083943]
 layout_mode = 2
@@ -144,9 +126,9 @@ metadata/_custom_type_script = "uid://djom14jyh6cwn"
 script = ExtResource("5_ato5p")
 metadata/_custom_type_script = "uid://sfh687fmx6ht"
 
-[connection signal="button_up" from="MarginContainer/VSplitContainer/YtDlpConfig/HBoxContainer/MarginContainer/HBoxContainer/YtDlpBrowseFilesButton" to="." method="_on_yt_dlp_browse_files_button_button_up"]
-[connection signal="file_selected" from="MarginContainer/VSplitContainer/YtDlpConfig/HBoxContainer/MarginContainer/HBoxContainer/YtDlpPathFileDialog" to="." method="_on_yt_dlp_path_file_dialog_file_selected"]
-[connection signal="button_up" from="MarginContainer/VSplitContainer/YtDlpConfig/HBoxContainer/UpdateYtDlpButton" to="." method="_on_update_yt_dlp_button_button_up"]
+[connection signal="button_up" from="MarginContainer/VSplitContainer/YtDlpConfig/YtDlpBrowseFilesButton" to="." method="_on_yt_dlp_browse_files_button_button_up"]
+[connection signal="file_selected" from="MarginContainer/VSplitContainer/YtDlpConfig/YtDlpPathFileDialog" to="." method="_on_yt_dlp_path_file_dialog_file_selected"]
+[connection signal="button_up" from="MarginContainer/VSplitContainer/YtDlpConfig/UpdateYtDlpButton" to="." method="_on_update_yt_dlp_button_button_up"]
 [connection signal="error_added" from="ConsoleSignalBus" to="MarginContainer/VSplitContainer/MarginContainer/Console/MarginContainer/ConsoleTextInput" method="_on_console_signal_bus_error_added"]
 [connection signal="line_added" from="ConsoleSignalBus" to="MarginContainer/VSplitContainer/MarginContainer/Console/MarginContainer/ConsoleTextInput" method="_on_console_signal_bus_line_added"]
 [connection signal="warning_added" from="ConsoleSignalBus" to="MarginContainer/VSplitContainer/MarginContainer/Console/MarginContainer/ConsoleTextInput" method="_on_console_signal_bus_warning_added"]

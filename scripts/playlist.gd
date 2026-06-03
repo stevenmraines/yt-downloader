@@ -1,4 +1,4 @@
-extends Control
+extends MarginContainer
 
 signal mark_as_archived_clicked(list : Dictionary)
 signal download_single_video_button_clicked(url : String, list : Dictionary)
