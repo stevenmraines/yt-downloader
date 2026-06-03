@@ -3,7 +3,6 @@ extends Control
 signal mark_as_archived_clicked(list : Dictionary)
 
 @onready var label := $VBoxContainer/HBoxContainer7/Label
-@onready var mark_as_archived_button := $VBoxContainer/HBoxContainer7/MarginContainer/MarkAsArchivedButton
 @onready var url_input := $VBoxContainer/HBoxContainer3/MarginContainer/UrlInput
 @onready var download_path_input := $VBoxContainer/HBoxContainer4/MarginContainer/DownloadPathInput
 @onready var backup_upload_path_input := $VBoxContainer/HBoxContainer/MarginContainer/BackupPathInput
@@ -11,6 +10,7 @@ signal mark_as_archived_clicked(list : Dictionary)
 @onready var download_archive_file_name_input := $VBoxContainer/HBoxContainer5/MarginContainer/DownloadArchiveFilePathInput
 @onready var cookies_from_browser_input := $VBoxContainer/HBoxContainer6/MarginContainer/CookiesFromBrowserInput
 @onready var queued_videos_container := $VBoxContainer/ScrollContainer/QueuedVideosContainer
+@onready var archive_confirmation_dialog := $ArchiveConfirmationDialog
 @onready var download_scene := load("res://scenes/download.tscn")
 
 var playlist : Dictionary:
@@ -81,4 +81,14 @@ func populate_download_queue() -> void:
 
 
 func _on_mark_as_archived_button_button_up():
+	archive_confirmation_dialog.dialog_text = "Are you sure you want to mark the " \
+		+ playlist.name + " playlist as archived? This will overwrite the archive file."
+	archive_confirmation_dialog.visible = true
+
+
+func _on_download_single_video_button_pressed():
+	pass # Replace with function body.
+
+
+func _on_archive_confirmation_dialog_confirmed():
 	mark_as_archived_clicked.emit(playlist)
