@@ -48,6 +48,12 @@ theme_override_styles/pressed = ExtResource("3_cx3k0")
 theme_override_styles/hover = ExtResource("4_qsv56")
 text = "Save Config"
 
+[node name="SaveConfigConfirmationDialog" type="ConfirmationDialog" parent="MarginContainer/VBoxContainer" unique_id=915739633]
+oversampling_override = 1.0
+initial_position = 2
+size = Vector2i(527, 100)
+dialog_text = "Are you sure you want to save changes to the config?"
+
 [node name="VSplitContainer" type="VSplitContainer" parent="MarginContainer/VBoxContainer" unique_id=1350764089]
 layout_mode = 2
 size_flags_vertical = 3
@@ -81,7 +87,7 @@ editable = false
 
 [node name="YtDlpPathFileDialog" type="FileDialog" parent="MarginContainer/VBoxContainer/VSplitContainer/MarginContainer/YtDlpConfig" unique_id=1484450864]
 oversampling_override = 1.0
-title = "Select a File"
+title = "Open a File"
 initial_position = 2
 size = Vector2i(1280, 720)
 ok_button_text = "Select"
@@ -144,6 +150,7 @@ script = ExtResource("5_ato5p")
 metadata/_custom_type_script = "uid://sfh687fmx6ht"
 
 [connection signal="button_up" from="MarginContainer/VBoxContainer/SaveConfigButton" to="." method="_on_save_config_button_button_up"]
+[connection signal="confirmed" from="MarginContainer/VBoxContainer/SaveConfigConfirmationDialog" to="." method="_on_save_config_confirmation_dialog_confirmed"]
 [connection signal="button_up" from="MarginContainer/VBoxContainer/VSplitContainer/MarginContainer/YtDlpConfig/YtDlpBrowseFilesButton" to="." method="_on_yt_dlp_browse_files_button_button_up"]
 [connection signal="file_selected" from="MarginContainer/VBoxContainer/VSplitContainer/MarginContainer/YtDlpConfig/YtDlpPathFileDialog" to="." method="_on_yt_dlp_path_file_dialog_file_selected"]
 [connection signal="button_up" from="MarginContainer/VBoxContainer/VSplitContainer/MarginContainer/YtDlpConfig/UpdateYtDlpButton" to="." method="_on_update_yt_dlp_button_button_up"]

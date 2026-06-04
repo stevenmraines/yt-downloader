@@ -19,7 +19,9 @@ signal download_single_video_button_clicked(url : String, list : Dictionary)
 var playlist : Dictionary:
 	set(value):
 		playlist = value
-		label.text = playlist.name
+		
+		# Set all the playlist vars
+		playlist_name = playlist.name
 		channel = playlist.channel
 		url = playlist.url
 		download_path = playlist.download_path
@@ -27,44 +29,24 @@ var playlist : Dictionary:
 		remote_upload_path = playlist.remote_upload_path
 		download_archive_file_name = playlist.download_archive_file_name
 		cookies_from_browser = playlist.cookies_from_browser
+		
+		# Set labels and inputs
+		label.text = playlist_name
+		url_input.text = url
+		download_path_input.text = download_path
+		backup_upload_path_input.text = backup_upload_path
+		remote_upload_path_input.text = remote_upload_path
+		download_archive_file_name_input.text = download_archive_file_name
+		cookies_from_browser_input.text = cookies_from_browser
 
 var channel := ""
-
-var url := "":
-	set(value):
-		url = value
-		if url_input:
-			url_input.text = url
-
-var download_path := "":
-	set(value):
-		download_path = value
-		if download_path_input:
-			download_path_input.text = download_path
-
-var backup_upload_path := "":
-	set(value):
-		backup_upload_path = value
-		if backup_upload_path_input:
-			backup_upload_path_input.text = backup_upload_path
-
-var remote_upload_path := "":
-	set(value):
-		remote_upload_path = value
-		if remote_upload_path_input:
-			remote_upload_path_input.text = remote_upload_path
-
-var download_archive_file_name := "":
-	set(value):
-		download_archive_file_name = value
-		if download_archive_file_name_input:
-			download_archive_file_name_input.text = download_archive_file_name
-
-var cookies_from_browser := "":
-	set(value):
-		cookies_from_browser = value
-		if cookies_from_browser_input:
-			cookies_from_browser_input.text = cookies_from_browser
+var playlist_name := ""
+var url := ""
+var download_path := ""
+var backup_upload_path := ""
+var remote_upload_path := ""
+var download_archive_file_name := ""
+var cookies_from_browser := ""
 
 var downloaded_videos := []
 var queued_videos := [
@@ -115,3 +97,27 @@ func _on_download_single_video_confirm_button_button_up():
 		return
 	download_single_video_button_clicked.emit(single_video_url_input.text, playlist)
 	download_single_video_window.visible = false
+
+
+func _on_url_input_text_changed(new_text):
+	url = new_text
+
+
+func _on_download_path_input_text_changed(new_text):
+	download_path = new_text
+
+
+func _on_backup_path_input_text_changed(new_text):
+	backup_upload_path = new_text
+
+
+func _on_remote_path_input_text_changed(new_text):
+	remote_upload_path = new_text
+
+
+func _on_download_archive_file_path_input_text_changed(new_text):
+	download_archive_file_name = new_text
+
+
+func _on_cookies_from_browser_input_text_changed(new_text):
+	cookies_from_browser = new_text

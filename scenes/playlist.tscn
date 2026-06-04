@@ -217,6 +217,12 @@ text = "Download"
 
 [connection signal="pressed" from="VBoxContainer/HBoxContainer7/DownloadSingleVideoButton" to="." method="_on_download_single_video_button_pressed"]
 [connection signal="button_up" from="VBoxContainer/HBoxContainer7/MarkAsArchivedButton" to="." method="_on_mark_as_archived_button_button_up"]
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer3/MarginContainer/UrlInput" to="." method="_on_url_input_text_changed"]
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer4/MarginContainer/DownloadPathInput" to="." method="_on_download_path_input_text_changed"]
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer/MarginContainer/BackupPathInput" to="." method="_on_backup_path_input_text_changed"]
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer2/MarginContainer/RemotePathInput" to="." method="_on_remote_path_input_text_changed"]
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer5/MarginContainer/DownloadArchiveFilePathInput" to="." method="_on_download_archive_file_path_input_text_changed"]
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer6/MarginContainer/CookiesFromBrowserInput" to="." method="_on_cookies_from_browser_input_text_changed"]
 [connection signal="confirmed" from="ArchiveConfirmationDialog" to="." method="_on_archive_confirmation_dialog_confirmed"]
 [connection signal="close_requested" from="DownloadSingleVideoWindow" to="." method="_on_download_single_video_window_close_requested"]
 [connection signal="button_up" from="DownloadSingleVideoWindow/Control/MarginContainer/VBoxContainer/DownloadSingleVideoConfirmButton" to="." method="_on_download_single_video_confirm_button_button_up"]

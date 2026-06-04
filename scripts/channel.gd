@@ -39,3 +39,7 @@ func _on_playlist_mark_as_archived_clicked(list : Dictionary) -> void:
 
 func _on_download_single_video_button_clicked(url : String, list : Dictionary) -> void:
 	playlist_single_video_downloaded.emit(url, list)
+
+
+func get_playlist_nodes() -> Array[Node]:
+	return playlist_container.get_children()
