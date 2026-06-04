@@ -24,12 +24,12 @@ func _ready() -> void:
 	console_signal_bus = get_tree().get_nodes_in_group("console_signal_bus")[0]
 
 
-func _run_command(args : PackedStringArray) -> void:
+func _run_command(args : PackedStringArray) -> int:
 	if yt_dlp_path == "":
 		console_signal_bus.add_error("yt-dlp executable path not provided")
-		return
+		return -1
 	print(" ".join(args))
-	OS.create_process(yt_dlp_path, args, true)
+	return OS.create_process(yt_dlp_path, args, true)
 
 
 func _get_archive_file_path(playlist : Dictionary) -> String:
@@ -44,6 +44,7 @@ func mark_playlist_as_archived(playlist : Dictionary) -> void:
 	var video_ids = []
 	
 	# TODO See if there's a way to actually show the output in the terminal window
+	# FIXME This returns an exit code, not a pid...that could be a problem
 	OS.execute(yt_dlp_path, [
 		playlist.url,
 		opts.archive, archive_file,
@@ -63,15 +64,15 @@ func mark_playlist_as_archived(playlist : Dictionary) -> void:
 	file.close()
 
 
-func download_playlist(playlist : Dictionary) -> void:
+func download_playlist(playlist : Dictionary) -> int:
 	# TODO Remove this after playlists have been marked as archived and we can kill processes
-	return
+	return -1
 	var archive_file = _get_archive_file_path(playlist)
 	var output = playlist.download_path + "/%(upload_date>%Y-%m-%d)s %(title)s.%(ext)s\""
 	
 	console_signal_bus.add_line("Downloading playlist " + playlist.name + " for channel " + playlist.channel)
 	
-	_run_command([
+	return _run_command([
 		playlist.url,
 		opts.archive, archive_file,
 		opts.cookies, playlist.cookies_from_browser,
@@ -82,14 +83,14 @@ func download_playlist(playlist : Dictionary) -> void:
 	])
 
 
-func download_single_video(url : String, playlist : Dictionary) -> void:
+func download_single_video(url : String, playlist : Dictionary) -> int:
 	var archive_file = _get_archive_file_path(playlist)
 	var output = playlist.download_path + "/%(upload_date>%Y-%m-%d)s %(title)s.%(ext)s\""
 	
 	console_signal_bus.add_line("Downloading single video")
 	
 	# TODO Try to find a way to keep the terminal window open
-	_run_command([
+	return _run_command([
 		url,
 		opts.archive, archive_file,
 		opts.cookies, playlist.cookies_from_browser,
@@ -101,5 +102,5 @@ func download_single_video(url : String, playlist : Dictionary) -> void:
 	])
 
 
-func update() -> void:
-	_run_command([opts.update])
+func update() -> int:
+	return _run_command([opts.update])

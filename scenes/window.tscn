@@ -13,6 +13,7 @@
 [ext_resource type="Script" uid="uid://djom14jyh6cwn" path="res://scripts/config_loader.gd" id="4_qnju7"]
 [ext_resource type="StyleBox" uid="uid://binch188kfmsf" path="res://styles/secondary_button_hover.tres" id="4_qsv56"]
 [ext_resource type="Script" uid="uid://sfh687fmx6ht" path="res://scripts/yt_dlp_wrapper.gd" id="5_ato5p"]
+[ext_resource type="Script" uid="uid://duwsp24mpyihb" path="res://scripts/process_queue.gd" id="14_cx3k0"]
 
 [node name="Window" type="PanelContainer" unique_id=1668980773]
 anchors_preset = 15
@@ -148,6 +149,11 @@ metadata/_custom_type_script = "uid://djom14jyh6cwn"
 [node name="YtDlpWrapper" type="Node" parent="." unique_id=708472213]
 script = ExtResource("5_ato5p")
 metadata/_custom_type_script = "uid://sfh687fmx6ht"
+
+[node name="ProcessQueue" type="Node" parent="." unique_id=205403384 node_paths=PackedStringArray("yt_dlp_wrapper")]
+script = ExtResource("14_cx3k0")
+yt_dlp_wrapper = NodePath("../YtDlpWrapper")
+metadata/_custom_type_script = "uid://duwsp24mpyihb"
 
 [connection signal="button_up" from="MarginContainer/VBoxContainer/SaveConfigButton" to="." method="_on_save_config_button_button_up"]
 [connection signal="confirmed" from="MarginContainer/VBoxContainer/SaveConfigConfirmationDialog" to="." method="_on_save_config_confirmation_dialog_confirmed"]

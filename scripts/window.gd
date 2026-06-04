@@ -6,7 +6,6 @@ extends PanelContainer
 		yt_dlp_path_input.text = yt_dlp_path
 		yt_dlp_wrapper.yt_dlp_path = yt_dlp_path
 		console_signal_bus.add_line("yt-dlp path set to " + yt_dlp_path)
-		# TODO Update config if value there is different
 
 @onready var save_config_confirmation_dialog := $MarginContainer/VBoxContainer/SaveConfigConfirmationDialog
 @onready var yt_dlp_path_input := $MarginContainer/VBoxContainer/VSplitContainer/MarginContainer/YtDlpConfig/YtDlpPathInput
@@ -16,6 +15,7 @@ extends PanelContainer
 @onready var console_signal_bus := $ConsoleSignalBus
 @onready var config_loader := $ConfigLoader
 @onready var yt_dlp_wrapper := $YtDlpWrapper
+@onready var process_queue := $ProcessQueue
 @onready var channel_scene := load("res://scenes/channel.tscn")
 
 
@@ -70,19 +70,19 @@ func _create_archive_files() -> void:
 
 
 func _on_update_yt_dlp_button_button_up():
-	yt_dlp_wrapper.update()
+	process_queue.queue_update()
 
 
 func _on_playlist_marked_as_archived(playlist : Dictionary) -> void:
-	yt_dlp_wrapper.mark_playlist_as_archived(playlist)
+	process_queue.queue_mark_playlist_as_archived(playlist)
 
 
 func _on_playlist_unarchived_videos_downloaded(playlist : Dictionary) -> void:
-	yt_dlp_wrapper.download_playlist(playlist)
+	process_queue.queue_download_playlist(playlist)
 
 
 func _on_playlist_single_video_downloaded(url : String, playlist : Dictionary) -> void:
-	yt_dlp_wrapper.download_single_video(url, playlist)
+	process_queue.queue_download_single_video(url, playlist)
 
 
 func _on_yt_dlp_browse_files_button_button_up() -> void:
