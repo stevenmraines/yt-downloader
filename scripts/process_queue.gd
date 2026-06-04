@@ -1,12 +1,14 @@
 class_name ProcessQueue extends Node
 
+signal queue_changed(processes : Array)
+
 @export var yt_dlp_wrapper : YtDlpWrapper
 
 var processes := []
 var current_process_index := 0
 var console_signal_bus : ConsoleSignalBus
 
-const PROGRESS_CHECK_DURATION := 500
+const PROGRESS_CHECK_DURATION := 0.5
 
 enum ProcessState { QUEUED, IN_PROGRESS, COMPLETE, ERRORED, KILLED }
 
@@ -48,6 +50,7 @@ func _start_queued_process(process_index : int) -> void:
 	process.pid = pid
 	process.timer.connect("timeout", _on_progress_check_timer_timeout.bind(pid))
 	process.timer.start()
+	queue_changed.emit(processes)
 
 
 func _on_progress_check_timer_timeout(pid : int) -> void:
@@ -66,10 +69,11 @@ func _on_progress_check_timer_timeout(pid : int) -> void:
 			console_signal_bus.add_error("Process %s (%d) completed with error code %d" % [process.name, process.pid, exit_code])
 		
 		process.timer.stop()
-		
+		queue_changed.emit(processes)
 		current_process_index += 1
 
 
+# FIXME This doesn't seem to be working
 func kill_process(pid : int) -> void:
 	var i = processes.find_custom(func(x): return x.pid == pid)
 	var process = processes[i]
@@ -79,12 +83,15 @@ func kill_process(pid : int) -> void:
 	if i == current_process_index:
 		current_process_index += 1
 	console_signal_bus.add_warning("Process %s (%d) killed" % [process.name, process.pid])
+	queue_changed.emit(processes)
 
 
 func queue_download_playlist(playlist : Dictionary) -> void:
-	var timer = get_tree().create_timer(PROGRESS_CHECK_DURATION)
+	var timer = Timer.new()
+	timer.wait_time = PROGRESS_CHECK_DURATION
 	timer.autostart = false
 	timer.one_shot = false
+	add_child(timer)
 	processes.append({
 		"exit_code": -1,
 		"name": "download_playlist",
@@ -95,12 +102,15 @@ func queue_download_playlist(playlist : Dictionary) -> void:
 		"url": "",
 	})
 	console_signal_bus.add_line("Queueing process download_playlist")
+	queue_changed.emit(processes)
 
 
 func queue_download_single_video(url : String, playlist : Dictionary) -> void:
-	var timer = get_tree().create_timer(PROGRESS_CHECK_DURATION)
+	var timer = Timer.new()
+	timer.wait_time = PROGRESS_CHECK_DURATION
 	timer.autostart = false
 	timer.one_shot = false
+	add_child(timer)
 	processes.append({
 		"exit_code": -1,
 		"name": "download_single_video",
@@ -111,12 +121,15 @@ func queue_download_single_video(url : String, playlist : Dictionary) -> void:
 		"url": url,
 	})
 	console_signal_bus.add_line("Queueing process download_single_video")
+	queue_changed.emit(processes)
 
 
 func queue_mark_playlist_as_archived(playlist : Dictionary) -> void:
-	var timer = get_tree().create_timer(PROGRESS_CHECK_DURATION)
+	var timer = Timer.new()
+	timer.wait_time = PROGRESS_CHECK_DURATION
 	timer.autostart = false
 	timer.one_shot = false
+	add_child(timer)
 	processes.append({
 		"exit_code": -1,
 		"name": "mark_playlist_as_archived",
@@ -127,13 +140,15 @@ func queue_mark_playlist_as_archived(playlist : Dictionary) -> void:
 		"url": "",
 	})
 	console_signal_bus.add_line("Queueing process mark_playlist_as_archived")
+	queue_changed.emit(processes)
 
 
 func queue_update() -> void:
-	# TODO Not sure this won't autostart since it's a SceneTreeTimer, still not clear on how that works
-	var timer = get_tree().create_timer(PROGRESS_CHECK_DURATION)
+	var timer = Timer.new()
+	timer.wait_time = PROGRESS_CHECK_DURATION
 	timer.autostart = false
 	timer.one_shot = false
+	add_child(timer)
 	processes.append({
 		"exit_code": -1,
 		"name": "update",
@@ -144,3 +159,4 @@ func queue_update() -> void:
 		"url": "",
 	})
 	console_signal_bus.add_line("Queueing process update")
+	queue_changed.emit(processes)

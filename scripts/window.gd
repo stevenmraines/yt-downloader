@@ -7,16 +7,18 @@ extends PanelContainer
 		yt_dlp_wrapper.yt_dlp_path = yt_dlp_path
 		console_signal_bus.add_line("yt-dlp path set to " + yt_dlp_path)
 
-@onready var save_config_confirmation_dialog := $MarginContainer/VBoxContainer/SaveConfigConfirmationDialog
-@onready var yt_dlp_path_input := $MarginContainer/VBoxContainer/VSplitContainer/MarginContainer/YtDlpConfig/YtDlpPathInput
-@onready var yt_dlp_path_file_dialog := $MarginContainer/VBoxContainer/VSplitContainer/MarginContainer/YtDlpConfig/YtDlpPathFileDialog
-@onready var channel_container := $MarginContainer/VBoxContainer/VSplitContainer/ChannelContainer
-@onready var console_text_input := $MarginContainer/VBoxContainer/VSplitContainer/Console/MarginContainer/ConsoleTextInput
+@onready var save_config_confirmation_dialog := %SaveConfigConfirmationDialog
+@onready var yt_dlp_path_input := %YtDlpPathInput
+@onready var yt_dlp_path_file_dialog := %YtDlpPathFileDialog
+@onready var channel_container := %ChannelContainer
+@onready var process_container := %ProcessContainer
+@onready var console_text_input := %ConsoleTextInput
 @onready var console_signal_bus := $ConsoleSignalBus
 @onready var config_loader := $ConfigLoader
 @onready var yt_dlp_wrapper := $YtDlpWrapper
 @onready var process_queue := $ProcessQueue
 @onready var channel_scene := load("res://scenes/channel.tscn")
+@onready var process_scene := load("res://scenes/process.tscn")
 
 
 func _ready() -> void:
@@ -143,3 +145,18 @@ func _on_save_config_confirmation_dialog_confirmed():
 					changes["playlists"].append(config_playlist)
 	
 	config_loader.save_changes(changes)
+
+
+func _on_process_queue_queue_changed(processes):
+	for process_node in process_container.get_children():
+		process_node.queue_free()
+	
+	for process in processes:
+		var new_process_node = process_scene.instantiate()
+		process_container.add_child(new_process_node)
+		new_process_node.process = process
+		new_process_node.connect("process_killed", _on_process_killed)
+
+
+func _on_process_killed(process : Dictionary) -> void:
+	process_queue.kill_process(process.pid)

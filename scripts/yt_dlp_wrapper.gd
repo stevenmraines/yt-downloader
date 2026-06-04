@@ -39,7 +39,8 @@ func _get_archive_file_path(playlist : Dictionary) -> String:
 
 func mark_playlist_as_archived(playlist : Dictionary) -> void:
 	console_signal_bus.add_line("Marking playlist " + playlist.name + " for channel " + playlist.channel + " as archived")
-	
+	# TODO Remove
+	return
 	var archive_file = _get_archive_file_path(playlist)
 	var video_ids = []
 	
@@ -83,6 +84,7 @@ func download_playlist(playlist : Dictionary) -> int:
 	])
 
 
+# FIXME If video is already in archive file, terminal closes immediately and process remains in queue
 func download_single_video(url : String, playlist : Dictionary) -> int:
 	var archive_file = _get_archive_file_path(playlist)
 	var output = playlist.download_path + "/%(upload_date>%Y-%m-%d)s %(title)s.%(ext)s\""
