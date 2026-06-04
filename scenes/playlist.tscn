@@ -121,14 +121,14 @@ layout_mode = 2
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5" unique_id=31195103]
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
-text = "Download Archive File Path:"
+text = "Download Archive File Name:"
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/HBoxContainer5" unique_id=281987234]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/margin_left = 10
 
-[node name="DownloadArchiveFilePathInput" type="LineEdit" parent="VBoxContainer/HBoxContainer5/MarginContainer" unique_id=552058923]
+[node name="DownloadArchiveFileNameInput" type="LineEdit" parent="VBoxContainer/HBoxContainer5/MarginContainer" unique_id=552058923]
 layout_mode = 2
 
 [node name="HBoxContainer6" type="HBoxContainer" parent="VBoxContainer" unique_id=679281164]
@@ -221,7 +221,7 @@ text = "Download"
 [connection signal="text_changed" from="VBoxContainer/HBoxContainer4/MarginContainer/DownloadPathInput" to="." method="_on_download_path_input_text_changed"]
 [connection signal="text_changed" from="VBoxContainer/HBoxContainer/MarginContainer/BackupPathInput" to="." method="_on_backup_path_input_text_changed"]
 [connection signal="text_changed" from="VBoxContainer/HBoxContainer2/MarginContainer/RemotePathInput" to="." method="_on_remote_path_input_text_changed"]
-[connection signal="text_changed" from="VBoxContainer/HBoxContainer5/MarginContainer/DownloadArchiveFilePathInput" to="." method="_on_download_archive_file_path_input_text_changed"]
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer5/MarginContainer/DownloadArchiveFileNameInput" to="." method="_on_download_archive_file_path_input_text_changed"]
 [connection signal="text_changed" from="VBoxContainer/HBoxContainer6/MarginContainer/CookiesFromBrowserInput" to="." method="_on_cookies_from_browser_input_text_changed"]
 [connection signal="confirmed" from="ArchiveConfirmationDialog" to="." method="_on_archive_confirmation_dialog_confirmed"]
 [connection signal="close_requested" from="DownloadSingleVideoWindow" to="." method="_on_download_single_video_window_close_requested"]

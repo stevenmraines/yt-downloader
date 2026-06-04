@@ -8,7 +8,7 @@ signal download_single_video_button_clicked(url : String, list : Dictionary)
 @onready var download_path_input := $VBoxContainer/HBoxContainer4/MarginContainer/DownloadPathInput
 @onready var backup_upload_path_input := $VBoxContainer/HBoxContainer/MarginContainer/BackupPathInput
 @onready var remote_upload_path_input := $VBoxContainer/HBoxContainer2/MarginContainer/RemotePathInput
-@onready var download_archive_file_name_input := $VBoxContainer/HBoxContainer5/MarginContainer/DownloadArchiveFilePathInput
+@onready var download_archive_file_name_input := $VBoxContainer/HBoxContainer5/MarginContainer/DownloadArchiveFileNameInput
 @onready var cookies_from_browser_input := $VBoxContainer/HBoxContainer6/MarginContainer/CookiesFromBrowserInput
 @onready var queued_videos_container := $VBoxContainer/ScrollContainer/QueuedVideosContainer
 @onready var archive_confirmation_dialog := $ArchiveConfirmationDialog
