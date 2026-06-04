@@ -83,8 +83,8 @@ func _on_playlist_unarchived_videos_downloaded(playlist : Dictionary) -> void:
 	process_queue.queue_download_playlist(playlist)
 
 
-func _on_playlist_single_video_downloaded(url : String, playlist : Dictionary) -> void:
-	process_queue.queue_download_single_video(url, playlist)
+func _on_playlist_single_video_downloaded(url : String, playlist : Dictionary, delete_download : bool) -> void:
+	process_queue.queue_download_single_video(url, playlist, delete_download)
 
 
 func _on_yt_dlp_browse_files_button_button_up() -> void:

@@ -77,7 +77,8 @@ func get_playlists() -> Array:
 				"backup_upload_path": _config_file.get_value(section, "backup_upload_path"),
 				"remote_upload_path": _config_file.get_value(section, "remote_upload_path"),
 				"download_archive_file_name": _config_file.get_value(section, "download_archive_file_name"),
-				"cookies_from_browser": _config_file.get_value(section, "cookies_from_browser", "firefox")
+				"cookies_from_browser": _config_file.get_value(section, "cookies_from_browser", "firefox"),
+				"delete_download" : str_to_var(_config_file.get_value(section, "delete_download", "true")),
 			})
 	
 	return playlists

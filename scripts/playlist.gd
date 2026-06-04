@@ -2,21 +2,23 @@ extends MarginContainer
 
 signal mark_as_archived_clicked(list : Dictionary)
 signal download_unarchived_videos_button_clicked(list : Dictionary)
-signal download_single_video_button_clicked(url : String, list : Dictionary)
+signal download_single_video_button_clicked(url : String, list : Dictionary, delete_download : bool)
 
-@onready var label := $VBoxContainer/HBoxContainer7/Label
-@onready var url_input := $VBoxContainer/HBoxContainer3/MarginContainer/UrlInput
-@onready var download_path_input := $VBoxContainer/HBoxContainer4/MarginContainer/DownloadPathInput
-@onready var backup_upload_path_input := $VBoxContainer/HBoxContainer/MarginContainer/BackupPathInput
-@onready var remote_upload_path_input := $VBoxContainer/HBoxContainer2/MarginContainer/RemotePathInput
-@onready var download_archive_file_name_input := $VBoxContainer/HBoxContainer5/MarginContainer/DownloadArchiveFileNameInput
-@onready var cookies_from_browser_input := $VBoxContainer/HBoxContainer6/MarginContainer/CookiesFromBrowserInput
-@onready var queued_videos_container := $VBoxContainer/ScrollContainer/QueuedVideosContainer
+@onready var label := %Label
+@onready var url_input := %UrlInput
+@onready var download_path_input := %DownloadPathInput
+@onready var backup_upload_path_input := %BackupPathInput
+@onready var remote_upload_path_input := %RemotePathInput
+@onready var download_archive_file_name_input := %DownloadArchiveFileNameInput
+@onready var cookies_from_browser_input := %CookiesFromBrowserInput
+@onready var delete_download_input := %DeleteDownloadInput
+@onready var queued_videos_container := %QueuedVideosContainer
 @onready var archive_confirmation_dialog := $ArchiveConfirmationDialog
-@onready var download_unarchived_videos_button := $VBoxContainer/HBoxContainer7/DownloadUnarchivedVideosButton
-@onready var download_unarchived_videos_confirmation_dialog := $VBoxContainer/HBoxContainer7/DownloadUnarchivedVideosConfirmationDialog
-@onready var download_single_video_window := $DownloadSingleVideoWindow
-@onready var single_video_url_input := $DownloadSingleVideoWindow/Control/MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/SingleVideoUrlInput
+@onready var download_unarchived_videos_button := %DownloadUnarchivedVideosButton
+@onready var download_unarchived_videos_confirmation_dialog := %DownloadUnarchivedVideosConfirmationDialog
+@onready var download_single_video_window := %DownloadSingleVideoWindow
+@onready var single_video_url_input := %SingleVideoUrlInput
+@onready var delete_single_download_input := %DeleteSingleDownloadInput
 @onready var download_scene := load("res://scenes/download.tscn")
 
 var playlist : Dictionary:
@@ -32,6 +34,7 @@ var playlist : Dictionary:
 		remote_upload_path = playlist.remote_upload_path
 		download_archive_file_name = playlist.download_archive_file_name
 		cookies_from_browser = playlist.cookies_from_browser
+		delete_download = playlist.delete_download
 		
 		# Set labels and inputs
 		label.text = playlist_name
@@ -41,6 +44,11 @@ var playlist : Dictionary:
 		remote_upload_path_input.text = remote_upload_path
 		download_archive_file_name_input.text = download_archive_file_name
 		cookies_from_browser_input.text = cookies_from_browser
+		delete_download_input.button_pressed = delete_download
+		
+		# Need to connect this here rather than in _ready because
+		# playlist won't be set yet when _ready is fired.
+		download_unarchived_videos_button.connect("button_up", _on_download_unarchived_videos_button_button_up.bind(playlist))
 
 var channel := ""
 var playlist_name := ""
@@ -50,6 +58,7 @@ var backup_upload_path := ""
 var remote_upload_path := ""
 var download_archive_file_name := ""
 var cookies_from_browser := ""
+var delete_download := false
 
 var downloaded_videos := []
 var queued_videos := [
@@ -68,7 +77,6 @@ var console_signal_bus : ConsoleSignalBus
 
 func _ready() -> void:
 	console_signal_bus = get_tree().get_nodes_in_group("console_signal_bus")[0]
-	download_unarchived_videos_button.connect("button_up", _on_download_unarchived_videos_button_button_up.bind(self))
 
 
 func populate_download_queue() -> void:
@@ -100,7 +108,7 @@ func _on_download_single_video_confirm_button_button_up():
 	if ! single_video_url_input.text:
 		console_signal_bus.add_error("No video URL provided")
 		return
-	download_single_video_button_clicked.emit(single_video_url_input.text, playlist)
+	download_single_video_button_clicked.emit(single_video_url_input.text, playlist, delete_single_download_input.button_pressed)
 	download_single_video_window.visible = false
 
 
@@ -128,9 +136,9 @@ func _on_cookies_from_browser_input_text_changed(new_text):
 	cookies_from_browser = new_text
 
 
-func _on_download_unarchived_videos_button_button_up(node : MarginContainer):
+func _on_download_unarchived_videos_button_button_up(list : Dictionary):
 	# FIXME Changing our text after the fact like this is messing with the window positioning
-	download_unarchived_videos_confirmation_dialog.dialog_text = "Are you sure you want to download unarchived videos from the " + node.playlist_name + " playlist?"
+	download_unarchived_videos_confirmation_dialog.dialog_text = "Are you sure you want to download unarchived videos from the " + list.name + " playlist?"
 	download_unarchived_videos_confirmation_dialog.visible = true
 
 

@@ -78,11 +78,11 @@ func kill_process(pid : int) -> void:
 	var i = processes.find_custom(func(x): return x.pid == pid)
 	var process = processes[i]
 	process.timer.stop()
-	OS.kill(pid)
+	var exit_code = error_string(OS.kill(pid))
 	process.status = ProcessState.KILLED
 	if i == current_process_index:
 		current_process_index += 1
-	console_signal_bus.add_warning("Process %s (%d) killed" % [process.name, process.pid])
+	console_signal_bus.add_warning("Process %s (%d) killed with exit code %s" % [process.name, process.pid, exit_code])
 	queue_changed.emit(processes)
 
 
@@ -105,12 +105,14 @@ func queue_download_playlist(playlist : Dictionary) -> void:
 	queue_changed.emit(processes)
 
 
-func queue_download_single_video(url : String, playlist : Dictionary) -> void:
+func queue_download_single_video(url : String, playlist : Dictionary, delete_download : bool) -> void:
 	var timer = Timer.new()
 	timer.wait_time = PROGRESS_CHECK_DURATION
 	timer.autostart = false
 	timer.one_shot = false
 	add_child(timer)
+	# Overwrite the playlist's delete_download option for this single video
+	playlist.delete_download = delete_download
 	processes.append({
 		"exit_code": -1,
 		"name": "download_single_video",
