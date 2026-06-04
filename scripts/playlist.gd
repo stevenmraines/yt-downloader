@@ -1,6 +1,7 @@
 extends MarginContainer
 
 signal mark_as_archived_clicked(list : Dictionary)
+signal download_unarchived_videos_button_clicked(list : Dictionary)
 signal download_single_video_button_clicked(url : String, list : Dictionary)
 
 @onready var label := $VBoxContainer/HBoxContainer7/Label
@@ -12,6 +13,8 @@ signal download_single_video_button_clicked(url : String, list : Dictionary)
 @onready var cookies_from_browser_input := $VBoxContainer/HBoxContainer6/MarginContainer/CookiesFromBrowserInput
 @onready var queued_videos_container := $VBoxContainer/ScrollContainer/QueuedVideosContainer
 @onready var archive_confirmation_dialog := $ArchiveConfirmationDialog
+@onready var download_unarchived_videos_button := $VBoxContainer/HBoxContainer7/DownloadUnarchivedVideosButton
+@onready var download_unarchived_videos_confirmation_dialog := $VBoxContainer/HBoxContainer7/DownloadUnarchivedVideosConfirmationDialog
 @onready var download_single_video_window := $DownloadSingleVideoWindow
 @onready var single_video_url_input := $DownloadSingleVideoWindow/Control/MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/SingleVideoUrlInput
 @onready var download_scene := load("res://scenes/download.tscn")
@@ -65,6 +68,7 @@ var console_signal_bus : ConsoleSignalBus
 
 func _ready() -> void:
 	console_signal_bus = get_tree().get_nodes_in_group("console_signal_bus")[0]
+	download_unarchived_videos_button.connect("button_up", _on_download_unarchived_videos_button_button_up.bind(self))
 
 
 func populate_download_queue() -> void:
@@ -79,6 +83,7 @@ func _on_mark_as_archived_button_button_up():
 
 func _on_download_single_video_button_pressed():
 	single_video_url_input.text = ""
+	download_single_video_window.title = "Download video using " + playlist.name + " options"
 	download_single_video_window.visible = true
 
 
@@ -121,3 +126,13 @@ func _on_download_archive_file_path_input_text_changed(new_text):
 
 func _on_cookies_from_browser_input_text_changed(new_text):
 	cookies_from_browser = new_text
+
+
+func _on_download_unarchived_videos_button_button_up(node : MarginContainer):
+	# FIXME Changing our text after the fact like this is messing with the window positioning
+	download_unarchived_videos_confirmation_dialog.dialog_text = "Are you sure you want to download unarchived videos from the " + node.playlist_name + " playlist?"
+	download_unarchived_videos_confirmation_dialog.visible = true
+
+
+func _on_download_unarchived_videos_confirmation_dialog_confirmed():
+	download_unarchived_videos_button_clicked.emit(playlist)

@@ -64,6 +64,8 @@ func mark_playlist_as_archived(playlist : Dictionary) -> void:
 
 
 func download_playlist(playlist : Dictionary) -> void:
+	# TODO Remove this after playlists have been marked as archived and we can kill processes
+	return
 	var archive_file = _get_archive_file_path(playlist)
 	var output = playlist.download_path + "/%(upload_date>%Y-%m-%d)s %(title)s.%(ext)s\""
 	
