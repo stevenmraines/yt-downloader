@@ -13,20 +13,10 @@
 [ext_resource type="Script" uid="uid://djom14jyh6cwn" path="res://scripts/config_loader.gd" id="4_qnju7"]
 [ext_resource type="StyleBox" uid="uid://binch188kfmsf" path="res://styles/secondary_button_hover.tres" id="4_qsv56"]
 [ext_resource type="Script" uid="uid://sfh687fmx6ht" path="res://scripts/yt_dlp_wrapper.gd" id="5_ato5p"]
+[ext_resource type="Texture2D" uid="uid://b8tvr7gaqcary" path="res://assets/pause-white.png" id="11_qsv56"]
+[ext_resource type="StyleBox" uid="uid://dvb5qs66bpht" path="res://styles/process_queue_background.tres" id="11_uxgp5"]
+[ext_resource type="Texture2D" uid="uid://dnt7ifxql3v3s" path="res://assets/play-white.png" id="12_yeipv"]
 [ext_resource type="Script" uid="uid://duwsp24mpyihb" path="res://scripts/process_queue.gd" id="14_cx3k0"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cx3k0"]
-bg_color = Color(0.35, 0.35, 0.35, 0.39215687)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.8, 0.8, 0.8, 0.49411765)
-corner_radius_top_left = 3
-corner_radius_top_right = 3
-corner_radius_bottom_right = 3
-corner_radius_bottom_left = 3
-corner_detail = 5
 
 [node name="Window" type="PanelContainer" unique_id=1668980773]
 anchors_preset = 15
@@ -173,14 +163,33 @@ script = ExtResource("2_qnju7")
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Panel" type="Panel" parent="MarginContainer/HSplitContainer/ProcessQueueContainer" unique_id=1934583462]
+[node name="ProcessQueueBackgroundPanel" type="Panel" parent="MarginContainer/HSplitContainer/ProcessQueueContainer" unique_id=1934583462]
+unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_cx3k0")
+theme_override_styles/panel = ExtResource("11_uxgp5")
+
+[node name="PauseStatusLabel" type="Label" parent="MarginContainer/HSplitContainer/ProcessQueueContainer" unique_id=531285125]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -14.0
+offset_right = 20.0
+offset_bottom = 14.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 48
+text = "PAUSED"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HSplitContainer/ProcessQueueContainer" unique_id=614514832]
 layout_mode = 1
@@ -205,10 +214,42 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="ProcessContainer" type="VBoxContainer" parent="MarginContainer/HSplitContainer/ProcessQueueContainer/VBoxContainer/MarginContainer" unique_id=1893584650]
-unique_name_in_owner = true
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HSplitContainer/ProcessQueueContainer/VBoxContainer/MarginContainer" unique_id=1186264208]
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/HSplitContainer/ProcessQueueContainer/VBoxContainer/MarginContainer/VBoxContainer" unique_id=360498502]
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_constants/scrollbar_h_separation = 10
+
+[node name="ProcessContainer" type="VBoxContainer" parent="MarginContainer/HSplitContainer/ProcessQueueContainer/VBoxContainer/MarginContainer/VBoxContainer/ScrollContainer" unique_id=1893584650]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PlayPauseButtonContainer" type="HBoxContainer" parent="MarginContainer/HSplitContainer/ProcessQueueContainer/VBoxContainer/MarginContainer/VBoxContainer" unique_id=625054047]
+layout_mode = 2
+size_flags_vertical = 8
+theme_override_constants/separation = 10
+alignment = 2
+
+[node name="PauseButton" type="Button" parent="MarginContainer/HSplitContainer/ProcessQueueContainer/VBoxContainer/MarginContainer/VBoxContainer/PlayPauseButtonContainer" unique_id=1577683683]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+theme_override_styles/pressed = ExtResource("2_shje2")
+theme_override_styles/hover = ExtResource("3_d8l8o")
+icon = ExtResource("11_qsv56")
+expand_icon = true
+
+[node name="PlayButton" type="Button" parent="MarginContainer/HSplitContainer/ProcessQueueContainer/VBoxContainer/MarginContainer/VBoxContainer/PlayPauseButtonContainer" unique_id=1028650675]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+theme_override_styles/pressed = ExtResource("2_shje2")
+theme_override_styles/hover = ExtResource("3_d8l8o")
+icon = ExtResource("12_yeipv")
+expand_icon = true
 
 [node name="ConsoleSignalBus" type="Node" parent="." unique_id=1967930258 groups=["console_signal_bus"]]
 script = ExtResource("2_to7fh")
@@ -232,6 +273,8 @@ metadata/_custom_type_script = "uid://duwsp24mpyihb"
 [connection signal="button_up" from="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/MarginContainer/YtDlpConfig/YtDlpBrowseFilesButton" to="." method="_on_yt_dlp_browse_files_button_button_up"]
 [connection signal="file_selected" from="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/MarginContainer/YtDlpConfig/YtDlpPathFileDialog" to="." method="_on_yt_dlp_path_file_dialog_file_selected"]
 [connection signal="button_up" from="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/MarginContainer/YtDlpConfig/UpdateYtDlpButton" to="." method="_on_update_yt_dlp_button_button_up"]
+[connection signal="button_up" from="MarginContainer/HSplitContainer/ProcessQueueContainer/VBoxContainer/MarginContainer/VBoxContainer/PlayPauseButtonContainer/PauseButton" to="." method="_on_pause_button_button_up"]
+[connection signal="button_up" from="MarginContainer/HSplitContainer/ProcessQueueContainer/VBoxContainer/MarginContainer/VBoxContainer/PlayPauseButtonContainer/PlayButton" to="." method="_on_play_button_button_up"]
 [connection signal="error_added" from="ConsoleSignalBus" to="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/Console/MarginContainer/ConsoleTextInput" method="_on_console_signal_bus_error_added"]
 [connection signal="line_added" from="ConsoleSignalBus" to="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/Console/MarginContainer/ConsoleTextInput" method="_on_console_signal_bus_line_added"]
 [connection signal="warning_added" from="ConsoleSignalBus" to="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/Console/MarginContainer/ConsoleTextInput" method="_on_console_signal_bus_warning_added"]

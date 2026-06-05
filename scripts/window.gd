@@ -12,6 +12,8 @@ extends PanelContainer
 @onready var yt_dlp_path_file_dialog := %YtDlpPathFileDialog
 @onready var channel_container := %ChannelContainer
 @onready var process_container := %ProcessContainer
+@onready var process_queue_background_panel := %ProcessQueueBackgroundPanel
+@onready var pause_status_label := %PauseStatusLabel
 @onready var console_text_input := %ConsoleTextInput
 @onready var console_signal_bus := $ConsoleSignalBus
 @onready var config_loader := $ConfigLoader
@@ -19,6 +21,8 @@ extends PanelContainer
 @onready var process_queue := $ProcessQueue
 @onready var channel_scene := load("res://scenes/channel.tscn")
 @onready var process_scene := load("res://scenes/process.tscn")
+@onready var process_queue_background_style := load("res://styles/process_queue_background.tres")
+@onready var process_queue_background_paused_style := load("res://styles/process_queue_background_paused.tres")
 
 
 func _ready() -> void:
@@ -160,3 +164,17 @@ func _on_process_queue_queue_changed(processes):
 
 func _on_process_killed(process : Dictionary) -> void:
 	process_queue.kill_process(process.pid)
+
+
+func _on_pause_button_button_up():
+	process_queue.process_mode = Node.PROCESS_MODE_DISABLED
+	console_signal_bus.add_line("Process queue paused")
+	process_queue_background_panel.add_theme_stylebox_override("panel", process_queue_background_paused_style)
+	pause_status_label.visible = true
+
+
+func _on_play_button_button_up():
+	process_queue.process_mode = Node.PROCESS_MODE_INHERIT
+	console_signal_bus.add_line("Process queue resumed")
+	process_queue_background_panel.add_theme_stylebox_override("panel", process_queue_background_style)
+	pause_status_label.visible = false

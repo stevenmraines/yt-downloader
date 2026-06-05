@@ -15,7 +15,6 @@ var process := {}:
 			name_label.text = process.name
 		
 		if status_label:
-			status_label.add_text("Status: ")
 			var text_color = status_colors[process.status]
 			status_label.push_color(text_color)
 			status_label.add_text(status_messages[process.status])
