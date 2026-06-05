@@ -162,3 +162,14 @@ func queue_update() -> void:
 	})
 	console_signal_bus.add_line("Queueing process update")
 	queue_changed.emit(processes)
+
+
+func get_windows_processes() -> Array:
+	var output = []
+	OS.execute("tasklist", [], output, true)
+	
+	if output.size() > 0:
+		var processes = output[0].split("\n")
+		return processes
+	
+	return []

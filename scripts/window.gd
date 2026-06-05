@@ -32,6 +32,10 @@ func _ready() -> void:
 	
 	_populate_channels()
 	_create_archive_files()
+	
+	# TODO Remove this
+	for x in process_queue.get_windows_processes():
+		print(x)
 
 
 func _unhandled_input(event: InputEvent) -> void:
