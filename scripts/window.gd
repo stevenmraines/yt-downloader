@@ -34,8 +34,8 @@ func _ready() -> void:
 	_create_archive_files()
 	
 	# TODO Remove this
-	for x in process_queue.get_windows_processes():
-		print(x)
+	#var x = process_queue.get_unix_processes()
+	#var y = "ree"
 
 
 func _unhandled_input(event: InputEvent) -> void:

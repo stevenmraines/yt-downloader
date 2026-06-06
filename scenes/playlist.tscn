@@ -254,6 +254,7 @@ text = "Download"
 [connection signal="text_changed" from="VBoxContainer/HBoxContainer2/RemotePathInput" to="." method="_on_remote_path_input_text_changed"]
 [connection signal="text_changed" from="VBoxContainer/HBoxContainer5/DownloadArchiveFileNameInput" to="." method="_on_download_archive_file_path_input_text_changed"]
 [connection signal="text_changed" from="VBoxContainer/HBoxContainer6/CookiesFromBrowserInput" to="." method="_on_cookies_from_browser_input_text_changed"]
+[connection signal="toggled" from="VBoxContainer/HBoxContainer8/DeleteDownloadInput" to="." method="_on_delete_download_input_toggled"]
 [connection signal="confirmed" from="ArchiveConfirmationDialog" to="." method="_on_archive_confirmation_dialog_confirmed"]
 [connection signal="close_requested" from="DownloadSingleVideoWindow" to="." method="_on_download_single_video_window_close_requested"]
 [connection signal="button_up" from="DownloadSingleVideoWindow/Control/MarginContainer/VBoxContainer/DownloadSingleVideoConfirmButton" to="." method="_on_download_single_video_confirm_button_button_up"]

@@ -113,27 +113,38 @@ func _on_download_single_video_confirm_button_button_up():
 
 
 func _on_url_input_text_changed(new_text):
+	playlist.url = new_text
 	url = new_text
 
 
 func _on_download_path_input_text_changed(new_text):
+	playlist.download_path = new_text
 	download_path = new_text
 
 
 func _on_backup_path_input_text_changed(new_text):
+	playlist.backup_upload_path = new_text
 	backup_upload_path = new_text
 
 
 func _on_remote_path_input_text_changed(new_text):
+	playlist.remote_upload_path = new_text
 	remote_upload_path = new_text
 
 
 func _on_download_archive_file_path_input_text_changed(new_text):
+	playlist.download_archive_file_name = new_text
 	download_archive_file_name = new_text
 
 
 func _on_cookies_from_browser_input_text_changed(new_text):
+	playlist.cookies_from_browser = new_text
 	cookies_from_browser = new_text
+
+
+func _on_delete_download_input_toggled(toggled_on: bool) -> void:
+	playlist.delete_download = toggled_on
+	delete_download = toggled_on
 
 
 func _on_download_unarchived_videos_button_button_up(list : Dictionary):
