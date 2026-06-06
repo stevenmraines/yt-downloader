@@ -138,9 +138,10 @@ func _on_download_archive_file_path_input_text_changed(new_text):
 	download_archive_file_name = new_text
 
 
-func _on_cookies_from_browser_input_text_changed(new_text):
-	playlist.cookies_from_browser = new_text
-	cookies_from_browser = new_text
+func _on_cookies_from_browser_input_item_selected(index):
+	var value = cookies_from_browser_input.get_item_text(index)
+	playlist.cookies_from_browser = value
+	cookies_from_browser = value
 
 
 func _on_delete_download_input_toggled(toggled_on: bool) -> void:

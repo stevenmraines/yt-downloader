@@ -37,37 +37,81 @@ func _get_archive_file_path(playlist : Dictionary) -> String:
 		+ "/" + playlist.download_archive_file_name
 
 
-func mark_playlist_as_archived(playlist : Dictionary) -> void:
+func mark_playlist_as_archived(playlist : Dictionary) -> int:
 	console_signal_bus.add_line("Marking playlist " + playlist.name + " for channel " + playlist.channel + " as archived")
-	# TODO Remove
-	return
+	
 	var archive_file = _get_archive_file_path(playlist)
-	var video_ids = []
+	var temp_file = OS.get_user_data_dir() + "/mark_playlist_as_archived_temp.txt"
 	
-	# TODO See if there's a way to actually show the output in the terminal window
-	# FIXME This returns an exit code, not a pid...that could be a problem
-	OS.execute(yt_dlp_path, [
+	console_signal_bus.add_line("Writing video IDs to temp file: %s" % temp_file)
+	
+	# Pipe yt-dlp output to a temp file via cmd
+	var args = [
+		"/c", yt_dlp_path,
 		playlist.url,
-		opts.archive, archive_file,
+		opts.get_id,
+		opts.flat,
 		opts.cookies, playlist.cookies_from_browser,
-		opts.simulate,
-		opts.get_id
-	], video_ids, false, true)
+		">", temp_file
+	]
+	var pid = OS.create_process("cmd.exe", args, true)
+	print(" ".join(args))
 	
-	video_ids = video_ids[0].split("\n")
-	var file = FileAccess.open(archive_file, FileAccess.WRITE)
+	_watch_archive_job(pid, archive_file, temp_file)
 	
-	for video_id in video_ids:
-		if video_id != "":
-			console_signal_bus.add_line("Video archived: " + video_id)
-			file.store_string("youtube " + video_id + "\n")
+	return pid
+
+
+func _watch_archive_job(pid : int, archive_file : String, temp_file : String) -> void:
+	var timer = Timer.new()
+	add_child(timer)
+	timer.wait_time = 1.0
 	
+	timer.timeout.connect(func():
+		if OS.is_process_running(pid):
+			return
+		timer.stop()
+		timer.queue_free()
+		var exit_code = OS.get_process_exit_code(pid)
+		if exit_code != 0:
+			# Exit code will be some non-zero value if the user killed the process
+			# or there was an error, either way we don't want to write to the archive file.
+			console_signal_bus.add_warning("mark_playlist_as_archived process terminated, removing temp file: %s" % temp_file)
+			DirAccess.remove_absolute(temp_file)
+			return
+		_write_archive_from_temp(archive_file, temp_file)
+	)
+	
+	timer.start()
+
+
+func _write_archive_from_temp(archive_file : String, temp_file : String) -> void:
+	var file = FileAccess.open(temp_file, FileAccess.READ)
+	
+	if not file:
+		console_signal_bus.add_error("Failed to read temp file: %s" % temp_file)
+		return
+	
+	var content = file.get_as_text()
 	file.close()
+	DirAccess.remove_absolute(temp_file)
+	
+	var out = FileAccess.open(archive_file, FileAccess.WRITE)
+	
+	if not out:
+		console_signal_bus.add_error("Failed to write archive file: %s" % archive_file)
+		return
+	
+	for video_id in content.split("\n"):
+		var id = video_id.strip_edges()
+		
+		if id != "":
+			out.store_string("youtube " + id + "\n")
+	
+	out.close()
 
 
 func download_playlist(playlist : Dictionary) -> int:
-	# TODO Remove this after playlists have been marked as archived and we can kill processes
-	return -1
 	var archive_file = _get_archive_file_path(playlist)
 	var output = playlist.download_path + "/%(upload_date>%Y-%m-%d)s %(title)s.%(ext)s\""
 	

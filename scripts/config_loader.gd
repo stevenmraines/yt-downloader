@@ -20,7 +20,6 @@ func _load_config() -> void:
 	console_signal_bus.add_line("Loading config")
 	
 	# Copy default config to user:// if it doesn't exist yet
-	# TODO Turn this back on when app is ready
 	#if ! FileAccess.file_exists(CONFIG_PATH):
 	console_signal_bus.add_line("Copying config to " + OS.get_user_data_dir() + "/config.cfg")
 	DirAccess.copy_absolute(DEFAULT_CONFIG_PATH, CONFIG_PATH)
@@ -57,7 +56,7 @@ func get_channels() -> Array:
 			channels.append({
 				"section": section,
 				"name" : _config_file.get_value(section, "name"),
-				"start_collapsed" : str_to_var(_config_file.get_value(section, "start_collapsed", "false")),
+				"start_collapsed" : _config_file.get_value(section, "start_collapsed", false),
 			})
 	
 	return channels
@@ -78,7 +77,7 @@ func get_playlists() -> Array:
 				"remote_upload_path": _config_file.get_value(section, "remote_upload_path"),
 				"download_archive_file_name": _config_file.get_value(section, "download_archive_file_name"),
 				"cookies_from_browser": _config_file.get_value(section, "cookies_from_browser", "firefox"),
-				"delete_download" : str_to_var(_config_file.get_value(section, "delete_download", "true")),
+				"delete_download" : _config_file.get_value(section, "delete_download", true),
 			})
 	
 	return playlists

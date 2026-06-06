@@ -45,7 +45,7 @@ func _start_queued_process(process_index : int) -> void:
 		pid = yt_dlp_wrapper.download_single_video(process.url, process.playlist)
 	elif process.name == "mark_playlist_as_archived":
 		console_signal_bus.add_line("Starting queued process %s" % process.name)
-		yt_dlp_wrapper.mark_playlist_as_archived(process.playlist)
+		pid = yt_dlp_wrapper.mark_playlist_as_archived(process.playlist)
 	
 	process.pid = pid
 	process.timer.connect("timeout", _on_progress_check_timer_timeout.bind(pid))

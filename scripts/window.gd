@@ -139,13 +139,15 @@ func _on_save_config_confirmation_dialog_confirmed():
 						or config_playlist.backup_upload_path != playlist_node.backup_upload_path \
 						or config_playlist.remote_upload_path != playlist_node.remote_upload_path \
 						or config_playlist.download_archive_file_name != playlist_node.download_archive_file_name \
-						or config_playlist.cookies_from_browser != playlist_node.cookies_from_browser:
+						or config_playlist.cookies_from_browser != playlist_node.cookies_from_browser \
+						or config_playlist.delete_download != playlist_node.delete_download:
 					config_playlist.url = playlist_node.url
 					config_playlist.download_path = playlist_node.download_path
 					config_playlist.backup_upload_path = playlist_node.backup_upload_path
 					config_playlist.remote_upload_path = playlist_node.remote_upload_path
 					config_playlist.download_archive_file_name = playlist_node.download_archive_file_name
 					config_playlist.cookies_from_browser = playlist_node.cookies_from_browser
+					config_playlist.delete_download = playlist_node.delete_download
 					changes["playlists"].append(config_playlist)
 	
 	config_loader.save_changes(changes)
