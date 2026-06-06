@@ -6,6 +6,7 @@ signal download_single_video_button_clicked(url : String, list : Dictionary, del
 
 @onready var label := %Label
 @onready var url_input := %UrlInput
+# TODO These should all have browse buttons
 @onready var download_path_input := %DownloadPathInput
 @onready var backup_upload_path_input := %BackupPathInput
 @onready var remote_upload_path_input := %RemotePathInput

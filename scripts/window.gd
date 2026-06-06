@@ -32,10 +32,6 @@ func _ready() -> void:
 	
 	_populate_channels()
 	_create_archive_files()
-	
-	# TODO Remove this
-	#var x = process_queue.get_unix_processes()
-	#var y = "ree"
 
 
 func _unhandled_input(event: InputEvent) -> void:

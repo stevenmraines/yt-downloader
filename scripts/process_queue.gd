@@ -73,16 +73,27 @@ func _on_progress_check_timer_timeout(pid : int) -> void:
 		current_process_index += 1
 
 
-# FIXME This doesn't seem to be working
 func kill_process(pid : int) -> void:
 	var i = processes.find_custom(func(x): return x.pid == pid)
 	var process = processes[i]
 	process.timer.stop()
 	var exit_code = error_string(OS.kill(pid))
 	process.status = ProcessState.KILLED
+	
+	console_signal_bus.add_warning("Process %s (%d) killed with exit code %s" % [process.name, process.pid, exit_code])
+	
+	# yt-dlp sometimes spawns two processes with the same name, for some reason.
+	# Both need to be killed.
+	var windows_processes = Util.get_windows_processes()
+	for windows_pid in windows_processes:
+		var process_name = windows_processes[windows_pid]
+		if process_name == "yt-dlp.exe" and windows_pid != process.pid:
+			var second_exit_code = error_string(OS.kill(windows_pid))
+			console_signal_bus.add_warning("Secondary process %s (%d) killed with exit code %s" % [process_name, windows_pid, second_exit_code])
+	
 	if i == current_process_index:
 		current_process_index += 1
-	console_signal_bus.add_warning("Process %s (%d) killed with exit code %s" % [process.name, process.pid, exit_code])
+	
 	queue_changed.emit(processes)
 
 
@@ -162,42 +173,3 @@ func queue_update() -> void:
 	})
 	console_signal_bus.add_line("Queueing process update")
 	queue_changed.emit(processes)
-
-
-func get_windows_processes() -> Array:
-	var output = []
-	OS.execute("tasklist", [], output, true)
-	
-	if output.size() > 0:
-		var windows_processes = output[0].split("\n")
-		return windows_processes
-	
-	return []
-
-
-func get_unix_processes() -> Dictionary:
-	var console_output = []
-	OS.execute("ps", ["-e", "-o", "pid,comm"], console_output, true)
-	
-	if console_output.size() > 0:
-		var raw_output = console_output[0].split("\n")
-		var unix_processes = {}
-		
-		for process_str in raw_output:
-			var regex = RegEx.new()
-			regex.compile("\\S+")
-			
-			var pid = -1
-			var process_name = ""
-			for result in regex.search_all(process_str):
-				if result.get_string().is_valid_int():
-					pid = result.get_string().to_int()
-				else:
-					process_name = result.get_string()
-			
-			if pid > 0:
-				unix_processes[pid] = process_name
-		
-		return unix_processes
-	
-	return {}
