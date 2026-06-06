@@ -1,12 +1,15 @@
 class_name Util extends Object
 
 
-static func get_windows_processes() -> Dictionary:
+static func _get_windows_processes() -> Dictionary:
 	var console_output = []
 	OS.execute("tasklist", [], console_output, true)
 	
 	if console_output.size() > 0:
 		var raw_output = console_output[0].split("\n")
+		# TODO Test this
+		#raw_output.remove_at(0)
+		#raw_output.remove_at(0)
 		var windows_processes = {}
 		
 		for process_str in raw_output:
@@ -24,30 +27,33 @@ static func get_windows_processes() -> Dictionary:
 	return {}
 
 
-static func get_unix_processes() -> Dictionary:
+static func _get_unix_processes() -> Dictionary:
 	var console_output = []
 	OS.execute("ps", ["-e", "-o", "pid,comm"], console_output, true)
 	
 	if console_output.size() > 0:
 		var raw_output = console_output[0].split("\n")
+		# First element is just a header, get rid of it
+		raw_output.remove_at(0)
 		var unix_processes = {}
 		
 		for process_str in raw_output:
 			var regex = RegEx.new()
-			regex.compile("\\S+")
+			regex.compile("^(?<pid>\\d+)\\s+(?<name>\\S+)")
+			var result = regex.search(process_str)
 			
-			# FIXME Use regex.search like in the get_windows_processes function
-			var pid = -1
-			var process_name = ""
-			for result in regex.search_all(process_str):
-				if result.get_string().is_valid_int():
-					pid = result.get_string().to_int()
-				else:
-					process_name = result.get_string()
-			
-			if pid > 0:
+			if result:
+				var pid = int(result.get_string("pid"))
+				var process_name = result.get_string("name").strip_edges()
 				unix_processes[pid] = process_name
 		
 		return unix_processes
 	
 	return {}
+
+
+static func get_processes() -> Dictionary:
+	if OS.get_name() == "Windows":
+		return _get_windows_processes()
+	else:
+		return _get_unix_processes()

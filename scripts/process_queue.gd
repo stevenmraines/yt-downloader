@@ -84,12 +84,12 @@ func kill_process(pid : int) -> void:
 	
 	# yt-dlp sometimes spawns two processes with the same name, for some reason.
 	# Both need to be killed.
-	var windows_processes = Util.get_windows_processes()
-	for windows_pid in windows_processes:
-		var process_name = windows_processes[windows_pid]
-		if process_name == "yt-dlp.exe" and windows_pid != process.pid:
-			var second_exit_code = error_string(OS.kill(windows_pid))
-			console_signal_bus.add_warning("Secondary process %s (%d) killed with exit code %s" % [process_name, windows_pid, second_exit_code])
+	var os_processes = Util.get_processes()
+	for os_pid in os_processes:
+		var process_name = os_processes[os_pid]
+		if process_name == "yt-dlp.exe" and os_pid != process.pid:
+			var second_exit_code = error_string(OS.kill(os_pid))
+			console_signal_bus.add_warning("Secondary process %s (%d) killed with exit code %s" % [process_name, os_pid, second_exit_code])
 	
 	if i == current_process_index:
 		current_process_index += 1
