@@ -24,6 +24,7 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 script = ExtResource("1_6qq0t")
+unfolded_minimum_height = 350.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=336436764]
 layout_mode = 2
@@ -66,86 +67,96 @@ oversampling_override = 1.0
 initial_position = 2
 size = Vector2i(364, 100)
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer" unique_id=968633641]
+[node name="SettingsContainer" type="FoldableContainer" parent="VBoxContainer" unique_id=939011708]
+unique_name_in_owner = true
+layout_mode = 2
+folded = true
+title = "Settings"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/SettingsContainer" unique_id=949129173]
+visible = false
+layout_mode = 2
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer/SettingsContainer/VBoxContainer" unique_id=968633641]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer3" unique_id=1270830101]
+[node name="Label" type="Label" parent="VBoxContainer/SettingsContainer/VBoxContainer/HBoxContainer3" unique_id=1270830101]
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
 text = "URL:"
 
-[node name="UrlInput" type="LineEdit" parent="VBoxContainer/HBoxContainer3" unique_id=1582843976]
+[node name="UrlInput" type="LineEdit" parent="VBoxContainer/SettingsContainer/VBoxContainer/HBoxContainer3" unique_id=1582843976]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HBoxContainer4" type="HBoxContainer" parent="VBoxContainer" unique_id=1582052553]
+[node name="HBoxContainer4" type="HBoxContainer" parent="VBoxContainer/SettingsContainer/VBoxContainer" unique_id=1582052553]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer4" unique_id=1582871873]
+[node name="Label" type="Label" parent="VBoxContainer/SettingsContainer/VBoxContainer/HBoxContainer4" unique_id=1582871873]
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
 text = "Download Path:"
 
-[node name="DownloadPathInput" type="LineEdit" parent="VBoxContainer/HBoxContainer4" unique_id=216570485]
+[node name="DownloadPathInput" type="LineEdit" parent="VBoxContainer/SettingsContainer/VBoxContainer/HBoxContainer4" unique_id=216570485]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=662479240]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/SettingsContainer/VBoxContainer" unique_id=662479240]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer" unique_id=2046659951]
+[node name="Label" type="Label" parent="VBoxContainer/SettingsContainer/VBoxContainer/HBoxContainer" unique_id=2046659951]
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
 text = "Backup Upload Path:"
 
-[node name="BackupPathInput" type="LineEdit" parent="VBoxContainer/HBoxContainer" unique_id=82656825]
+[node name="BackupPathInput" type="LineEdit" parent="VBoxContainer/SettingsContainer/VBoxContainer/HBoxContainer" unique_id=82656825]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer" unique_id=1884939731]
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/SettingsContainer/VBoxContainer" unique_id=1884939731]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer2" unique_id=960508437]
+[node name="Label" type="Label" parent="VBoxContainer/SettingsContainer/VBoxContainer/HBoxContainer2" unique_id=960508437]
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
 text = "Remote Upload Path:"
 
-[node name="RemotePathInput" type="LineEdit" parent="VBoxContainer/HBoxContainer2" unique_id=407623150]
+[node name="RemotePathInput" type="LineEdit" parent="VBoxContainer/SettingsContainer/VBoxContainer/HBoxContainer2" unique_id=407623150]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HBoxContainer5" type="HBoxContainer" parent="VBoxContainer" unique_id=1514312610]
+[node name="HBoxContainer5" type="HBoxContainer" parent="VBoxContainer/SettingsContainer/VBoxContainer" unique_id=1514312610]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5" unique_id=31195103]
+[node name="Label" type="Label" parent="VBoxContainer/SettingsContainer/VBoxContainer/HBoxContainer5" unique_id=31195103]
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
 text = "Download Archive File Name:"
 
-[node name="DownloadArchiveFileNameInput" type="LineEdit" parent="VBoxContainer/HBoxContainer5" unique_id=552058923]
+[node name="DownloadArchiveFileNameInput" type="LineEdit" parent="VBoxContainer/SettingsContainer/VBoxContainer/HBoxContainer5" unique_id=552058923]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HBoxContainer6" type="HBoxContainer" parent="VBoxContainer" unique_id=679281164]
+[node name="HBoxContainer6" type="HBoxContainer" parent="VBoxContainer/SettingsContainer/VBoxContainer" unique_id=679281164]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer6" unique_id=1294731165]
+[node name="Label" type="Label" parent="VBoxContainer/SettingsContainer/VBoxContainer/HBoxContainer6" unique_id=1294731165]
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
 text = "Cookies From Browser:"
 
-[node name="CookiesFromBrowserInput" type="OptionButton" parent="VBoxContainer/HBoxContainer6" unique_id=1356019817]
+[node name="CookiesFromBrowserInput" type="OptionButton" parent="VBoxContainer/SettingsContainer/VBoxContainer/HBoxContainer6" unique_id=1356019817]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -156,29 +167,29 @@ popup/item_0/id = 0
 popup/item_1/text = "chrome"
 popup/item_1/id = 1
 
-[node name="HBoxContainer8" type="HBoxContainer" parent="VBoxContainer" unique_id=2122258363]
+[node name="HBoxContainer8" type="HBoxContainer" parent="VBoxContainer/SettingsContainer/VBoxContainer" unique_id=2122258363]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer8" unique_id=389848572]
+[node name="Label" type="Label" parent="VBoxContainer/SettingsContainer/VBoxContainer/HBoxContainer8" unique_id=389848572]
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
 text = "Delete Download After Upload:"
 
-[node name="DeleteDownloadInput" type="CheckBox" parent="VBoxContainer/HBoxContainer8" unique_id=1838470739]
+[node name="DeleteDownloadInput" type="CheckBox" parent="VBoxContainer/SettingsContainer/VBoxContainer/HBoxContainer8" unique_id=1838470739]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HBoxContainer9" type="HBoxContainer" parent="VBoxContainer" unique_id=1802549357]
+[node name="HBoxContainer9" type="HBoxContainer" parent="VBoxContainer/SettingsContainer/VBoxContainer" unique_id=1802549357]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer9" unique_id=1542065105]
+[node name="Label" type="Label" parent="VBoxContainer/SettingsContainer/VBoxContainer/HBoxContainer9" unique_id=1542065105]
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
 text = "Preview Unarchived Videos On Startup:"
 
-[node name="PreviewUnarchivedOnStartupInput" type="CheckBox" parent="VBoxContainer/HBoxContainer9" unique_id=1707409221]
+[node name="PreviewUnarchivedOnStartupInput" type="CheckBox" parent="VBoxContainer/SettingsContainer/VBoxContainer/HBoxContainer9" unique_id=1707409221]
 unique_name_in_owner = true
 layout_mode = 2
 
@@ -280,14 +291,15 @@ text = "Download"
 [connection signal="pressed" from="VBoxContainer/HBoxContainer7/DownloadSingleVideoButton" to="." method="_on_download_single_video_button_pressed"]
 [connection signal="button_up" from="VBoxContainer/HBoxContainer7/MarkAsArchivedButton" to="." method="_on_mark_as_archived_button_button_up"]
 [connection signal="confirmed" from="VBoxContainer/HBoxContainer7/DownloadUnarchivedVideosConfirmationDialog" to="." method="_on_download_unarchived_videos_confirmation_dialog_confirmed"]
-[connection signal="text_changed" from="VBoxContainer/HBoxContainer3/UrlInput" to="." method="_on_url_input_text_changed"]
-[connection signal="text_changed" from="VBoxContainer/HBoxContainer4/DownloadPathInput" to="." method="_on_download_path_input_text_changed"]
-[connection signal="text_changed" from="VBoxContainer/HBoxContainer/BackupPathInput" to="." method="_on_backup_path_input_text_changed"]
-[connection signal="text_changed" from="VBoxContainer/HBoxContainer2/RemotePathInput" to="." method="_on_remote_path_input_text_changed"]
-[connection signal="text_changed" from="VBoxContainer/HBoxContainer5/DownloadArchiveFileNameInput" to="." method="_on_download_archive_file_path_input_text_changed"]
-[connection signal="item_selected" from="VBoxContainer/HBoxContainer6/CookiesFromBrowserInput" to="." method="_on_cookies_from_browser_input_item_selected"]
-[connection signal="toggled" from="VBoxContainer/HBoxContainer8/DeleteDownloadInput" to="." method="_on_delete_download_input_toggled"]
-[connection signal="toggled" from="VBoxContainer/HBoxContainer9/PreviewUnarchivedOnStartupInput" to="." method="_on_preview_unarchived_on_startup_input_toggled"]
+[connection signal="folding_changed" from="VBoxContainer/SettingsContainer" to="." method="_on_foldable_container_folding_changed"]
+[connection signal="text_changed" from="VBoxContainer/SettingsContainer/VBoxContainer/HBoxContainer3/UrlInput" to="." method="_on_url_input_text_changed"]
+[connection signal="text_changed" from="VBoxContainer/SettingsContainer/VBoxContainer/HBoxContainer4/DownloadPathInput" to="." method="_on_download_path_input_text_changed"]
+[connection signal="text_changed" from="VBoxContainer/SettingsContainer/VBoxContainer/HBoxContainer/BackupPathInput" to="." method="_on_backup_path_input_text_changed"]
+[connection signal="text_changed" from="VBoxContainer/SettingsContainer/VBoxContainer/HBoxContainer2/RemotePathInput" to="." method="_on_remote_path_input_text_changed"]
+[connection signal="text_changed" from="VBoxContainer/SettingsContainer/VBoxContainer/HBoxContainer5/DownloadArchiveFileNameInput" to="." method="_on_download_archive_file_path_input_text_changed"]
+[connection signal="item_selected" from="VBoxContainer/SettingsContainer/VBoxContainer/HBoxContainer6/CookiesFromBrowserInput" to="." method="_on_cookies_from_browser_input_item_selected"]
+[connection signal="toggled" from="VBoxContainer/SettingsContainer/VBoxContainer/HBoxContainer8/DeleteDownloadInput" to="." method="_on_delete_download_input_toggled"]
+[connection signal="toggled" from="VBoxContainer/SettingsContainer/VBoxContainer/HBoxContainer9/PreviewUnarchivedOnStartupInput" to="." method="_on_preview_unarchived_on_startup_input_toggled"]
 [connection signal="confirmed" from="ArchiveConfirmationDialog" to="." method="_on_archive_confirmation_dialog_confirmed"]
 [connection signal="close_requested" from="DownloadSingleVideoWindow" to="." method="_on_download_single_video_window_close_requested"]
 [connection signal="button_up" from="DownloadSingleVideoWindow/Control/MarginContainer/VBoxContainer/DownloadSingleVideoConfirmButton" to="." method="_on_download_single_video_confirm_button_button_up"]

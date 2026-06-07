@@ -4,7 +4,11 @@ signal mark_as_archived_clicked(list : Dictionary)
 signal download_unarchived_videos_button_clicked(list : Dictionary)
 signal download_single_video_button_clicked(url : String, list : Dictionary, delete_download : bool)
 
+@export var folded_minimum_height := 50.0
+@export var unfolded_minimum_height := 450.0
+
 @onready var label := %Label
+@onready var settings_container := %SettingsContainer
 @onready var url_input := %UrlInput
 # TODO These should all have browse buttons
 @onready var download_path_input := %DownloadPathInput
@@ -85,6 +89,8 @@ var yt_dlp_wrapper : YtDlpWrapper
 
 func _ready() -> void:
 	console_signal_bus = get_tree().get_nodes_in_group("console_signal_bus")[0]
+	custom_minimum_size = Vector2(0, folded_minimum_height) \
+		if settings_container.folded else Vector2(0, unfolded_minimum_height)
 
 
 func populate_preview_queue() -> void:
@@ -176,3 +182,8 @@ func _on_download_unarchived_videos_button_button_up(list : Dictionary):
 
 func _on_download_unarchived_videos_confirmation_dialog_confirmed():
 	download_unarchived_videos_button_clicked.emit(playlist)
+
+
+func _on_foldable_container_folding_changed(is_folded: bool) -> void:
+	custom_minimum_size = Vector2(0, folded_minimum_height) if is_folded \
+		else Vector2(0, unfolded_minimum_height)
