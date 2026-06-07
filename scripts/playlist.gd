@@ -13,14 +13,16 @@ signal download_single_video_button_clicked(url : String, list : Dictionary, del
 @onready var download_archive_file_name_input := %DownloadArchiveFileNameInput
 @onready var cookies_from_browser_input := %CookiesFromBrowserInput
 @onready var delete_download_input := %DeleteDownloadInput
-@onready var queued_videos_container := %QueuedVideosContainer
+@onready var preview_unarchived_on_startup_input := %PreviewUnarchivedOnStartupInput
+@onready var preview_parent_container := %PreviewParentContainer
+@onready var preview_container := %PreviewContainer
 @onready var archive_confirmation_dialog := $ArchiveConfirmationDialog
 @onready var download_unarchived_videos_button := %DownloadUnarchivedVideosButton
 @onready var download_unarchived_videos_confirmation_dialog := %DownloadUnarchivedVideosConfirmationDialog
 @onready var download_single_video_window := %DownloadSingleVideoWindow
 @onready var single_video_url_input := %SingleVideoUrlInput
 @onready var delete_single_download_input := %DeleteSingleDownloadInput
-@onready var download_scene := load("res://scenes/download.tscn")
+@onready var preview_scene := load("res://scenes/preview.tscn")
 
 var playlist : Dictionary:
 	set(value):
@@ -36,6 +38,7 @@ var playlist : Dictionary:
 		download_archive_file_name = playlist.download_archive_file_name
 		cookies_from_browser = playlist.cookies_from_browser
 		delete_download = playlist.delete_download
+		preview_unarchived_on_startup = playlist.preview_unarchived_on_startup
 		
 		# Set labels and inputs
 		label.text = playlist_name
@@ -46,6 +49,8 @@ var playlist : Dictionary:
 		download_archive_file_name_input.text = download_archive_file_name
 		cookies_from_browser_input.text = cookies_from_browser
 		delete_download_input.button_pressed = delete_download
+		preview_unarchived_on_startup_input.button_pressed = preview_unarchived_on_startup
+		preview_parent_container.visible = preview_unarchived_on_startup
 		
 		# Need to connect this here rather than in _ready because
 		# playlist won't be set yet when _ready is fired.
@@ -60,6 +65,7 @@ var remote_upload_path := ""
 var download_archive_file_name := ""
 var cookies_from_browser := ""
 var delete_download := false
+var preview_unarchived_on_startup := false
 
 var downloaded_videos := []
 var queued_videos := [
@@ -74,14 +80,22 @@ var queued_videos := [
 ]
 
 var console_signal_bus : ConsoleSignalBus
+var yt_dlp_wrapper : YtDlpWrapper
 
 
 func _ready() -> void:
 	console_signal_bus = get_tree().get_nodes_in_group("console_signal_bus")[0]
 
 
-func populate_download_queue() -> void:
-	pass
+func populate_preview_queue() -> void:
+	if ! preview_unarchived_on_startup:
+		return
+	
+	var preview_details = yt_dlp_wrapper.get_unarchived_video_details(playlist)
+	for title in preview_details:
+		var preview_node = preview_scene.instantiate()
+		preview_container.add_child(preview_node)
+		preview_node.title = title
 
 
 func _on_mark_as_archived_button_button_up():
@@ -147,6 +161,11 @@ func _on_cookies_from_browser_input_item_selected(index):
 func _on_delete_download_input_toggled(toggled_on: bool) -> void:
 	playlist.delete_download = toggled_on
 	delete_download = toggled_on
+
+
+func _on_preview_unarchived_on_startup_input_toggled(toggled_on):
+	playlist.preview_unarchived_on_startup = toggled_on
+	preview_unarchived_on_startup = toggled_on
 
 
 func _on_download_unarchived_videos_button_button_up(list : Dictionary):

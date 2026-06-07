@@ -44,6 +44,7 @@ func _populate_channels() -> void:
 	for channel in config_loader.get_channels():
 		var channel_node = channel_scene.instantiate()
 		channel_container.add_child(channel_node)
+		channel_node.yt_dlp_wrapper = yt_dlp_wrapper
 		channel_node.channel_name = channel.name
 		channel_node.playlists = config_loader.get_playlists()
 		channel_node.playlist_marked_as_archived.connect(_on_playlist_marked_as_archived)

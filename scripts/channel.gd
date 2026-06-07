@@ -17,6 +17,8 @@ signal playlist_single_video_downloaded(url : String, list : Dictionary, delete_
 @onready var playlist_container := $ScrollContainer/PlaylistContainer
 @onready var playlist_scene := load("res://scenes/playlist.tscn")
 
+var yt_dlp_wrapper : YtDlpWrapper
+
 
 func _populate_playlists() -> void:
 	for child in playlist_container.get_children():
@@ -32,7 +34,8 @@ func _populate_playlists() -> void:
 		playlist_node.mark_as_archived_clicked.connect(_on_playlist_mark_as_archived_clicked)
 		playlist_node.download_unarchived_videos_button_clicked.connect(_on_download_unarchived_videos_button_clicked)
 		playlist_node.download_single_video_button_clicked.connect(_on_download_single_video_button_clicked)
-		#playlist_node.populate_download_queue()
+		playlist_node.yt_dlp_wrapper = yt_dlp_wrapper
+		playlist_node.populate_preview_queue()
 
 
 func _on_playlist_mark_as_archived_clicked(list : Dictionary) -> void:

@@ -78,6 +78,7 @@ func get_playlists() -> Array:
 				"download_archive_file_name": _config_file.get_value(section, "download_archive_file_name"),
 				"cookies_from_browser": _config_file.get_value(section, "cookies_from_browser", "firefox"),
 				"delete_download" : _config_file.get_value(section, "delete_download", true),
+				"preview_unarchived_on_startup" : _config_file.get_value(section, "preview_unarchived_on_startup", false)
 			})
 	
 	return playlists

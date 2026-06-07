@@ -7,9 +7,10 @@ static func _get_windows_processes() -> Dictionary:
 	
 	if console_output.size() > 0:
 		var raw_output = console_output[0].split("\n")
-		# TODO Test this
-		#raw_output.remove_at(0)
-		#raw_output.remove_at(0)
+		# These first 3 lines are all just headers
+		raw_output.remove_at(0)
+		raw_output.remove_at(0)
+		raw_output.remove_at(0)
 		var windows_processes = {}
 		
 		for process_str in raw_output:

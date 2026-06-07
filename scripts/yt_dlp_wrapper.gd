@@ -12,6 +12,7 @@ const opts := {
 	"no_playlist" : "--no-playlist",
 	"output" : "--output",
 	"output_format" : "--merge-output-format",
+	"print" : "--print",
 	"restrict" : "--restrict-filenames",
 	"simulate" : "--simulate",
 	"skip" : "--skip-download",
@@ -146,6 +147,49 @@ func download_single_video(url : String, playlist : Dictionary) -> int:
 		opts.format, "bestvideo[height<=720][ext=mp4]+bestaudio[ext=m4a]/best[height<=720][ext=mp4]",
 		opts.no_playlist
 	])
+
+
+func get_unarchived_video_details(playlist : Dictionary) -> Array:
+	var archive_file = _get_archive_file_path(playlist)
+	var output = []
+	
+	console_signal_bus.add_line("Getting unarchived video details for playlist %s" % playlist.name)
+	
+	OS.execute(yt_dlp_path, [
+		playlist.url,
+		opts.archive, archive_file,
+		opts.cookies, playlist.cookies_from_browser,
+		opts.simulate,
+		opts.print, "upload_date,title"
+	], output)
+	
+	output = output[0].split("\n")
+	var details = []
+	var date = ""
+	var title = ""
+	
+	for line in output:
+		if line == "":
+			continue
+		
+		var date_regex = RegEx.new()
+		date_regex.compile("(?<year>\\d{4})(?<month>\\d{2})(?<day>\\d{2})")
+		var result = date_regex.search(line)
+		
+		if result:
+			var year = result.get_string("year")
+			var month = result.get_string("month")
+			var day = result.get_string("day")
+			date = year + "-" + month + "-" + day
+		else:
+			title = line
+			if date:
+				title = date + " - " + title
+			details.append(title)
+			date = ""
+			title = ""
+	
+	return details
 
 
 func update() -> int:

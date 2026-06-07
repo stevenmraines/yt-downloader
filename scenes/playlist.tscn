@@ -11,7 +11,7 @@
 [ext_resource type="StyleBox" uid="uid://caep6kc0fjn86" path="res://styles/success_button_hover.tres" id="9_8605i"]
 
 [node name="Playlist" type="MarginContainer" unique_id=1021777078]
-custom_minimum_size = Vector2(0, 250)
+custom_minimum_size = Vector2(0, 450)
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -169,15 +169,41 @@ text = "Delete Download After Upload:"
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer" unique_id=334417810]
+[node name="HBoxContainer9" type="HBoxContainer" parent="VBoxContainer" unique_id=1802549357]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer9" unique_id=1542065105]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Preview Unarchived Videos On Startup:"
+
+[node name="PreviewUnarchivedOnStartupInput" type="CheckBox" parent="VBoxContainer/HBoxContainer9" unique_id=1707409221]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="PreviewParentContainer" type="MarginContainer" parent="VBoxContainer" unique_id=1880220991]
+unique_name_in_owner = true
+visible = false
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_constants/margin_left = 10
 
-[node name="QueuedVideosContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer" unique_id=1193915359]
+[node name="FoldableContainer" type="FoldableContainer" parent="VBoxContainer/PreviewParentContainer" unique_id=1837632835]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+title = "Unarchived Videos"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/PreviewParentContainer/FoldableContainer" unique_id=211462644]
+layout_mode = 2
+
+[node name="PreviewContainer" type="VBoxContainer" parent="VBoxContainer/PreviewParentContainer/FoldableContainer/ScrollContainer" unique_id=1743985583]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+theme_override_constants/separation = 30
 
 [node name="ArchiveConfirmationDialog" type="ConfirmationDialog" parent="." unique_id=1942883403]
 oversampling_override = 1.0
@@ -261,6 +287,7 @@ text = "Download"
 [connection signal="text_changed" from="VBoxContainer/HBoxContainer5/DownloadArchiveFileNameInput" to="." method="_on_download_archive_file_path_input_text_changed"]
 [connection signal="item_selected" from="VBoxContainer/HBoxContainer6/CookiesFromBrowserInput" to="." method="_on_cookies_from_browser_input_item_selected"]
 [connection signal="toggled" from="VBoxContainer/HBoxContainer8/DeleteDownloadInput" to="." method="_on_delete_download_input_toggled"]
+[connection signal="toggled" from="VBoxContainer/HBoxContainer9/PreviewUnarchivedOnStartupInput" to="." method="_on_preview_unarchived_on_startup_input_toggled"]
 [connection signal="confirmed" from="ArchiveConfirmationDialog" to="." method="_on_archive_confirmation_dialog_confirmed"]
 [connection signal="close_requested" from="DownloadSingleVideoWindow" to="." method="_on_download_single_video_window_close_requested"]
 [connection signal="button_up" from="DownloadSingleVideoWindow/Control/MarginContainer/VBoxContainer/DownloadSingleVideoConfirmButton" to="." method="_on_download_single_video_confirm_button_button_up"]
