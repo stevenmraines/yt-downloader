@@ -26,6 +26,9 @@ signal download_single_video_button_clicked(url : String, list : Dictionary, del
 @onready var download_single_video_window := %DownloadSingleVideoWindow
 @onready var single_video_url_input := %SingleVideoUrlInput
 @onready var delete_single_download_input := %DeleteSingleDownloadInput
+@onready var download_path_dialog := $DownloadPathDialog
+@onready var backup_upload_path_dialog := $BackupUploadPathDialog
+@onready var remote_upload_path_dialog := $RemoteUploadPathDialog
 @onready var preview_scene := load("res://scenes/preview.tscn")
 
 var playlist : Dictionary:
@@ -89,8 +92,7 @@ var yt_dlp_wrapper : YtDlpWrapper
 
 func _ready() -> void:
 	console_signal_bus = get_tree().get_nodes_in_group("console_signal_bus")[0]
-	custom_minimum_size = Vector2(0, folded_minimum_height) \
-		if settings_container.folded else Vector2(0, unfolded_minimum_height)
+	settings_container.fold()
 
 
 func populate_preview_queue() -> void:
@@ -187,3 +189,33 @@ func _on_download_unarchived_videos_confirmation_dialog_confirmed():
 func _on_foldable_container_folding_changed(is_folded: bool) -> void:
 	custom_minimum_size = Vector2(0, folded_minimum_height) if is_folded \
 		else Vector2(0, unfolded_minimum_height)
+
+
+func _on_download_path_button_button_up():
+	download_path_dialog.visible = true
+
+
+func _on_backup_upload_path_button_button_up():
+	backup_upload_path_dialog.visible = true
+
+
+func _on_remote_upload_path_button_button_up():
+	remote_upload_path_dialog.visible = true
+
+
+func _on_download_path_dialog_dir_selected(dir):
+	download_path = dir
+	download_path_input.text = dir
+	playlist.download_path = dir
+
+
+func _on_backup_upload_path_dialog_dir_selected(dir):
+	backup_upload_path = dir
+	backup_upload_path_input.text = dir
+	playlist.backup_upload_path = dir
+
+
+func _on_remote_upload_path_dialog_dir_selected(dir):
+	remote_upload_path = dir
+	remote_upload_path_input.text = dir
+	playlist.remote_upload_path = dir

@@ -70,11 +70,9 @@ size = Vector2i(364, 100)
 [node name="SettingsContainer" type="FoldableContainer" parent="VBoxContainer" unique_id=939011708]
 unique_name_in_owner = true
 layout_mode = 2
-folded = true
 title = "Settings"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/SettingsContainer" unique_id=949129173]
-visible = false
 layout_mode = 2
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer/SettingsContainer/VBoxContainer" unique_id=968633641]
@@ -100,6 +98,12 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 14
 text = "Download Path:"
 
+[node name="DownloadPathButton" type="Button" parent="VBoxContainer/SettingsContainer/VBoxContainer/HBoxContainer4" unique_id=81080938]
+layout_mode = 2
+theme_override_styles/pressed = ExtResource("5_8votw")
+theme_override_styles/hover = ExtResource("6_wdmaq")
+text = "Browse"
+
 [node name="DownloadPathInput" type="LineEdit" parent="VBoxContainer/SettingsContainer/VBoxContainer/HBoxContainer4" unique_id=216570485]
 unique_name_in_owner = true
 layout_mode = 2
@@ -114,6 +118,12 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 14
 text = "Backup Upload Path:"
 
+[node name="BackupUploadPathButton" type="Button" parent="VBoxContainer/SettingsContainer/VBoxContainer/HBoxContainer" unique_id=650890444]
+layout_mode = 2
+theme_override_styles/pressed = ExtResource("5_8votw")
+theme_override_styles/hover = ExtResource("6_wdmaq")
+text = "Browse"
+
 [node name="BackupPathInput" type="LineEdit" parent="VBoxContainer/SettingsContainer/VBoxContainer/HBoxContainer" unique_id=82656825]
 unique_name_in_owner = true
 layout_mode = 2
@@ -127,6 +137,12 @@ theme_override_constants/separation = 10
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
 text = "Remote Upload Path:"
+
+[node name="RemoteUploadPathButton" type="Button" parent="VBoxContainer/SettingsContainer/VBoxContainer/HBoxContainer2" unique_id=57976297]
+layout_mode = 2
+theme_override_styles/pressed = ExtResource("5_8votw")
+theme_override_styles/hover = ExtResource("6_wdmaq")
+text = "Browse"
 
 [node name="RemotePathInput" type="LineEdit" parent="VBoxContainer/SettingsContainer/VBoxContainer/HBoxContainer2" unique_id=407623150]
 unique_name_in_owner = true
@@ -288,13 +304,43 @@ theme_override_styles/pressed = ExtResource("8_xais8")
 theme_override_styles/hover = ExtResource("9_8605i")
 text = "Download"
 
+[node name="DownloadPathDialog" type="FileDialog" parent="." unique_id=1171291283]
+oversampling_override = 1.0
+title = "Select Download Path"
+initial_position = 2
+size = Vector2i(1280, 720)
+file_mode = 2
+access = 2
+show_hidden_files = true
+
+[node name="BackupUploadPathDialog" type="FileDialog" parent="." unique_id=467450347]
+oversampling_override = 1.0
+title = "Select Backup Upload Path"
+initial_position = 2
+size = Vector2i(1280, 720)
+file_mode = 2
+access = 2
+show_hidden_files = true
+
+[node name="RemoteUploadPathDialog" type="FileDialog" parent="." unique_id=1619137532]
+oversampling_override = 1.0
+title = "Select Remote Upload Path"
+initial_position = 2
+size = Vector2i(1280, 720)
+file_mode = 2
+access = 2
+show_hidden_files = true
+
 [connection signal="pressed" from="VBoxContainer/HBoxContainer7/DownloadSingleVideoButton" to="." method="_on_download_single_video_button_pressed"]
 [connection signal="button_up" from="VBoxContainer/HBoxContainer7/MarkAsArchivedButton" to="." method="_on_mark_as_archived_button_button_up"]
 [connection signal="confirmed" from="VBoxContainer/HBoxContainer7/DownloadUnarchivedVideosConfirmationDialog" to="." method="_on_download_unarchived_videos_confirmation_dialog_confirmed"]
 [connection signal="folding_changed" from="VBoxContainer/SettingsContainer" to="." method="_on_foldable_container_folding_changed"]
 [connection signal="text_changed" from="VBoxContainer/SettingsContainer/VBoxContainer/HBoxContainer3/UrlInput" to="." method="_on_url_input_text_changed"]
+[connection signal="button_up" from="VBoxContainer/SettingsContainer/VBoxContainer/HBoxContainer4/DownloadPathButton" to="." method="_on_download_path_button_button_up"]
 [connection signal="text_changed" from="VBoxContainer/SettingsContainer/VBoxContainer/HBoxContainer4/DownloadPathInput" to="." method="_on_download_path_input_text_changed"]
+[connection signal="button_up" from="VBoxContainer/SettingsContainer/VBoxContainer/HBoxContainer/BackupUploadPathButton" to="." method="_on_backup_upload_path_button_button_up"]
 [connection signal="text_changed" from="VBoxContainer/SettingsContainer/VBoxContainer/HBoxContainer/BackupPathInput" to="." method="_on_backup_path_input_text_changed"]
+[connection signal="button_up" from="VBoxContainer/SettingsContainer/VBoxContainer/HBoxContainer2/RemoteUploadPathButton" to="." method="_on_remote_upload_path_button_button_up"]
 [connection signal="text_changed" from="VBoxContainer/SettingsContainer/VBoxContainer/HBoxContainer2/RemotePathInput" to="." method="_on_remote_path_input_text_changed"]
 [connection signal="text_changed" from="VBoxContainer/SettingsContainer/VBoxContainer/HBoxContainer5/DownloadArchiveFileNameInput" to="." method="_on_download_archive_file_path_input_text_changed"]
 [connection signal="item_selected" from="VBoxContainer/SettingsContainer/VBoxContainer/HBoxContainer6/CookiesFromBrowserInput" to="." method="_on_cookies_from_browser_input_item_selected"]
@@ -303,3 +349,6 @@ text = "Download"
 [connection signal="confirmed" from="ArchiveConfirmationDialog" to="." method="_on_archive_confirmation_dialog_confirmed"]
 [connection signal="close_requested" from="DownloadSingleVideoWindow" to="." method="_on_download_single_video_window_close_requested"]
 [connection signal="button_up" from="DownloadSingleVideoWindow/Control/MarginContainer/VBoxContainer/DownloadSingleVideoConfirmButton" to="." method="_on_download_single_video_confirm_button_button_up"]
+[connection signal="dir_selected" from="DownloadPathDialog" to="." method="_on_download_path_dialog_dir_selected"]
+[connection signal="dir_selected" from="BackupUploadPathDialog" to="." method="_on_backup_upload_path_dialog_dir_selected"]
+[connection signal="dir_selected" from="RemoteUploadPathDialog" to="." method="_on_remote_upload_path_dialog_dir_selected"]
