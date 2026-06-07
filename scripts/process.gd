@@ -2,17 +2,21 @@ extends MarginContainer
 
 signal process_killed(process : Dictionary)
 
-@onready var name_label := $HBoxContainer/NameLabel
-@onready var status_label := $HBoxContainer/StatusLabel
-@onready var kill_button := $HBoxContainer/KillButton
+@onready var channel_and_playlist_label := %ChannelAndPlaylistLabel
+@onready var process_type_label := %ProcessTypeLabel
+@onready var status_label := %StatusLabel
+@onready var kill_button := %KillButton
 @onready var kill_confirmation_dialog := $KillConfirmationDialog
 
 var process := {}:
 	set(value):
 		process = value
 		
-		if name_label:
-			name_label.text = process.name
+		if channel_and_playlist_label:
+			channel_and_playlist_label.text = process.playlist.channel + ": " + process.playlist.name
+		
+		if process_type_label:
+			process_type_label.text = process.name
 		
 		if status_label:
 			var text_color = status_colors[process.status]
@@ -24,7 +28,7 @@ var process := {}:
 		kill_button.disabled = ! killable_states.has(process.status)
 
 var status_colors := {
-	ProcessQueue.ProcessState.QUEUED: Color.BLUE,
+	ProcessQueue.ProcessState.QUEUED: Color.AQUA,
 	ProcessQueue.ProcessState.IN_PROGRESS: Color.YELLOW,
 	ProcessQueue.ProcessState.COMPLETE: Color.GREEN,
 	ProcessQueue.ProcessState.ERRORED: Color.ORANGE,
