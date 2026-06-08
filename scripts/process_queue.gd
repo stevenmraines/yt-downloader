@@ -7,6 +7,9 @@ signal queue_changed(processes : Array)
 var processes := []
 var current_process_index := 0
 var console_signal_bus : ConsoleSignalBus
+var remote_ip : String
+var remote_user : String
+var ssh_key_path : String
 
 const PROGRESS_CHECK_DURATION := 0.5
 
@@ -62,8 +65,7 @@ func _on_progress_check_timer_timeout(pid : int) -> void:
 		process.exit_code = exit_code
 		
 		if exit_code == 0:
-			process.status = ProcessState.COMPLETE
-			console_signal_bus.add_line("Process %s (%d) complete" % [process.name, process.pid])
+			_handle_followup_job(process)
 		else:
 			process.status = ProcessState.ERRORED
 			console_signal_bus.add_error("Process %s (%d) completed with error code %d" % [process.name, process.pid, exit_code])
@@ -71,6 +73,41 @@ func _on_progress_check_timer_timeout(pid : int) -> void:
 		process.timer.stop()
 		queue_changed.emit(processes)
 		current_process_index += 1
+
+
+func _handle_followup_job(process : Dictionary) -> void:
+	if ["update", "mark_playlist_as_archived"].has(process.name):
+		process.status = ProcessState.COMPLETE
+		console_signal_bus.add_line("Process %s (%d) complete" % [process.name, process.pid])
+	elif process.name == "download_playlist":
+		pass
+	elif process.name == "download_single_video":
+		var download_path = process.playlist.download_path
+		# TODO How to get filename?
+		var filename = download_path + "/whatever.mp4"
+		var backup_path = process.playlist.backup_upload_path
+		var remote_path = process.playist.remote_upload_path
+		var delete_download = process.playlist.delete_download
+		# FIXME Really, each of these things should probably be their own process
+		if backup_path:
+			pass
+			#if DirAccess.dir_exists_absolute(backup_path):
+				#console_signal_bus.add_line("Copying download to %s" % backup_path)
+				#DirAccess.copy_absolute(download_path, backup_path)
+			#else:
+				#console_signal_bus.add_error("Error copying download to %s, dir does not exist" % backup_path)
+		if remote_path:
+			pass
+			# TODO
+			#var ip = ""
+			#var user = ""
+			#var ssh_key_path = ""
+			# TODO Add error if remote_ip, user, or ssh_key aren't set
+			#Util.scp(filename, remote_path, remote_ip, remote_user, ssh_key_path)
+		# FIXME We'll need to make sure this doesn't happen until backup and remote are handled
+		if delete_download:
+			pass
+			#DirAccess.remove_absolute(download_path)
 
 
 func kill_process(pid : int) -> void:

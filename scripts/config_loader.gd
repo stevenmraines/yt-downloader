@@ -48,6 +48,35 @@ func get_paths() -> Array:
 	return paths
 
 
+func get_servers() -> Array:
+	var servers := []
+	
+	for section in _config_file.get_sections():
+		if section.begins_with("server"):
+			servers.append({
+				"section": section,
+				"name": _config_file.get_value(section, "name"),
+				"ip": _config_file.get_value(section, "ip")
+			})
+	
+	return servers
+
+
+func get_credentials() -> Array:
+	var credentials := []
+	
+	for section in _config_file.get_sections():
+		if section.begins_with("credentials"):
+			credentials.append({
+				"section": section,
+				"server": _config_file.get_value(section, "server"),
+				"user": _config_file.get_value(section, "user"),
+				"ssh_key_path": _config_file.get_value(section, "ssh_key_path", "~/.ssh/id_rsa.pub")
+			})
+	
+	return credentials
+
+
 func get_channels() -> Array:
 	var channels := []
 	
@@ -94,6 +123,8 @@ func save_changes(changes : Dictionary) -> void:
 			
 			var value = config_path[key]
 			_config_file.set_value(config_path.section, key, value)
+	
+	# TODO Save servers and credentials
 	
 	for config_channel in changes.channels:
 		for key in config_channel.keys():

@@ -58,3 +58,9 @@ static func get_processes() -> Dictionary:
 		return _get_windows_processes()
 	else:
 		return _get_unix_processes()
+
+
+static func scp(file : String, destination, ip : String, user : String, ssh_key_path : String) -> int:
+	return OS.create_process("scp", [
+		file, "-i", ssh_key_path, "%s@%s:%s" % [user, ip, destination]
+	], true)

@@ -32,6 +32,12 @@ func _ready() -> void:
 	
 	_populate_channels()
 	_create_archive_files()
+	
+	var server = config_loader.get_servers()[0]
+	var creds = config_loader.get_credentials()[0]
+	process_queue.remote_ip = server.ip
+	process_queue.remote_user = creds.user
+	process_queue.ssh_key_path = creds.ssh_key_path
 
 
 func _unhandled_input(event: InputEvent) -> void:
