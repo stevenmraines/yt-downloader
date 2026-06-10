@@ -9,6 +9,7 @@ var process_name := ""
 var playlist := {}
 var progress_timer := Timer.new()
 var parent_process : Process
+var child_processes : Array[Process]
 
 const PROGRESS_CHECK_DURATION := 0.5
 

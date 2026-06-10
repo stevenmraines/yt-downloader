@@ -142,6 +142,7 @@ func queue_download_single_video(url : String, playlist : Dictionary, delete_dow
 	copy_to_backup_process.progress_timer_timeout.connect(_on_process_progress_timer_timeout)
 	process.parent_process = process
 	processes.append(copy_to_backup_process)
+	process.child_processes.append(copy_to_backup_process)
 	
 	var copy_to_remote_process = Process.new()
 	copy_to_remote_process.process_name = "copy_to_remote"
@@ -149,6 +150,7 @@ func queue_download_single_video(url : String, playlist : Dictionary, delete_dow
 	copy_to_remote_process.progress_timer_timeout.connect(_on_process_progress_timer_timeout)
 	process.parent_process = process
 	processes.append(copy_to_remote_process)
+	process.child_processes.append(copy_to_remote_process)
 	
 	if delete_download:
 		var delete_download_process = Process.new()
@@ -157,6 +159,7 @@ func queue_download_single_video(url : String, playlist : Dictionary, delete_dow
 		delete_download_process.progress_timer_timeout.connect(_on_process_progress_timer_timeout)
 		process.parent_process = process
 		processes.append(delete_download_process)
+		process.child_processes.append(delete_download_process)
 	
 	console_signal_bus.add_line("Queueing process download_single_video")
 	queue_changed.emit(processes)
