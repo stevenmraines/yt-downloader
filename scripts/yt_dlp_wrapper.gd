@@ -130,7 +130,7 @@ func download_playlist(playlist : Dictionary) -> int:
 
 
 # FIXME If video is already in archive file, terminal closes immediately and process remains in queue
-func download_single_video(url : String, playlist : Dictionary) -> int:
+func download_single_video(playlist : Dictionary) -> int:
 	var archive_file = _get_archive_file_path(playlist)
 	var output = playlist.download_path + "/%(upload_date>%Y-%m-%d)s %(title)s.%(ext)s\""
 	
@@ -138,7 +138,7 @@ func download_single_video(url : String, playlist : Dictionary) -> int:
 	
 	# TODO Try to find a way to keep the terminal window open
 	return _run_command([
-		url,
+		playlist.url,
 		opts.archive, archive_file,
 		opts.cookies, playlist.cookies_from_browser,
 		opts.restrict,

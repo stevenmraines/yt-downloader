@@ -171,7 +171,7 @@ func _on_process_queue_queue_changed(processes):
 		new_process_node.connect("process_killed", _on_process_killed)
 
 
-func _on_process_killed(process : Dictionary) -> void:
+func _on_process_killed(process : Process) -> void:
 	process_queue.kill_process(process.pid)
 
 

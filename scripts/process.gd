@@ -1,14 +1,15 @@
 extends MarginContainer
 
-signal process_killed(process : Dictionary)
+signal process_killed(process : Process)
 
+@onready var is_child_process_icon := %IsChildProcessIcon
 @onready var channel_and_playlist_label := %ChannelAndPlaylistLabel
 @onready var process_type_label := %ProcessTypeLabel
 @onready var status_label := %StatusLabel
 @onready var kill_button := %KillButton
 @onready var kill_confirmation_dialog := $KillConfirmationDialog
 
-var process := {}:
+var process : Process:
 	set(value):
 		process = value
 		
@@ -16,7 +17,7 @@ var process := {}:
 			channel_and_playlist_label.text = process.playlist.channel + ": " + process.playlist.name
 		
 		if process_type_label:
-			process_type_label.text = process.name
+			process_type_label.text = process.process_name
 		
 		if status_label:
 			var text_color = status_colors[process.status]
@@ -24,23 +25,25 @@ var process := {}:
 			status_label.add_text(status_messages[process.status])
 			status_label.pop()
 		
-		var killable_states = [ProcessQueue.ProcessState.QUEUED, ProcessQueue.ProcessState.IN_PROGRESS]
+		var killable_states = [Process.ProcessState.QUEUED, Process.ProcessState.IN_PROGRESS]
 		kill_button.disabled = ! killable_states.has(process.status)
+		
+		is_child_process_icon.visible = ! (true if process.parent_process else false)
 
 var status_colors := {
-	ProcessQueue.ProcessState.QUEUED: Color.AQUA,
-	ProcessQueue.ProcessState.IN_PROGRESS: Color.YELLOW,
-	ProcessQueue.ProcessState.COMPLETE: Color.GREEN,
-	ProcessQueue.ProcessState.ERRORED: Color.ORANGE,
-	ProcessQueue.ProcessState.KILLED: Color.RED,
+	Process.ProcessState.QUEUED: Color.AQUA,
+	Process.ProcessState.IN_PROGRESS: Color.YELLOW,
+	Process.ProcessState.COMPLETE: Color.GREEN,
+	Process.ProcessState.ERRORED: Color.ORANGE,
+	Process.ProcessState.KILLED: Color.RED,
 }
 
 var status_messages := {
-	ProcessQueue.ProcessState.QUEUED: "QUEUED",
-	ProcessQueue.ProcessState.IN_PROGRESS: "IN PROGRESS",
-	ProcessQueue.ProcessState.COMPLETE: "COMPLETE",
-	ProcessQueue.ProcessState.ERRORED: "ERRORED",
-	ProcessQueue.ProcessState.KILLED: "KILLED",
+	Process.ProcessState.QUEUED: "QUEUED",
+	Process.ProcessState.IN_PROGRESS: "IN PROGRESS",
+	Process.ProcessState.COMPLETE: "COMPLETE",
+	Process.ProcessState.ERRORED: "ERRORED",
+	Process.ProcessState.KILLED: "KILLED",
 }
 
 

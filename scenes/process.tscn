@@ -2,6 +2,7 @@
 
 [ext_resource type="StyleBox" uid="uid://b2vscmgcfd1q2" path="res://styles/danger_button_normal.tres" id="1_vy3yq"]
 [ext_resource type="Script" uid="uid://bxi7rhkso52aj" path="res://scripts/process.gd" id="1_y5cam"]
+[ext_resource type="Texture2D" uid="uid://cn00usu6pmv48" path="res://assets/child-process.png" id="2_ify2r"]
 [ext_resource type="StyleBox" uid="uid://mj3scniudw06" path="res://styles/danger_button_pressed.tres" id="2_y5cam"]
 [ext_resource type="StyleBox" uid="uid://p0cmbk4o48q7" path="res://styles/danger_button_hover.tres" id="3_7l6q0"]
 [ext_resource type="StyleBox" uid="uid://dpd3ok5hnddk0" path="res://styles/danger_button_disabled.tres" id="5_7l6q0"]
@@ -18,17 +19,30 @@ grow_vertical = 2
 size_flags_horizontal = 3
 script = ExtResource("1_y5cam")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=508457646]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=694287343]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=508457646]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer" unique_id=839656425]
+[node name="IsChildProcessIcon" type="TextureRect" parent="VBoxContainer/HBoxContainer" unique_id=926696738]
+unique_name_in_owner = true
+self_modulate = Color(0.31667995, 0.78, 0.14819999, 1)
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+tooltip_text = "This is a child process."
+texture = ExtResource("2_ify2r")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer" unique_id=839656425]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 2.0
 theme_override_constants/separation = 10
 
-[node name="ChannelAndPlaylistLabel" type="Label" parent="HBoxContainer/VBoxContainer" unique_id=1906076249]
+[node name="ChannelAndPlaylistLabel" type="Label" parent="VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1906076249]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 1
@@ -36,20 +50,20 @@ size_flags_stretch_ratio = 2.0
 clip_text = true
 text_overrun_behavior = 5
 
-[node name="ProcessTypeLabel" type="Label" parent="HBoxContainer/VBoxContainer" unique_id=321379629]
+[node name="ProcessTypeLabel" type="Label" parent="VBoxContainer/HBoxContainer/VBoxContainer" unique_id=321379629]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="StatusLabel" type="RichTextLabel" parent="HBoxContainer" unique_id=548722286]
+[node name="StatusLabel" type="RichTextLabel" parent="VBoxContainer/HBoxContainer" unique_id=548722286]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_stretch_ratio = 0.35
+size_flags_stretch_ratio = 0.5
 fit_content = true
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="KillButton" type="Button" parent="HBoxContainer" unique_id=967262316]
+[node name="KillButton" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=967262316]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(60, 40)
 layout_mode = 2
@@ -66,5 +80,5 @@ text = "KILL"
 oversampling_override = 1.0
 initial_position = 2
 
-[connection signal="button_up" from="HBoxContainer/KillButton" to="." method="_on_kill_button_button_up"]
+[connection signal="button_up" from="VBoxContainer/HBoxContainer/KillButton" to="." method="_on_kill_button_button_up"]
 [connection signal="confirmed" from="KillConfirmationDialog" to="." method="_on_kill_confirmation_dialog_confirmed"]
