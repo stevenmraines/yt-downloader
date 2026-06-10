@@ -3,7 +3,7 @@ class_name Process extends Node
 signal progress_timer_timeout(process : Process)
 
 var status := ProcessState.QUEUED
-var exit_code := -1
+var exit_code := 0
 var pid := -1
 var process_name := ""
 var playlist := {}

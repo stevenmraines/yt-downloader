@@ -83,15 +83,14 @@ func _start_queued_process(process_index : int) -> void:
 	queue_changed.emit(processes)
 
 
-func kill_process(pid : int) -> void:
-	# FIXME THIS WON'T WORK FOR KILLING CHILD PROCESSES, YOU'LL HAVE MULTIPLE PROCESSES W/ PID OF -1
-	var i = processes.find_custom(func(x): return x.pid == pid)
-	var process = processes[i]
+func kill_process(process : Process) -> void:
 	process.progress_timer.stop()
-	var exit_code = error_string(OS.kill(pid))
+	var kill_exit_code = error_string(0)
+	if process.pid > -1:
+		kill_exit_code = error_string(OS.kill(process.pid))
 	process.status = Process.ProcessState.KILLED
 	
-	console_signal_bus.add_warning("Process %s (%d) killed with exit code %s" % [process.process_name, process.pid, exit_code])
+	console_signal_bus.add_warning("Process %s (%d) killed with exit code %s" % [process.process_name, process.pid, kill_exit_code])
 	
 	# yt-dlp sometimes spawns two processes with the same name, for some reason.
 	# Both need to be killed.
@@ -99,17 +98,17 @@ func kill_process(pid : int) -> void:
 	for os_pid in os_processes:
 		var process_name = os_processes[os_pid]
 		if process_name == "yt-dlp.exe" and os_pid != process.pid:
-			var second_exit_code = error_string(OS.kill(os_pid))
-			console_signal_bus.add_warning("Secondary process %s (%d) killed with exit code %s" % [process_name, os_pid, second_exit_code])
+			var second_kill_exit_code = error_string(OS.kill(os_pid))
+			console_signal_bus.add_warning("Secondary process %s (%d) killed with exit code %s" % [process_name, os_pid, second_kill_exit_code])
 	
+	var i = processes.find_custom(func(x): return x.get_instance_id() == process.get_instance_id())
 	if i == current_process_index:
+		# FIXME Need to check if processes[current_process_index] is a child process and increment past all of those I guess
 		current_process_index += 1
 	
-	# Check for any child processes that need killing
-	# TODO
-	#for child_process in processes:
-		#if child_process.parent_process == process:
-			#kill_process(child_process.pid)
+	for child_process in processes:
+		if child_process.parent_process == process:
+			kill_process(child_process)
 	
 	queue_changed.emit(processes)
 

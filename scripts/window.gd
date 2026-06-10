@@ -172,7 +172,7 @@ func _on_process_queue_queue_changed(processes):
 
 
 func _on_process_killed(process : Process) -> void:
-	process_queue.kill_process(process.pid)
+	process_queue.kill_process(process)
 
 
 func _on_pause_button_button_up():
