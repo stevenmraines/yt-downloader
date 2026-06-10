@@ -23,13 +23,25 @@ func _process(_delta):
 		return
 	
 	var current_process = processes[current_process_index]
+	var finished_states = [
+		Process.ProcessState.COMPLETE,
+		Process.ProcessState.KILLED,
+		Process.ProcessState.ERRORED
+	]
+	
+	if finished_states.has(current_process.status):
+		current_process_index += 1
+		return
 	
 	if current_process.status == Process.ProcessState.QUEUED:
-		_start_queued_process(current_process_index)
+		if current_process.parent_process and current_process.parent_process.status == Process.ProcessState.KILLED:
+			# Kill any children of killed parent processes
+			kill_process(current_process)
+		else:
+			_start_queued_process(current_process)
 
 
-func _start_queued_process(process_index : int) -> void:
-	var process = processes[process_index]
+func _start_queued_process(process : Process) -> void:
 	process.status = Process.ProcessState.IN_PROGRESS
 	var pid = -1
 	
@@ -100,15 +112,6 @@ func kill_process(process : Process) -> void:
 		if process_name == "yt-dlp.exe" and os_pid != process.pid:
 			var second_kill_exit_code = error_string(OS.kill(os_pid))
 			console_signal_bus.add_warning("Secondary process %s (%d) killed with exit code %s" % [process_name, os_pid, second_kill_exit_code])
-	
-	var i = processes.find_custom(func(x): return x.get_instance_id() == process.get_instance_id())
-	if i == current_process_index:
-		# FIXME Need to check if processes[current_process_index] is a child process and increment past all of those I guess
-		current_process_index += 1
-	
-	for child_process in processes:
-		if child_process.parent_process == process:
-			kill_process(child_process)
 	
 	queue_changed.emit(processes)
 
@@ -192,4 +195,4 @@ func _on_process_progress_timer_timeout(process : Process) -> void:
 		
 		process.progress_timer.stop()
 		queue_changed.emit(processes)
-		current_process_index += 1
+		#current_process_index += 1
