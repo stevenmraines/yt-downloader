@@ -90,7 +90,6 @@ func _start_queued_process(process : Process) -> void:
 		#DirAccess.remove_absolute(filename)
 	
 	process.pid = pid
-	# FIXME "Unable to start the timer because it's not inside the scene tree"
 	process.progress_timer.start()
 	queue_changed.emit(processes)
 
@@ -122,6 +121,7 @@ func queue_download_playlist(playlist : Dictionary) -> void:
 	process.playlist = playlist
 	process.progress_timer_timeout.connect(_on_process_progress_timer_timeout)
 	processes.append(process)
+	add_child(process)
 	console_signal_bus.add_line("Queueing process download_playlist")
 	queue_changed.emit(processes)
 
@@ -135,31 +135,35 @@ func queue_download_single_video(url : String, playlist : Dictionary, delete_dow
 	process.playlist = playlist
 	process.progress_timer_timeout.connect(_on_process_progress_timer_timeout)
 	processes.append(process)
+	add_child(process)
 	
 	var copy_to_backup_process = Process.new()
 	copy_to_backup_process.process_name = "copy_to_backup"
 	copy_to_backup_process.playlist = playlist
 	copy_to_backup_process.progress_timer_timeout.connect(_on_process_progress_timer_timeout)
-	process.parent_process = process
+	copy_to_backup_process.parent_process = process
 	processes.append(copy_to_backup_process)
 	process.child_processes.append(copy_to_backup_process)
+	add_child(copy_to_backup_process)
 	
 	var copy_to_remote_process = Process.new()
 	copy_to_remote_process.process_name = "copy_to_remote"
 	copy_to_remote_process.playlist = playlist
 	copy_to_remote_process.progress_timer_timeout.connect(_on_process_progress_timer_timeout)
-	process.parent_process = process
+	copy_to_remote_process.parent_process = process
 	processes.append(copy_to_remote_process)
 	process.child_processes.append(copy_to_remote_process)
+	add_child(copy_to_remote_process)
 	
 	if delete_download:
 		var delete_download_process = Process.new()
 		delete_download_process.process_name = "delete_download"
 		delete_download_process.playlist = playlist
 		delete_download_process.progress_timer_timeout.connect(_on_process_progress_timer_timeout)
-		process.parent_process = process
+		delete_download_process.parent_process = process
 		processes.append(delete_download_process)
 		process.child_processes.append(delete_download_process)
+		add_child(delete_download_process)
 	
 	console_signal_bus.add_line("Queueing process download_single_video")
 	queue_changed.emit(processes)
@@ -171,6 +175,7 @@ func queue_mark_playlist_as_archived(playlist : Dictionary) -> void:
 	process.playlist = playlist
 	process.progress_timer_timeout.connect(_on_process_progress_timer_timeout)
 	processes.append(process)
+	add_child(process)
 	console_signal_bus.add_line("Queueing process mark_playlist_as_archived")
 	queue_changed.emit(processes)
 
@@ -180,6 +185,7 @@ func queue_update() -> void:
 	process.process_name = "update"
 	process.progress_timer_timeout.connect(_on_process_progress_timer_timeout)
 	processes.append(process)
+	add_child(process)
 	console_signal_bus.add_line("Queueing process update")
 	queue_changed.emit(processes)
 
@@ -198,4 +204,3 @@ func _on_process_progress_timer_timeout(process : Process) -> void:
 		
 		process.progress_timer.stop()
 		queue_changed.emit(processes)
-		#current_process_index += 1

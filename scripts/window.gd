@@ -23,6 +23,7 @@ extends PanelContainer
 @onready var process_scene := load("res://scenes/process.tscn")
 @onready var process_queue_background_style := load("res://styles/process_queue_background.tres")
 @onready var process_queue_background_paused_style := load("res://styles/process_queue_background_paused.tres")
+@onready var parent_process_container_style := load("res://styles/parent_process_container.tres")
 
 
 func _ready() -> void:
@@ -165,22 +166,25 @@ func _on_process_queue_queue_changed(processes):
 		process_node.queue_free()
 	
 	var parent_process : Process
-	# TODO Make this a foldable?
-	var parent_vbox : VBoxContainer
+	var vbox : VBoxContainer
 	
 	for process in processes:
 		var new_process_node = process_scene.instantiate()
 		var container = process_container
+		
 		# If this is a parent
 		if process.child_processes.size() > 0:
 			parent_process = process
-			parent_vbox = VBoxContainer.new()
-			# TODO Add stylebox or whatever to outline everything with a border
-			process_container.add_child(parent_vbox)
-			container = parent_vbox
+			var parent_container = PanelContainer.new()
+			parent_container.add_theme_stylebox_override("panel", parent_process_container_style)
+			vbox = VBoxContainer.new()
+			parent_container.add_child(vbox)
+			process_container.add_child(parent_container)
+			container = vbox
 		# If this is a child
-		elif process.parent_process == parent_process:
-			container = parent_vbox
+		elif parent_process and process.parent_process == parent_process:
+			container = vbox
+		
 		container.add_child(new_process_node)
 		new_process_node.process = process
 		new_process_node.connect("process_killed", _on_process_killed)
