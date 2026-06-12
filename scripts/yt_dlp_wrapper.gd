@@ -3,7 +3,7 @@ class_name YtDlpWrapper extends Node
 var yt_dlp_path : String
 var console_signal_bus : ConsoleSignalBus
 
-const opts := {
+const OPTS := {
 	"archive" : "--download-archive",
 	"cookies" : "--cookies-from-browser",
 	"flat" : "--flat-playlist",
@@ -19,6 +19,8 @@ const opts := {
 	"update" : "--update",
 	"watched" : "--mark-watched",
 }
+
+const FORMAT_STRING := "bestvideo[height<=720][ext=mp4]+bestaudio[ext=m4a]/best[height<=720][ext=mp4]"
 
 
 func _ready() -> void:
@@ -40,23 +42,21 @@ func _get_archive_file_path(playlist : Dictionary) -> String:
 
 func mark_playlist_as_archived(playlist : Dictionary) -> int:
 	console_signal_bus.add_line("Marking playlist " + playlist.name + " for channel " + playlist.channel + " as archived")
-	
 	var archive_file = _get_archive_file_path(playlist)
 	var temp_file = OS.get_user_data_dir() + "/mark_playlist_as_archived_temp.txt"
-	
 	console_signal_bus.add_line("Writing video IDs to temp file: %s" % temp_file)
 	
 	# Pipe yt-dlp output to a temp file via cmd
 	var args = [
 		"/c", yt_dlp_path,
 		playlist.url,
-		opts.get_id,
-		opts.flat,
-		opts.cookies, playlist.cookies_from_browser,
+		OPTS.get_id,
+		OPTS.flat,
+		OPTS.cookies, playlist.cookies_from_browser,
 		">", temp_file
 	]
+	
 	var pid = OS.create_process("cmd.exe", args, true)
-	print(" ".join(args))
 	
 	_watch_archive_job(pid, archive_file, temp_file)
 	
@@ -120,33 +120,67 @@ func download_playlist(playlist : Dictionary) -> int:
 	
 	return _run_command([
 		playlist.url,
-		opts.archive, archive_file,
-		opts.cookies, playlist.cookies_from_browser,
-		opts.restrict,
-		opts.output, output,
-		opts.output_format, "mp4",
-		opts.format, "bestvideo[height<=720][ext=mp4]+bestaudio[ext=m4a]/best[height<=720][ext=mp4]"
+		OPTS.archive, archive_file,
+		OPTS.cookies, playlist.cookies_from_browser,
+		OPTS.restrict,
+		OPTS.output, output,
+		OPTS.output_format, "mp4",
+		OPTS.format, FORMAT_STRING
 	])
 
 
 # FIXME If video is already in archive file, terminal closes immediately and process remains in queue
 func download_single_video(playlist : Dictionary) -> int:
-	var archive_file = _get_archive_file_path(playlist)
-	var output = playlist.download_path + "/%(upload_date>%Y-%m-%d)s %(title)s.%(ext)s\""
-	
 	console_signal_bus.add_line("Downloading single video")
+	var archive_file = _get_archive_file_path(playlist)
+	var output = playlist.download_path + "/%(upload_date>%Y-%m-%d)s %(title)s.%(ext)s"
+	var temp_file = OS.get_user_data_dir() + "/download_single_video_temp.txt"
+	console_signal_bus.add_line("Writing output to temp file: %s" % temp_file)
 	
-	# TODO Try to find a way to keep the terminal window open
-	return _run_command([
+	# Pass our args as one big string so that we don't have to escape a bunch of stuff for cmd.exe
+	var command_str = ("\"%s\" \"%s\" %s \"%s\" %s %s %s \"%s\" \"%s\" %s \"mp4\" %s \"%s\" %s > \"%s\"" % [
+		yt_dlp_path,
 		playlist.url,
-		opts.archive, archive_file,
-		opts.cookies, playlist.cookies_from_browser,
-		opts.restrict,
-		opts.output, output,
-		opts.output_format, "mp4",
-		opts.format, "bestvideo[height<=720][ext=mp4]+bestaudio[ext=m4a]/best[height<=720][ext=mp4]",
-		opts.no_playlist
+		OPTS.archive, archive_file,
+		OPTS.cookies, playlist.cookies_from_browser,
+		OPTS.restrict,
+		OPTS.output, output,
+		OPTS.output_format,
+		OPTS.format, FORMAT_STRING,
+		OPTS.no_playlist,
+		temp_file
 	])
+	
+	var pid = OS.create_process("cmd.exe", ["/c", command_str], true)
+	
+	_watch_download_single_video_job(pid, temp_file)
+	
+	return pid
+
+
+func _watch_download_single_video_job(pid : int, temp_file : String) -> void:
+	var timer = Timer.new()
+	add_child(timer)
+	timer.wait_time = 1.0
+	
+	timer.timeout.connect(func():
+		if OS.is_process_running(pid):
+			return
+		timer.stop()
+		timer.queue_free()
+		var exit_code = OS.get_process_exit_code(pid)
+		if exit_code != 0:
+			#console_signal_bus.add_warning("download_single_video process terminated, removing temp file: %s" % temp_file)
+			#DirAccess.remove_absolute(temp_file)
+			return
+		# TODO Get downloaded video filename
+		# [Merger] Merging formats into "C:\Users\steve\Videos\Astrogoblin\other\2025-05-19 I_Spent_24_Hours_at_Dollywood.mp4"
+		# TODO Notify child processes of that filename somehow
+		print("yee")
+		#_write_archive_from_temp(archive_file, temp_file)
+	)
+	
+	timer.start()
 
 
 func get_unarchived_video_details(playlist : Dictionary) -> Array:
@@ -157,10 +191,10 @@ func get_unarchived_video_details(playlist : Dictionary) -> Array:
 	
 	OS.execute(yt_dlp_path, [
 		playlist.url,
-		opts.archive, archive_file,
-		opts.cookies, playlist.cookies_from_browser,
-		opts.simulate,
-		opts.print, "upload_date,title"
+		OPTS.archive, archive_file,
+		OPTS.cookies, playlist.cookies_from_browser,
+		OPTS.simulate,
+		OPTS.print, "upload_date,title"
 	], output)
 	
 	output = output[0].split("\n")
@@ -193,4 +227,4 @@ func get_unarchived_video_details(playlist : Dictionary) -> Array:
 
 
 func update() -> int:
-	return _run_command([opts.update])
+	return _run_command([OPTS.update])
