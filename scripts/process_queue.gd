@@ -137,6 +137,8 @@ func queue_download_single_video(url : String, playlist : Dictionary, delete_dow
 	processes.append(process)
 	add_child(process)
 	
+	# TODO Spawn another process for parsing the output file to get the video filename
+	
 	var copy_to_backup_process = Process.new()
 	copy_to_backup_process.process_name = "copy_to_backup"
 	copy_to_backup_process.playlist = playlist
@@ -169,6 +171,7 @@ func queue_download_single_video(url : String, playlist : Dictionary, delete_dow
 	queue_changed.emit(processes)
 
 
+# TODO This should spawn 2 processes: one for running the yt-dlp command and a child process for reading the output file and updating the archive file
 func queue_mark_playlist_as_archived(playlist : Dictionary) -> void:
 	var process = Process.new()
 	process.process_name = "mark_playlist_as_archived"
@@ -204,3 +207,12 @@ func _on_process_progress_timer_timeout(process : Process) -> void:
 		
 		process.progress_timer.stop()
 		queue_changed.emit(processes)
+
+
+# TODO The new child processes we're adding should go here because they'll update their states by themselves at the end, rather than relying on _on_process_progress_timer_timeout, and it would be good if all state handling stuff is updated here and only here
+func _update_archive_file_with_video_ids(process : Process) -> void:
+	pass
+
+
+func _get_single_video_filename_from_output_file(process : Process) -> void:
+	pass

@@ -7,6 +7,8 @@ var exit_code := 0
 var pid := -1
 var process_name := ""
 var playlist := {}
+# TODO Store any data generated during the process which is needed by a child process
+var data := {}
 var progress_timer := Timer.new()
 var parent_process : Process
 var child_processes : Array[Process]

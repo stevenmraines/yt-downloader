@@ -43,6 +43,7 @@ func _get_archive_file_path(playlist : Dictionary) -> String:
 func mark_playlist_as_archived(playlist : Dictionary) -> int:
 	console_signal_bus.add_line("Marking playlist " + playlist.name + " for channel " + playlist.channel + " as archived")
 	var archive_file = _get_archive_file_path(playlist)
+	# TODO Maybe pass this via process.data so that it's known in process_queue, because we'll need it for the child process
 	var temp_file = OS.get_user_data_dir() + "/mark_playlist_as_archived_temp.txt"
 	console_signal_bus.add_line("Writing video IDs to temp file: %s" % temp_file)
 	
@@ -58,34 +59,36 @@ func mark_playlist_as_archived(playlist : Dictionary) -> int:
 	
 	var pid = OS.create_process("cmd.exe", args, true)
 	
-	_watch_archive_job(pid, archive_file, temp_file)
+	#_watch_archive_job(pid, archive_file, temp_file)
 	
 	return pid
 
 
-func _watch_archive_job(pid : int, archive_file : String, temp_file : String) -> void:
-	var timer = Timer.new()
-	add_child(timer)
-	timer.wait_time = 1.0
-	
-	timer.timeout.connect(func():
-		if OS.is_process_running(pid):
-			return
-		timer.stop()
-		timer.queue_free()
-		var exit_code = OS.get_process_exit_code(pid)
-		if exit_code != 0:
-			# Exit code will be some non-zero value if the user killed the process
-			# or there was an error, either way we don't want to write to the archive file.
-			console_signal_bus.add_warning("mark_playlist_as_archived process terminated, removing temp file: %s" % temp_file)
-			DirAccess.remove_absolute(temp_file)
-			return
-		_write_archive_from_temp(archive_file, temp_file)
-	)
-	
-	timer.start()
+# TODO This can go away, it'll be handled by the normal process progress_timer stuff
+#func _watch_archive_job(pid : int, archive_file : String, temp_file : String) -> void:
+	#var timer = Timer.new()
+	#add_child(timer)
+	#timer.wait_time = 1.0
+	#
+	#timer.timeout.connect(func():
+		#if OS.is_process_running(pid):
+			#return
+		#timer.stop()
+		#timer.queue_free()
+		#var exit_code = OS.get_process_exit_code(pid)
+		#if exit_code != 0:
+			## Exit code will be some non-zero value if the user killed the process
+			## or there was an error, either way we don't want to write to the archive file.
+			#console_signal_bus.add_warning("mark_playlist_as_archived process terminated, removing temp file: %s" % temp_file)
+			#DirAccess.remove_absolute(temp_file)
+			#return
+		#_write_archive_from_temp(archive_file, temp_file)
+	#)
+	#
+	#timer.start()
 
 
+# TODO This will become a child process of mark_playlist_as_archived
 func _write_archive_from_temp(archive_file : String, temp_file : String) -> void:
 	var file = FileAccess.open(temp_file, FileAccess.READ)
 	
