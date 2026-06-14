@@ -60,10 +60,19 @@ static func get_processes() -> Dictionary:
 		return _get_unix_processes()
 
 
-static func scp(file : String, destination, ip : String, user : String, ssh_key_path : String) -> int:
-	return OS.create_process("scp", [
-		file, "-i", ssh_key_path, "%s@%s:%s" % [user, ip, destination]
+static func cp(file : String, destination : String) -> int:
+	# FIXME Not sure passing the command in the args like this is correct, also not sure we need /c
+	return OS.create_process("cmd.exe", ["/c", "cp", file, destination], true)
+
+
+static func scp(file : String, destination : String, ip : String, user : String, ssh_key_path : String) -> int:
+	return OS.create_process("cmd.exe", [
+		"/c", "scp", file, "-i", ssh_key_path, "%s@%s:%s" % [user, ip, destination]
 	], true)
+
+
+static func rm(file : String) -> int:
+	return OS.create_process("cmd.exe", ["/c", "rm", file], true)
 
 
 static func get_archive_file_path(playlist : Dictionary) -> String:

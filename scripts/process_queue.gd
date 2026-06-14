@@ -67,34 +67,13 @@ func _start_queued_process(process : Process) -> void:
 		_populate_archive_file(process)
 	elif process.process_name == "copy_to_backup":
 		console_signal_bus.add_line("Starting queued process %s" % process.process_name)
-		var download_path = process.playlist.download_path
-		var filename = process.data.filename
-		var backup_path = process.playlist.backup_upload_path
-		if backup_path:
-			pass
-			#if DirAccess.dir_exists_absolute(backup_path):
-				#console_signal_bus.add_line("Copying download to %s" % backup_path)
-				#DirAccess.copy_absolute(download_path, backup_path)
-			#else:
-				#console_signal_bus.add_error("Error copying download to %s, dir does not exist" % backup_path)
+		pid = _copy_to_backup(process)
 	elif process.process_name == "copy_to_remote":
 		console_signal_bus.add_line("Starting queued process %s" % process.process_name)
-		var download_path = process.playlist.download_path
-		var filename = process.data.filename
-		var remote_path = process.playist.remote_upload_path
-		if remote_path:
-			pass
-		#var ip = ""
-		#var user = ""
-		#var ssh_key_path = ""
-		# TODO Add error if remote_ip, user, or ssh_key aren't set
-		#Util.scp(filename, remote_path, remote_ip, remote_user, ssh_key_path)
+		pid = _copy_to_remote(process)
 	elif process.process_name == "delete_download":
 		console_signal_bus.add_line("Starting queued process %s" % process.process_name)
-		var download_path = process.playlist.download_path
-		var filename = process.data.filename
-		# FIXME Use OS.create_process so that we can get the PID like with everything else
-		#DirAccess.remove_absolute(filename)
+		pid = _delete_download(process)
 	
 	process.pid = pid
 	if process.killable:
@@ -228,14 +207,14 @@ func _on_process_progress_timer_timeout(process : Process) -> void:
 			console_signal_bus.add_line("Process %s (%d) complete" % [process.process_name, process.pid])
 		else:
 			process.status = Process.ProcessState.ERRORED
-			console_signal_bus.add_error("Process %s (%d) completed with error code %d" % [process.process_name, process.pid, exit_code])
+			console_signal_bus.add_error("Process %s (%d) completed with error code %s" % [process.process_name, process.pid, error_string(exit_code)])
 		
 		process.progress_timer.stop()
 		queue_changed.emit(processes)
 
 
 func _populate_archive_file(process : Process) -> void:
-	var temp_file = process.data.temp_file
+	var temp_file = process.parent_process.data.temp_file
 	var archive_file = Util.get_archive_file_path(process.playlist)
 	var file = FileAccess.open(temp_file, FileAccess.READ)
 	
@@ -267,7 +246,7 @@ func _populate_archive_file(process : Process) -> void:
 
 # TODO I guess this won't be killable, unless we use multithreading or something, idk
 func _get_single_video_filename(process : Process) -> void:
-	var temp_file = process.data.temp_file
+	var temp_file = process.parent_process.data.temp_file
 	var file = FileAccess.open(temp_file, FileAccess.READ)
 	
 	if not file:
@@ -289,11 +268,60 @@ func _get_single_video_filename(process : Process) -> void:
 		var result = regex.search(line)
 		
 		if result:
-			process.data.filename = result.get_string("filename")
-			console_signal_bus.add_line("Downloaded video: %s" % process.data.filename)
+			process.parent_process.data.filename = result.get_string("filename")
+			console_signal_bus.add_line("Downloaded video: %s" % process.parent_process.data.filename)
 			DirAccess.remove_absolute(temp_file)
 			process.status = Process.ProcessState.COMPLETE
 	
-	if ! process.data.filename:
+	if ! process.parent_process.data.filename:
 		process.status = Process.ProcessState.ERRORED
 		console_signal_bus.add_error("Could not parse downloaded video filename")
+
+
+func _copy_to_backup(process : Process) -> int:
+	var download_path = process.playlist.download_path
+	var filename = process.parent_process.data.filename
+	var backup_path = process.playlist.backup_upload_path
+	var pid = -1
+	
+	if backup_path:
+		if DirAccess.dir_exists_absolute(backup_path):
+			console_signal_bus.add_line("Copying download to %s" % backup_path)
+			pid = Util.cp(filename, backup_path)
+			if pid == -1:
+				console_signal_bus.add_error("Error copying download to %s, process could not be created" % backup_path)
+		else:
+			console_signal_bus.add_error("Error copying download to %s, dir does not exist" % backup_path)
+			process.status = Process.ProcessState.ERRORED
+	
+	return pid
+
+
+func _copy_to_remote(process : Process) -> int:
+	var download_path = process.playlist.download_path
+	var filename = process.parent_process.data.filename
+	print(process.playlist)
+	var remote_path = process.playist.remote_upload_path
+	var pid = -1
+	
+	if remote_path:
+		pass
+		#var ip = ""
+		#var user = ""
+		#var ssh_key_path = ""
+		# TODO Add error if remote_ip, user, or ssh_key aren't set
+		#pid = Util.scp(filename, remote_path, remote_ip, remote_user, ssh_key_path)
+	
+	return pid
+
+
+func _delete_download(process : Process) -> int:
+	var download_path = process.playlist.download_path
+	var filename = process.parent_process.data.filename
+	var pid = Util.rm(filename)
+	
+	if pid == -1:
+		# TODO
+		pass
+	
+	return pid

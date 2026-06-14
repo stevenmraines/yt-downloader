@@ -26,8 +26,7 @@ var process : Process:
 			status_label.pop()
 		
 		var killable_states = [Process.ProcessState.QUEUED, Process.ProcessState.IN_PROGRESS]
-		kill_button.disabled = ! killable_states.has(process.status)
-		kill_button.visible = process.killable
+		kill_button.disabled = process.killable and ! killable_states.has(process.status)
 		
 		is_child_process_icon.visible = process.parent_process != null
 
