@@ -53,15 +53,22 @@ func _start_queued_process(process : Process) -> void:
 		pid = yt_dlp_wrapper.download_playlist(process.playlist)
 	elif process.process_name == "download_single_video":
 		console_signal_bus.add_line("Starting queued process %s" % process.process_name)
-		pid = yt_dlp_wrapper.download_single_video(process.playlist)
+		process.data.temp_file = OS.get_user_data_dir() + "/download_single_video_temp.txt"
+		pid = yt_dlp_wrapper.download_single_video(process)
+	elif process.process_name == "get_single_video_filename":
+		console_signal_bus.add_line("Starting queued process %s" % process.process_name)
+		_get_single_video_filename(process)
 	elif process.process_name == "mark_playlist_as_archived":
 		console_signal_bus.add_line("Starting queued process %s" % process.process_name)
-		pid = yt_dlp_wrapper.mark_playlist_as_archived(process.playlist)
+		process.data.temp_file = OS.get_user_data_dir() + "/mark_playlist_as_archived_temp.txt"
+		pid = yt_dlp_wrapper.mark_playlist_as_archived(process)
+	elif process.process_name == "populate_archive_file":
+		console_signal_bus.add_line("Starting queued process %s" % process.process_name)
+		_populate_archive_file(process)
 	elif process.process_name == "copy_to_backup":
 		console_signal_bus.add_line("Starting queued process %s" % process.process_name)
 		var download_path = process.playlist.download_path
-		# TODO How to get filename?
-		var filename = download_path + "/whatever.mp4"
+		var filename = process.data.filename
 		var backup_path = process.playlist.backup_upload_path
 		if backup_path:
 			pass
@@ -73,7 +80,7 @@ func _start_queued_process(process : Process) -> void:
 	elif process.process_name == "copy_to_remote":
 		console_signal_bus.add_line("Starting queued process %s" % process.process_name)
 		var download_path = process.playlist.download_path
-		var filename = download_path + "/whatever.mp4"
+		var filename = process.data.filename
 		var remote_path = process.playist.remote_upload_path
 		if remote_path:
 			pass
@@ -85,12 +92,13 @@ func _start_queued_process(process : Process) -> void:
 	elif process.process_name == "delete_download":
 		console_signal_bus.add_line("Starting queued process %s" % process.process_name)
 		var download_path = process.playlist.download_path
-		var filename = download_path + "/whatever.mp4"
+		var filename = process.data.filename
 		# FIXME Use OS.create_process so that we can get the PID like with everything else
 		#DirAccess.remove_absolute(filename)
 	
 	process.pid = pid
-	process.progress_timer.start()
+	if process.killable:
+		process.progress_timer.start()
 	queue_changed.emit(processes)
 
 
@@ -137,7 +145,14 @@ func queue_download_single_video(url : String, playlist : Dictionary, delete_dow
 	processes.append(process)
 	add_child(process)
 	
-	# TODO Spawn another process for parsing the output file to get the video filename
+	var get_filename_process = Process.new()
+	get_filename_process.process_name = "get_single_video_filename"
+	get_filename_process.playlist = playlist
+	get_filename_process.killable = false
+	get_filename_process.parent_process = process
+	processes.append(get_filename_process)
+	process.child_processes.append(get_filename_process)
+	add_child(get_filename_process)
 	
 	var copy_to_backup_process = Process.new()
 	copy_to_backup_process.process_name = "copy_to_backup"
@@ -171,7 +186,6 @@ func queue_download_single_video(url : String, playlist : Dictionary, delete_dow
 	queue_changed.emit(processes)
 
 
-# TODO This should spawn 2 processes: one for running the yt-dlp command and a child process for reading the output file and updating the archive file
 func queue_mark_playlist_as_archived(playlist : Dictionary) -> void:
 	var process = Process.new()
 	process.process_name = "mark_playlist_as_archived"
@@ -180,6 +194,17 @@ func queue_mark_playlist_as_archived(playlist : Dictionary) -> void:
 	processes.append(process)
 	add_child(process)
 	console_signal_bus.add_line("Queueing process mark_playlist_as_archived")
+	
+	var child_process = Process.new()
+	child_process.process_name = "populate_archive_file"
+	child_process.killable = false
+	child_process.playlist = playlist
+	child_process.parent_process = process
+	processes.append(child_process)
+	add_child(child_process)
+	console_signal_bus.add_line("Queueing process populate_archive_file")
+	process.child_processes.append(child_process)
+	
 	queue_changed.emit(processes)
 
 
@@ -209,10 +234,66 @@ func _on_process_progress_timer_timeout(process : Process) -> void:
 		queue_changed.emit(processes)
 
 
-# TODO The new child processes we're adding should go here because they'll update their states by themselves at the end, rather than relying on _on_process_progress_timer_timeout, and it would be good if all state handling stuff is updated here and only here
-func _update_archive_file_with_video_ids(process : Process) -> void:
-	pass
+func _populate_archive_file(process : Process) -> void:
+	var temp_file = process.data.temp_file
+	var archive_file = Util.get_archive_file_path(process.playlist)
+	var file = FileAccess.open(temp_file, FileAccess.READ)
+	
+	if not file:
+		console_signal_bus.add_error("Failed to read temp file: %s" % temp_file)
+		process.status = Process.ProcessState.ERRORED
+		return
+	
+	var content = file.get_as_text()
+	file.close()
+	
+	var out = FileAccess.open(archive_file, FileAccess.WRITE)
+	
+	if not out:
+		console_signal_bus.add_error("Failed to write archive file: %s" % archive_file)
+		process.status = Process.ProcessState.ERRORED
+		return
+	
+	for video_id in content.split("\n"):
+		var id = video_id.strip_edges()
+		
+		if id != "":
+			out.store_string("youtube " + id + "\n")
+	
+	out.close()
+	process.status = Process.ProcessState.COMPLETE
+	DirAccess.remove_absolute(temp_file)
 
 
-func _get_single_video_filename_from_output_file(process : Process) -> void:
-	pass
+# TODO I guess this won't be killable, unless we use multithreading or something, idk
+func _get_single_video_filename(process : Process) -> void:
+	var temp_file = process.data.temp_file
+	var file = FileAccess.open(temp_file, FileAccess.READ)
+	
+	if not file:
+		console_signal_bus.add_error("Failed to read temp file: %s" % temp_file)
+		process.status = Process.ProcessState.ERRORED
+		return
+	
+	var content = file.get_as_text()
+	file.close()
+	var regex = RegEx.new()
+	regex.compile(r"^\[Merger\] Merging formats into \"(?<filename>.+\.mp4)\"")
+	
+	for line in content.split("\n"):
+		line = line.strip_edges()
+		
+		if line == "":
+			continue
+		
+		var result = regex.search(line)
+		
+		if result:
+			process.data.filename = result.get_string("filename")
+			console_signal_bus.add_line("Downloaded video: %s" % process.data.filename)
+			DirAccess.remove_absolute(temp_file)
+			process.status = Process.ProcessState.COMPLETE
+	
+	if ! process.data.filename:
+		process.status = Process.ProcessState.ERRORED
+		console_signal_bus.add_error("Could not parse downloaded video filename")

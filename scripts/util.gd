@@ -64,3 +64,8 @@ static func scp(file : String, destination, ip : String, user : String, ssh_key_
 	return OS.create_process("scp", [
 		file, "-i", ssh_key_path, "%s@%s:%s" % [user, ip, destination]
 	], true)
+
+
+static func get_archive_file_path(playlist : Dictionary) -> String:
+	return OS.get_user_data_dir() + "/archived/" + playlist.channel \
+		+ "/" + playlist.download_archive_file_name

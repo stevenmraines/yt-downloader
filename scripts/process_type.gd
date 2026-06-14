@@ -6,6 +6,7 @@ var status := ProcessState.QUEUED
 var exit_code := 0
 var pid := -1
 var process_name := ""
+var killable := true
 var playlist := {}
 # TODO Store any data generated during the process which is needed by a child process
 var data := {}
