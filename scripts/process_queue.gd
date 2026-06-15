@@ -23,10 +23,12 @@ func _process(_delta):
 		return
 	
 	var current_process = processes[current_process_index]
+	
 	var finished_states = [
 		Process.ProcessState.COMPLETE,
 		Process.ProcessState.KILLED,
-		Process.ProcessState.ERRORED
+		Process.ProcessState.FAILED,
+		Process.ProcessState.SKIPPED
 	]
 	
 	if finished_states.has(current_process.status):
@@ -206,7 +208,7 @@ func _on_process_progress_timer_timeout(process : Process) -> void:
 			process.status = Process.ProcessState.COMPLETE
 			console_signal_bus.add_line("Process %s (%d) complete" % [process.process_name, process.pid])
 		else:
-			process.status = Process.ProcessState.ERRORED
+			process.status = Process.ProcessState.FAILED
 			console_signal_bus.add_error("Process %s (%d) completed with error code %s" % [process.process_name, process.pid, error_string(exit_code)])
 		
 		process.progress_timer.stop()
@@ -220,7 +222,7 @@ func _populate_archive_file(process : Process) -> void:
 	
 	if not file:
 		console_signal_bus.add_error("Failed to read temp file: %s" % temp_file)
-		process.status = Process.ProcessState.ERRORED
+		process.status = Process.ProcessState.FAILED
 		return
 	
 	var content = file.get_as_text()
@@ -230,7 +232,7 @@ func _populate_archive_file(process : Process) -> void:
 	
 	if not out:
 		console_signal_bus.add_error("Failed to write archive file: %s" % archive_file)
-		process.status = Process.ProcessState.ERRORED
+		process.status = Process.ProcessState.FAILED
 		return
 	
 	for video_id in content.split("\n"):
@@ -251,7 +253,7 @@ func _get_single_video_filename(process : Process) -> void:
 	
 	if not file:
 		console_signal_bus.add_error("Failed to read temp file: %s" % temp_file)
-		process.status = Process.ProcessState.ERRORED
+		process.status = Process.ProcessState.FAILED
 		return
 	
 	var content = file.get_as_text()
@@ -274,7 +276,7 @@ func _get_single_video_filename(process : Process) -> void:
 			process.status = Process.ProcessState.COMPLETE
 	
 	if ! process.parent_process.data.filename:
-		process.status = Process.ProcessState.ERRORED
+		process.status = Process.ProcessState.FAILED
 		console_signal_bus.add_error("Could not parse downloaded video filename")
 
 
@@ -292,7 +294,7 @@ func _copy_to_backup(process : Process) -> int:
 				console_signal_bus.add_error("Error copying download to %s, process could not be created" % backup_path)
 		else:
 			console_signal_bus.add_error("Error copying download to %s, dir does not exist" % backup_path)
-			process.status = Process.ProcessState.ERRORED
+			process.status = Process.ProcessState.FAILED
 	
 	return pid
 
@@ -300,8 +302,7 @@ func _copy_to_backup(process : Process) -> int:
 func _copy_to_remote(process : Process) -> int:
 	var download_path = process.playlist.download_path
 	var filename = process.parent_process.data.filename
-	print(process.playlist)
-	var remote_path = process.playist.remote_upload_path
+	var remote_path = process.playlist.remote_upload_path
 	var pid = -1
 	
 	if remote_path:
@@ -311,6 +312,8 @@ func _copy_to_remote(process : Process) -> int:
 		#var ssh_key_path = ""
 		# TODO Add error if remote_ip, user, or ssh_key aren't set
 		#pid = Util.scp(filename, remote_path, remote_ip, remote_user, ssh_key_path)
+		#if pid == -1:
+		#	console_signal_bus.add_error("Error uploading to %s, process could not be created" % remote_path)
 	
 	return pid
 
@@ -321,7 +324,6 @@ func _delete_download(process : Process) -> int:
 	var pid = Util.rm(filename)
 	
 	if pid == -1:
-		# TODO
-		pass
+		console_signal_bus.add_error("Error deleting download from %s, process could not be created" % download_path)
 	
 	return pid

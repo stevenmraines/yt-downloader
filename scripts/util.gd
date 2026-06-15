@@ -61,18 +61,18 @@ static func get_processes() -> Dictionary:
 
 
 static func cp(file : String, destination : String) -> int:
-	# FIXME Not sure passing the command in the args like this is correct, also not sure we need /c
-	return OS.create_process("cmd.exe", ["/c", "cp", file, destination], true)
+	# TODO Maybe add a keep_open param that uses /k instead of /c so we can have a "run again and keep open" button to see errors, or just start logging all output to a file
+	return OS.create_process("cmd.exe", ["/c", "copy \"" + file + "\" \"" + destination + "\""], true)
 
 
 static func scp(file : String, destination : String, ip : String, user : String, ssh_key_path : String) -> int:
 	return OS.create_process("cmd.exe", [
-		"/c", "scp", file, "-i", ssh_key_path, "%s@%s:%s" % [user, ip, destination]
+		"/k", "scp %s -i %s %s@%s:%s" % [file, ssh_key_path, user, ip, destination]
 	], true)
 
 
 static func rm(file : String) -> int:
-	return OS.create_process("cmd.exe", ["/c", "rm", file], true)
+	return OS.create_process("cmd.exe", ["/c", "del \"" + file + "\""], true)
 
 
 static func get_archive_file_path(playlist : Dictionary) -> String:

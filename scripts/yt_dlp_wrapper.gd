@@ -17,6 +17,7 @@ const OPTS := {
 	"simulate" : "--simulate",
 	"skip" : "--skip-download",
 	"update" : "--update",
+	"update_to" : "--update-to",
 	"watched" : "--mark-watched",
 }
 
@@ -141,4 +142,4 @@ func get_unarchived_video_details(playlist : Dictionary) -> Array:
 
 
 func update() -> int:
-	return _run_command([OPTS.update])
+	return _run_command([OPTS.update_to, "nightly@latest"])

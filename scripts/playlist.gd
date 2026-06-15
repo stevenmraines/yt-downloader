@@ -106,6 +106,14 @@ func populate_preview_queue() -> void:
 		preview_node.title = title
 
 
+func _confirm_download_single_video() -> void:
+	if ! single_video_url_input.text:
+		console_signal_bus.add_error("No video URL provided")
+		return
+	download_single_video_button_clicked.emit(single_video_url_input.text, playlist, delete_single_download_input.button_pressed)
+	download_single_video_window.visible = false
+
+
 func _on_mark_as_archived_button_button_up():
 	archive_confirmation_dialog.dialog_text = "Are you sure you want to mark the " \
 		+ playlist.name + " playlist as archived? This will overwrite the archive file."
@@ -116,6 +124,7 @@ func _on_download_single_video_button_pressed():
 	single_video_url_input.text = ""
 	download_single_video_window.title = "Download video using " + playlist.name + " options"
 	download_single_video_window.visible = true
+	single_video_url_input.grab_focus.call_deferred()
 
 
 func _on_download_single_video_window_close_requested():
@@ -128,11 +137,7 @@ func _on_archive_confirmation_dialog_confirmed():
 
 
 func _on_download_single_video_confirm_button_button_up():
-	if ! single_video_url_input.text:
-		console_signal_bus.add_error("No video URL provided")
-		return
-	download_single_video_button_clicked.emit(single_video_url_input.text, playlist, delete_single_download_input.button_pressed)
-	download_single_video_window.visible = false
+	_confirm_download_single_video()
 
 
 func _on_url_input_text_changed(new_text):
@@ -219,3 +224,7 @@ func _on_remote_upload_path_dialog_dir_selected(dir):
 	remote_upload_path = dir
 	remote_upload_path_input.text = dir
 	playlist.remote_upload_path = dir
+
+
+func _on_single_video_url_input_text_submitted(new_text):
+	_confirm_download_single_video()

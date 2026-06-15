@@ -306,7 +306,7 @@ text = "Download"
 
 [node name="DownloadPathDialog" type="FileDialog" parent="." unique_id=1171291283]
 oversampling_override = 1.0
-title = "Select Download Path"
+title = "Open a Directory"
 initial_position = 2
 size = Vector2i(1280, 720)
 file_mode = 2
@@ -315,7 +315,7 @@ show_hidden_files = true
 
 [node name="BackupUploadPathDialog" type="FileDialog" parent="." unique_id=467450347]
 oversampling_override = 1.0
-title = "Select Backup Upload Path"
+title = "Open a Directory"
 initial_position = 2
 size = Vector2i(1280, 720)
 file_mode = 2
@@ -324,7 +324,7 @@ show_hidden_files = true
 
 [node name="RemoteUploadPathDialog" type="FileDialog" parent="." unique_id=1619137532]
 oversampling_override = 1.0
-title = "Select Remote Upload Path"
+title = "Open a Directory"
 initial_position = 2
 size = Vector2i(1280, 720)
 file_mode = 2
@@ -348,6 +348,7 @@ show_hidden_files = true
 [connection signal="toggled" from="VBoxContainer/SettingsContainer/VBoxContainer/HBoxContainer9/PreviewUnarchivedOnStartupInput" to="." method="_on_preview_unarchived_on_startup_input_toggled"]
 [connection signal="confirmed" from="ArchiveConfirmationDialog" to="." method="_on_archive_confirmation_dialog_confirmed"]
 [connection signal="close_requested" from="DownloadSingleVideoWindow" to="." method="_on_download_single_video_window_close_requested"]
+[connection signal="text_submitted" from="DownloadSingleVideoWindow/Control/MarginContainer/VBoxContainer/HBoxContainer/SingleVideoUrlInput" to="." method="_on_single_video_url_input_text_submitted"]
 [connection signal="button_up" from="DownloadSingleVideoWindow/Control/MarginContainer/VBoxContainer/DownloadSingleVideoConfirmButton" to="." method="_on_download_single_video_confirm_button_button_up"]
 [connection signal="dir_selected" from="DownloadPathDialog" to="." method="_on_download_path_dialog_dir_selected"]
 [connection signal="dir_selected" from="BackupUploadPathDialog" to="." method="_on_backup_upload_path_dialog_dir_selected"]

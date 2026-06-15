@@ -43,6 +43,7 @@ func _ready() -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("Escape"):
+		# TODO Add a confirm dialog before exiting
 		get_viewport().set_input_as_handled()
 		get_tree().quit(0)
 

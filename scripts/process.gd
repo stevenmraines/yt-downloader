@@ -14,7 +14,8 @@ var process : Process:
 		process = value
 		
 		if channel_and_playlist_label:
-			channel_and_playlist_label.text = process.playlist.channel + ": " + process.playlist.name
+			channel_and_playlist_label.text = process.playlist.channel + ": " + process.playlist.name \
+				if process.playlist.has("channel") else "N/A"
 		
 		if process_type_label:
 			process_type_label.text = process.process_name
@@ -34,16 +35,18 @@ var status_colors := {
 	Process.ProcessState.QUEUED: Color.AQUA,
 	Process.ProcessState.IN_PROGRESS: Color.YELLOW,
 	Process.ProcessState.COMPLETE: Color.GREEN,
-	Process.ProcessState.ERRORED: Color.ORANGE,
+	Process.ProcessState.FAILED: Color.ORANGE,
 	Process.ProcessState.KILLED: Color.RED,
+	Process.ProcessState.SKIPPED: Color.BLUE_VIOLET,
 }
 
 var status_messages := {
 	Process.ProcessState.QUEUED: "QUEUED",
 	Process.ProcessState.IN_PROGRESS: "IN PROGRESS",
 	Process.ProcessState.COMPLETE: "COMPLETE",
-	Process.ProcessState.ERRORED: "ERRORED",
+	Process.ProcessState.FAILED: "FAILED",
 	Process.ProcessState.KILLED: "KILLED",
+	Process.ProcessState.SKIPPED: "SKIPPED",
 }
 
 
