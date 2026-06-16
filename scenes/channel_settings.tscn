@@ -31,7 +31,15 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="PlaylistsContainer" type="VBoxContainer" parent="VBoxContainer" unique_id=58049635]
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer" unique_id=1299310742]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="PlaylistsContainer" type="VBoxContainer" parent="VBoxContainer/MarginContainer" unique_id=58049635]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
@@ -44,3 +52,5 @@ theme_override_styles/normal = ExtResource("2_ri8i5")
 theme_override_styles/pressed = ExtResource("3_d3q66")
 theme_override_styles/hover = ExtResource("4_o0ltd")
 text = "New Playlist"
+
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer/ChannelNameInput" to="." method="_on_channel_name_input_text_changed"]

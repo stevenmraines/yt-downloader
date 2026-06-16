@@ -21,6 +21,10 @@ var playlists : Array[Dictionary]:
 			playlist_node.playlist = playlist
 
 
+func _on_channel_name_input_text_changed(new_text: String) -> void:
+	title = new_text
+
+
 func get_data() -> Dictionary:
 	return {
 		"name": channel_name_input.text,

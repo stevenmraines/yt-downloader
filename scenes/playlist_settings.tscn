@@ -4,127 +4,130 @@
 [ext_resource type="StyleBox" uid="uid://co4550p76db2k" path="res://styles/default_button_pressed.tres" id="2_iu3an"]
 [ext_resource type="StyleBox" uid="uid://caorea2ay4rb4" path="res://styles/default_button_hover.tres" id="3_xf5im"]
 
-[node name="PlaylistSettings" type="VBoxContainer" unique_id=1494284431]
+[node name="PlaylistSettings" type="FoldableContainer" unique_id=1060512353]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 10
 script = ExtResource("1_3ydvd")
 
-[node name="HBoxContainer9" type="HBoxContainer" parent="." unique_id=110135054]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1494284431]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="HBoxContainer9" type="HBoxContainer" parent="VBoxContainer" unique_id=110135054]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="Label" type="Label" parent="HBoxContainer9" unique_id=310572894]
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer9" unique_id=310572894]
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
 text = "Playlist Name:"
 
-[node name="NameInput" type="LineEdit" parent="HBoxContainer9" unique_id=1109045438]
+[node name="NameInput" type="LineEdit" parent="VBoxContainer/HBoxContainer9" unique_id=1109045438]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=998866955]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=998866955]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="Label" type="Label" parent="HBoxContainer" unique_id=1965120622]
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer" unique_id=1965120622]
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
 text = "URL:"
 
-[node name="UrlInput" type="LineEdit" parent="HBoxContainer" unique_id=1290243954]
+[node name="UrlInput" type="LineEdit" parent="VBoxContainer/HBoxContainer" unique_id=1290243954]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="." unique_id=552892277]
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer" unique_id=552892277]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="Label" type="Label" parent="HBoxContainer2" unique_id=838937134]
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer2" unique_id=838937134]
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
 text = "Download Path:"
 
-[node name="DownloadPathButton" type="Button" parent="HBoxContainer2" unique_id=1778634578]
+[node name="DownloadPathButton" type="Button" parent="VBoxContainer/HBoxContainer2" unique_id=1778634578]
 layout_mode = 2
 theme_override_styles/pressed = ExtResource("2_iu3an")
 theme_override_styles/hover = ExtResource("3_xf5im")
 text = "Browse"
 
-[node name="DownloadPathInput" type="LineEdit" parent="HBoxContainer2" unique_id=121323208]
+[node name="DownloadPathInput" type="LineEdit" parent="VBoxContainer/HBoxContainer2" unique_id=121323208]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="." unique_id=299798510]
+[node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer" unique_id=299798510]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="Label" type="Label" parent="HBoxContainer3" unique_id=1404351751]
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer3" unique_id=1404351751]
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
 text = "Backup Upload Path:"
 
-[node name="BackupPathButton" type="Button" parent="HBoxContainer3" unique_id=577285441]
+[node name="BackupPathButton" type="Button" parent="VBoxContainer/HBoxContainer3" unique_id=577285441]
 layout_mode = 2
 theme_override_styles/pressed = ExtResource("2_iu3an")
 theme_override_styles/hover = ExtResource("3_xf5im")
 text = "Browse"
 
-[node name="BackupPathInput" type="LineEdit" parent="HBoxContainer3" unique_id=152944265]
+[node name="BackupPathInput" type="LineEdit" parent="VBoxContainer/HBoxContainer3" unique_id=152944265]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HBoxContainer4" type="HBoxContainer" parent="." unique_id=272871718]
+[node name="HBoxContainer4" type="HBoxContainer" parent="VBoxContainer" unique_id=272871718]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="Label" type="Label" parent="HBoxContainer4" unique_id=1130064365]
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer4" unique_id=1130064365]
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
 text = "Remote Upload Path:"
 
-[node name="RemotePathButton" type="Button" parent="HBoxContainer4" unique_id=1282101230]
+[node name="RemotePathButton" type="Button" parent="VBoxContainer/HBoxContainer4" unique_id=1282101230]
 layout_mode = 2
 theme_override_styles/pressed = ExtResource("2_iu3an")
 theme_override_styles/hover = ExtResource("3_xf5im")
 text = "Browse"
 
-[node name="RemotePathInput" type="LineEdit" parent="HBoxContainer4" unique_id=134707847]
+[node name="RemotePathInput" type="LineEdit" parent="VBoxContainer/HBoxContainer4" unique_id=134707847]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HBoxContainer5" type="HBoxContainer" parent="." unique_id=630688905]
+[node name="HBoxContainer5" type="HBoxContainer" parent="VBoxContainer" unique_id=630688905]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="Label" type="Label" parent="HBoxContainer5" unique_id=1315785400]
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5" unique_id=1315785400]
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
 text = "Download Archive File Name:"
 
-[node name="DownloadArchiveFileNameInput" type="LineEdit" parent="HBoxContainer5" unique_id=1811834309]
+[node name="DownloadArchiveFileNameInput" type="LineEdit" parent="VBoxContainer/HBoxContainer5" unique_id=1811834309]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HBoxContainer6" type="HBoxContainer" parent="." unique_id=516928852]
+[node name="HBoxContainer6" type="HBoxContainer" parent="VBoxContainer" unique_id=516928852]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="Label" type="Label" parent="HBoxContainer6" unique_id=788768365]
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer6" unique_id=788768365]
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
 text = "Cookies From Browser:"
 
-[node name="CookiesFromBrowserInput" type="OptionButton" parent="HBoxContainer6" unique_id=1611184706]
+[node name="CookiesFromBrowserInput" type="OptionButton" parent="VBoxContainer/HBoxContainer6" unique_id=1611184706]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -135,28 +138,30 @@ popup/item_0/id = 0
 popup/item_1/text = "chrome"
 popup/item_1/id = 1
 
-[node name="HBoxContainer7" type="HBoxContainer" parent="." unique_id=740759275]
+[node name="HBoxContainer7" type="HBoxContainer" parent="VBoxContainer" unique_id=740759275]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="Label" type="Label" parent="HBoxContainer7" unique_id=373871632]
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer7" unique_id=373871632]
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
 text = "Delete Download After Upload:"
 
-[node name="DeleteDownloadInput" type="CheckBox" parent="HBoxContainer7" unique_id=1465689548]
+[node name="DeleteDownloadInput" type="CheckBox" parent="VBoxContainer/HBoxContainer7" unique_id=1465689548]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HBoxContainer8" type="HBoxContainer" parent="." unique_id=766019987]
+[node name="HBoxContainer8" type="HBoxContainer" parent="VBoxContainer" unique_id=766019987]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="Label" type="Label" parent="HBoxContainer8" unique_id=1473376312]
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer8" unique_id=1473376312]
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
 text = "Preview Unarchived Videos On Startup:"
 
-[node name="PreviewUnarchivedOnStartupInput" type="CheckBox" parent="HBoxContainer8" unique_id=1149875628]
+[node name="PreviewUnarchivedOnStartupInput" type="CheckBox" parent="VBoxContainer/HBoxContainer8" unique_id=1149875628]
 unique_name_in_owner = true
 layout_mode = 2
+
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer9/NameInput" to="." method="_on_name_input_text_changed"]

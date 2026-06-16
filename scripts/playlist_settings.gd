@@ -1,4 +1,4 @@
-extends VBoxContainer
+extends FoldableContainer
 
 @onready var name_input := %NameInput
 @onready var url_input := %UrlInput
@@ -13,6 +13,7 @@ extends VBoxContainer
 var playlist : Dictionary:
 	set(value):
 		playlist = value
+		title = playlist.name
 		name_input.text = playlist.name
 		url_input.text = playlist.url
 		download_path_input.text = playlist.download_path
@@ -26,6 +27,10 @@ var playlist : Dictionary:
 			var item = cookies_from_browser_input.get_item_text(i)
 			if item == playlist.cookies_from_browser:
 				cookies_from_browser_input.select(i)
+
+
+func _on_name_input_text_changed(new_text: String) -> void:
+	title = new_text
 
 
 func get_data() -> Dictionary:

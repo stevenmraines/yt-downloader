@@ -1,4 +1,4 @@
-extends VBoxContainer
+extends FoldableContainer
 
 @onready var name_input := %NameInput
 @onready var ip_input := %IPInput
@@ -10,11 +10,16 @@ extends VBoxContainer
 var server : Dictionary:
 	set(value):
 		server = value
+		title = server.name
 		name_input.text = server.name
 		ip_input.text = server.ip
 		user_input.text = server.user
 		ssh_key_path_input.text = server.ssh_key_path
 		is_default_input.button_pressed = server.is_default
+
+
+func _on_name_input_text_changed(new_text: String) -> void:
+	title = new_text
 
 
 func get_data() -> Dictionary:
