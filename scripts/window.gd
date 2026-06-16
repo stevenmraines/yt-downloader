@@ -1,18 +1,6 @@
 extends PanelContainer
 
-@export var yt_dlp_path := "":
-	set(value):
-		yt_dlp_path = value
-		yt_dlp_path_input.text = yt_dlp_path
-		yt_dlp_wrapper.yt_dlp_path = yt_dlp_path
-		console_signal_bus.add_line("yt-dlp path set to " + yt_dlp_path)
-
-@onready var save_config_confirmation_dialog := %SaveConfigConfirmationDialog
-@onready var yt_dlp_path_input := %YtDlpPathInput
-@onready var yt_dlp_path_file_dialog := %YtDlpPathFileDialog
-@onready var ssh_key_path_input := %SSHKeyPathInput
-@onready var ssh_key_path_file_dialog := %SSHKeyPathFileDialog
-@onready var remote_user_input := %RemoteUserInput
+@onready var servers_input := %ServersInput
 @onready var channel_container := %ChannelContainer
 @onready var process_container := %ProcessContainer
 @onready var process_queue_background_panel := %ProcessQueueBackgroundPanel
@@ -22,11 +10,24 @@ extends PanelContainer
 @onready var config_loader := $ConfigLoader
 @onready var yt_dlp_wrapper := $YtDlpWrapper
 @onready var process_queue := $ProcessQueue
+@onready var settings := $Settings
 @onready var channel_scene := load("res://scenes/channel.tscn")
 @onready var process_scene := load("res://scenes/process.tscn")
 @onready var process_queue_background_style := load("res://styles/process_queue_background.tres")
 @onready var process_queue_background_paused_style := load("res://styles/process_queue_background_paused.tres")
 @onready var parent_process_container_style := load("res://styles/parent_process_container.tres")
+
+var yt_dlp_path := "":
+	set(value):
+		yt_dlp_path = value
+		settings.yt_dlp_path = yt_dlp_path
+		yt_dlp_wrapper.yt_dlp_path = yt_dlp_path
+		console_signal_bus.add_line("yt-dlp path set to " + yt_dlp_path)
+
+var selected_server : Dictionary:
+	set(value):
+		selected_server = value
+		_set_server_vars()
 
 
 func _ready() -> void:
@@ -36,14 +37,9 @@ func _ready() -> void:
 	
 	_populate_channels()
 	_create_archive_files()
+	_populate_servers()
 	
-	var server = config_loader.get_servers()[0]
-	var creds = config_loader.get_credentials()[0]
-	ssh_key_path_input.text = creds.ssh_key_path
-	remote_user_input.text = creds.user
-	process_queue.remote_ip = server.ip
-	process_queue.remote_user = creds.user
-	process_queue.ssh_key_path = creds.ssh_key_path
+	settings.playlists = config_loader.get_playlists()
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -54,7 +50,10 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _populate_channels() -> void:
-	for channel in config_loader.get_channels():
+	var channels = config_loader.get_channels()
+	settings.channels = channels
+	
+	for channel in channels:
 		var channel_node = channel_scene.instantiate()
 		channel_container.add_child(channel_node)
 		channel_node.yt_dlp_wrapper = yt_dlp_wrapper
@@ -89,6 +88,43 @@ func _create_archive_files() -> void:
 			archive_file.close()
 
 
+func _populate_servers() -> void:
+	var servers = config_loader.get_servers()
+	settings.servers = servers
+	var default_server_found = false
+	
+	for i in servers.size():
+		var server = servers[i]
+		servers_input.add_item(server.name)
+		
+		if server.default:
+			servers_input.select(i)
+			selected_server = server
+			default_server_found = true
+			console_signal_bus.add_line("Default server %s selected" % selected_server.name)
+	
+	if ! default_server_found:
+		console_signal_bus.add_warning("No default server found")
+
+
+func _set_server_vars() -> void:
+	var server_credentials = config_loader.get_credentials()
+	settings.credentials = server_credentials
+	var selected_server_credentials = {}
+			
+	for credentials in server_credentials:
+		if credentials.server == selected_server.name:
+			selected_server_credentials = credentials
+	
+	if ! selected_server_credentials:
+		console_signal_bus.add_error("No credentials found for default server")
+		return
+	
+	process_queue.remote_ip = selected_server.ip
+	process_queue.remote_user = selected_server_credentials.user
+	process_queue.ssh_key_path = selected_server_credentials.ssh_key_path
+
+
 func _on_update_yt_dlp_button_button_up():
 	process_queue.queue_update()
 
@@ -105,10 +141,6 @@ func _on_playlist_single_video_downloaded(url : String, playlist : Dictionary, d
 	process_queue.queue_download_single_video(url, playlist, delete_download)
 
 
-func _on_yt_dlp_browse_files_button_button_up() -> void:
-	yt_dlp_path_file_dialog.visible = true
-
-
 func _on_yt_dlp_path_file_dialog_file_selected(path: String) -> void:
 	yt_dlp_path = path
 
@@ -118,10 +150,6 @@ func _on_channel_folding_changed(is_folded : bool, container : FoldableContainer
 		container.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 	else:
 		container.size_flags_vertical = Control.SIZE_EXPAND_FILL
-
-
-func _on_save_config_button_button_up():
-	save_config_confirmation_dialog.visible = true
 
 
 func _on_save_config_confirmation_dialog_confirmed():
@@ -215,11 +243,5 @@ func _on_play_button_button_up():
 	pause_status_label.visible = false
 
 
-func _on_ssh_key_browse_files_button_button_up():
-	ssh_key_path_file_dialog.visible = true
-
-
-func _on_ssh_key_path_file_dialog_file_selected(path):
-	ssh_key_path_input.text = path
-	process_queue.ssh_key_path = path
-	console_signal_bus.add_line("SSH key path set to " + path)
+func _on_settings_close_requested() -> void:
+	settings.visible = false

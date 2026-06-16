@@ -34,8 +34,8 @@ func _load_config() -> void:
 	console_signal_bus.add_line("Config loaded")
 
 
-func get_paths() -> Array:
-	var paths := []
+func get_paths() -> Array[Dictionary]:
+	var paths : Array[Dictionary]
 	
 	for section in _config_file.get_sections():
 		if section.begins_with("path"):
@@ -48,22 +48,23 @@ func get_paths() -> Array:
 	return paths
 
 
-func get_servers() -> Array:
-	var servers := []
+func get_servers() -> Array[Dictionary]:
+	var servers : Array[Dictionary]
 	
 	for section in _config_file.get_sections():
 		if section.begins_with("server"):
 			servers.append({
 				"section": section,
 				"name": _config_file.get_value(section, "name"),
-				"ip": _config_file.get_value(section, "ip")
+				"ip": _config_file.get_value(section, "ip"),
+				"default": _config_file.get_value(section, "default", false),
 			})
 	
 	return servers
 
 
-func get_credentials() -> Array:
-	var credentials := []
+func get_credentials() -> Array[Dictionary]:
+	var credentials : Array[Dictionary]
 	
 	for section in _config_file.get_sections():
 		if section.begins_with("credentials"):
@@ -77,8 +78,8 @@ func get_credentials() -> Array:
 	return credentials
 
 
-func get_channels() -> Array:
-	var channels := []
+func get_channels() -> Array[Dictionary]:
+	var channels : Array[Dictionary]
 	
 	for section in _config_file.get_sections():
 		if section.begins_with("channel"):
@@ -91,8 +92,8 @@ func get_channels() -> Array:
 	return channels
 
 
-func get_playlists() -> Array:
-	var playlists := []
+func get_playlists() -> Array[Dictionary]:
+	var playlists : Array[Dictionary]
 	
 	for section in _config_file.get_sections():
 		if section.begins_with("playlist"):

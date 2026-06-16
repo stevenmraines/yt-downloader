@@ -1,20 +1,15 @@
 [gd_scene format=3 uid="uid://2866mpf2bn32"]
 
 [ext_resource type="Script" uid="uid://bbh3xqmfw1vbe" path="res://scripts/window.gd" id="1_to7fh"]
-[ext_resource type="StyleBox" uid="uid://8kxj1vqhxwsv" path="res://styles/secondary_button_normal.tres" id="2_4hy5e"]
 [ext_resource type="Script" uid="uid://cq6rkpt6rlx77" path="res://scripts/console_text_input.gd" id="2_qnju7"]
 [ext_resource type="StyleBox" uid="uid://co4550p76db2k" path="res://styles/default_button_pressed.tres" id="2_shje2"]
-[ext_resource type="StyleBox" uid="uid://b5cwgpibw4xld" path="res://styles/success_button_normal.tres" id="2_syahi"]
 [ext_resource type="Script" uid="uid://bsefncd1fxkyf" path="res://scripts/console_signal_bus.gd" id="2_to7fh"]
-[ext_resource type="StyleBox" uid="uid://3i0ogs0x15df" path="res://styles/secondary_button_pressed.tres" id="3_cx3k0"]
 [ext_resource type="StyleBox" uid="uid://caorea2ay4rb4" path="res://styles/default_button_hover.tres" id="3_d8l8o"]
-[ext_resource type="StyleBox" uid="uid://cyjp84k0pbqf3" path="res://styles/success_button_pressed.tres" id="3_qncfr"]
-[ext_resource type="StyleBox" uid="uid://caep6kc0fjn86" path="res://styles/success_button_hover.tres" id="4_k52h1"]
 [ext_resource type="Script" uid="uid://djom14jyh6cwn" path="res://scripts/config_loader.gd" id="4_qnju7"]
-[ext_resource type="StyleBox" uid="uid://binch188kfmsf" path="res://styles/secondary_button_hover.tres" id="4_qsv56"]
 [ext_resource type="Script" uid="uid://sfh687fmx6ht" path="res://scripts/yt_dlp_wrapper.gd" id="5_ato5p"]
 [ext_resource type="Texture2D" uid="uid://b8tvr7gaqcary" path="res://assets/pause-white.png" id="11_qsv56"]
 [ext_resource type="StyleBox" uid="uid://dvb5qs66bpht" path="res://styles/process_queue_background.tres" id="11_uxgp5"]
+[ext_resource type="PackedScene" uid="uid://dnr15c0xrfsob" path="res://scenes/settings.tscn" id="12_atfn8"]
 [ext_resource type="Texture2D" uid="uid://dnt7ifxql3v3s" path="res://assets/play-white.png" id="12_yeipv"]
 [ext_resource type="Script" uid="uid://duwsp24mpyihb" path="res://scripts/process_queue.gd" id="14_cx3k0"]
 
@@ -56,129 +51,25 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 10
 
-[node name="SaveConfigButton" type="Button" parent="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer" unique_id=1261245522]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer" unique_id=1060766533]
 layout_mode = 2
-size_flags_vertical = 0
-theme_override_font_sizes/font_size = 20
-theme_override_styles/normal = ExtResource("2_4hy5e")
-theme_override_styles/pressed = ExtResource("3_cx3k0")
-theme_override_styles/hover = ExtResource("4_qsv56")
-text = "Save Config"
+theme_override_constants/separation = 20
 
-[node name="SaveConfigConfirmationDialog" type="ConfirmationDialog" parent="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer" unique_id=915739633]
+[node name="Label" type="Label" parent="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/HBoxContainer" unique_id=1052712187]
+layout_mode = 2
+text = "Server:"
+
+[node name="ServersInput" type="OptionButton" parent="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/HBoxContainer" unique_id=726418963]
 unique_name_in_owner = true
-oversampling_override = 1.0
-initial_position = 2
-size = Vector2i(527, 100)
-dialog_text = "Are you sure you want to save changes to the config?"
+layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="VSplitContainer" type="VSplitContainer" parent="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer" unique_id=1350764089]
 layout_mode = 2
 size_flags_vertical = 3
-split_offsets = PackedInt32Array(31, 74, 117, 6)
+split_offsets = PackedInt32Array(-1)
 drag_area_highlight_in_editor = true
-split_offset = 31
-
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer" unique_id=1315609519]
-layout_mode = 2
-theme_override_constants/margin_left = 3
-theme_override_constants/margin_right = 3
-
-[node name="YtDlpConfig" type="HBoxContainer" parent="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/MarginContainer" unique_id=551422303]
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_constants/separation = 20
-
-[node name="Label" type="Label" parent="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/MarginContainer/YtDlpConfig" unique_id=333003297]
-layout_mode = 2
-text = "yt-dlp Executable Path:"
-
-[node name="YtDlpBrowseFilesButton" type="Button" parent="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/MarginContainer/YtDlpConfig" unique_id=192768295]
-layout_mode = 2
-theme_override_styles/pressed = ExtResource("2_shje2")
-theme_override_styles/hover = ExtResource("3_d8l8o")
-text = "Browse"
-
-[node name="YtDlpPathInput" type="LineEdit" parent="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/MarginContainer/YtDlpConfig" unique_id=1220911714]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-editable = false
-
-[node name="YtDlpPathFileDialog" type="FileDialog" parent="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/MarginContainer/YtDlpConfig" unique_id=1484450864]
-unique_name_in_owner = true
-oversampling_override = 1.0
-title = "Open a File"
-initial_position = 2
-size = Vector2i(1280, 720)
-ok_button_text = "Select"
-file_mode = 0
-access = 2
-show_hidden_files = true
-
-[node name="UpdateYtDlpButton" type="Button" parent="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/MarginContainer/YtDlpConfig" unique_id=1564146492]
-layout_mode = 2
-theme_override_styles/normal = ExtResource("2_syahi")
-theme_override_styles/pressed = ExtResource("3_qncfr")
-theme_override_styles/hover = ExtResource("4_k52h1")
-text = "Update yt-dlp"
-
-[node name="MarginContainer2" type="MarginContainer" parent="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer" unique_id=1082454022]
-layout_mode = 2
-theme_override_constants/margin_left = 3
-theme_override_constants/margin_right = 3
-
-[node name="SSHKeyConfig" type="HBoxContainer" parent="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/MarginContainer2" unique_id=424670700]
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_constants/separation = 20
-
-[node name="Label" type="Label" parent="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/MarginContainer2/SSHKeyConfig" unique_id=1797171861]
-layout_mode = 2
-text = "SSH Key Path:"
-
-[node name="SSHKeyBrowseFilesButton" type="Button" parent="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/MarginContainer2/SSHKeyConfig" unique_id=101926166]
-layout_mode = 2
-theme_override_styles/pressed = ExtResource("2_shje2")
-theme_override_styles/hover = ExtResource("3_d8l8o")
-text = "Browse"
-
-[node name="SSHKeyPathInput" type="LineEdit" parent="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/MarginContainer2/SSHKeyConfig" unique_id=944636369]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-editable = false
-
-[node name="SSHKeyPathFileDialog" type="FileDialog" parent="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/MarginContainer2/SSHKeyConfig" unique_id=423852204]
-unique_name_in_owner = true
-oversampling_override = 1.0
-title = "Open a File"
-initial_position = 2
-size = Vector2i(1280, 720)
-ok_button_text = "Select"
-file_mode = 0
-access = 2
-show_hidden_files = true
-
-[node name="MarginContainer3" type="MarginContainer" parent="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer" unique_id=967998991]
-layout_mode = 2
-theme_override_constants/margin_left = 3
-theme_override_constants/margin_right = 3
-
-[node name="RemoteUserConfig" type="HBoxContainer" parent="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/MarginContainer3" unique_id=1447474824]
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_constants/separation = 20
-
-[node name="Label" type="Label" parent="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/MarginContainer3/RemoteUserConfig" unique_id=1834967957]
-layout_mode = 2
-text = "Remote User:"
-
-[node name="RemoteUserInput" type="LineEdit" parent="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/MarginContainer3/RemoteUserConfig" unique_id=2122059533]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-editable = false
+split_offset = -1
 
 [node name="ChannelContainer" type="VBoxContainer" parent="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer" unique_id=1767764382]
 unique_name_in_owner = true
@@ -309,6 +200,8 @@ theme_override_styles/hover = ExtResource("3_d8l8o")
 icon = ExtResource("12_yeipv")
 expand_icon = true
 
+[node name="Settings" parent="." unique_id=1145338180 instance=ExtResource("12_atfn8")]
+
 [node name="ConsoleSignalBus" type="Node" parent="." unique_id=1967930258 groups=["console_signal_bus"]]
 script = ExtResource("2_to7fh")
 metadata/_custom_type_script = "uid://bsefncd1fxkyf"
@@ -326,15 +219,9 @@ script = ExtResource("14_cx3k0")
 yt_dlp_wrapper = NodePath("../YtDlpWrapper")
 metadata/_custom_type_script = "uid://duwsp24mpyihb"
 
-[connection signal="button_up" from="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/SaveConfigButton" to="." method="_on_save_config_button_button_up"]
-[connection signal="confirmed" from="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/SaveConfigConfirmationDialog" to="." method="_on_save_config_confirmation_dialog_confirmed"]
-[connection signal="button_up" from="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/MarginContainer/YtDlpConfig/YtDlpBrowseFilesButton" to="." method="_on_yt_dlp_browse_files_button_button_up"]
-[connection signal="file_selected" from="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/MarginContainer/YtDlpConfig/YtDlpPathFileDialog" to="." method="_on_yt_dlp_path_file_dialog_file_selected"]
-[connection signal="button_up" from="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/MarginContainer/YtDlpConfig/UpdateYtDlpButton" to="." method="_on_update_yt_dlp_button_button_up"]
-[connection signal="button_up" from="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/MarginContainer2/SSHKeyConfig/SSHKeyBrowseFilesButton" to="." method="_on_ssh_key_browse_files_button_button_up"]
-[connection signal="file_selected" from="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/MarginContainer2/SSHKeyConfig/SSHKeyPathFileDialog" to="." method="_on_ssh_key_path_file_dialog_file_selected"]
 [connection signal="button_up" from="MarginContainer/HSplitContainer/ProcessQueueContainer/VBoxContainer/MarginContainer/VBoxContainer/PlayPauseButtonContainer/PauseButton" to="." method="_on_pause_button_button_up"]
 [connection signal="button_up" from="MarginContainer/HSplitContainer/ProcessQueueContainer/VBoxContainer/MarginContainer/VBoxContainer/PlayPauseButtonContainer/PlayButton" to="." method="_on_play_button_button_up"]
+[connection signal="close_requested" from="Settings" to="." method="_on_settings_close_requested"]
 [connection signal="error_added" from="ConsoleSignalBus" to="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/Console/MarginContainer/ConsoleTextInput" method="_on_console_signal_bus_error_added"]
 [connection signal="line_added" from="ConsoleSignalBus" to="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/Console/MarginContainer/ConsoleTextInput" method="_on_console_signal_bus_line_added"]
 [connection signal="warning_added" from="ConsoleSignalBus" to="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/Console/MarginContainer/ConsoleTextInput" method="_on_console_signal_bus_warning_added"]
