@@ -57,26 +57,12 @@ func get_servers() -> Array[Dictionary]:
 				"section": section,
 				"name": _config_file.get_value(section, "name"),
 				"ip": _config_file.get_value(section, "ip"),
-				"default": _config_file.get_value(section, "default", false),
+				"user": _config_file.get_value(section, "user"),
+				"ssh_key_path": _config_file.get_value(section, "ssh_key_path", "~/.ssh/id_rsa"),
+				"is_default": _config_file.get_value(section, "is_default", false),
 			})
 	
 	return servers
-
-
-# TODO Merge credential stuff into servers to make life easier
-func get_credentials() -> Array[Dictionary]:
-	var credentials : Array[Dictionary]
-	
-	for section in _config_file.get_sections():
-		if section.begins_with("credentials"):
-			credentials.append({
-				"section": section,
-				"server": _config_file.get_value(section, "server"),
-				"user": _config_file.get_value(section, "user"),
-				"ssh_key_path": _config_file.get_value(section, "ssh_key_path", "~/.ssh/id_rsa")
-			})
-	
-	return credentials
 
 
 func get_channels() -> Array[Dictionary]:

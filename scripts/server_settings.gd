@@ -12,20 +12,16 @@ var server : Dictionary:
 		server = value
 		name_input.text = server.name
 		ip_input.text = server.ip
-		is_default_input.button_pressed = server.default
-
-var credentials : Dictionary:
-	set(value):
-		credentials = value
-		user_input.text = credentials.user
-		ssh_key_path_input.text = credentials.ssh_key_path
+		user_input.text = server.user
+		ssh_key_path_input.text = server.ssh_key_path
+		is_default_input.button_pressed = server.is_default
 
 
 func get_data() -> Dictionary:
 	return {
 		"name": name_input.text,
 		"ip": ip_input.text,
-		"is_default": is_default_input.button_pressed,
 		"user": user_input.text,
 		"ssh_key_path": ssh_key_path_input.text,
+		"is_default": is_default_input.button_pressed,
 	}

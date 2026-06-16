@@ -22,14 +22,6 @@ var servers : Array[Dictionary]:
 			server_settings_container.add_child(server_node)
 			server_node.server = server
 
-var credentials : Array[Dictionary]:
-	set(value):
-		credentials = value
-		for child in server_settings_container.get_children():
-			for creds in credentials:
-				if creds.server == child.server.name:
-					child.credentials = creds
-
 var channels : Array[Dictionary]:
 	set(value):
 		channels = value

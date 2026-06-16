@@ -29,8 +29,6 @@ var selected_server : Dictionary:
 		selected_server = value
 		_set_server_vars()
 
-var selected_server_credentials : Dictionary
-
 
 func _ready() -> void:
 	for config_path in config_loader.get_paths():
@@ -99,7 +97,7 @@ func _populate_servers() -> void:
 		var server = servers[i]
 		servers_input.add_item(server.name)
 		
-		if server.default:
+		if server.is_default:
 			servers_input.select(i)
 			selected_server = server
 			default_server_found = true
@@ -110,23 +108,11 @@ func _populate_servers() -> void:
 
 
 func _set_server_vars() -> void:
-	var server_credentials = config_loader.get_credentials()
-	settings.credentials = server_credentials
-	var credentials_set = false
-			
-	for credentials in server_credentials:
-		if credentials.server == selected_server.name:
-			selected_server_credentials = credentials
-			credentials_set = true
-	
-	if ! credentials_set:
-		console_signal_bus.add_error("No credentials found for default server")
-		return
-	
 	process_queue.remote_ip = selected_server.ip
-	process_queue.remote_user = selected_server_credentials.user
-	process_queue.ssh_key_path = selected_server_credentials.ssh_key_path
-	console_signal_bus.add_line("SSH Key Path set to %s" % selected_server_credentials.ssh_key_path)
+	process_queue.remote_user = selected_server.user
+	process_queue.ssh_key_path = selected_server.ssh_key_path
+	console_signal_bus.add_line("Server credentials set to %s@%s" % [selected_server.user, selected_server.ip])
+	console_signal_bus.add_line("SSH Key Path set to %s" % selected_server.ssh_key_path)
 
 
 func _on_playlist_marked_as_archived(playlist : Dictionary) -> void:
