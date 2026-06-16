@@ -63,6 +63,7 @@ func get_servers() -> Array[Dictionary]:
 	return servers
 
 
+# TODO Merge credential stuff into servers to make life easier
 func get_credentials() -> Array[Dictionary]:
 	var credentials : Array[Dictionary]
 	

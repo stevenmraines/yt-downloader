@@ -251,3 +251,7 @@ func _on_yt_dlp_menu_index_pressed(_index: int) -> void:
 
 func _on_settings_close_requested() -> void:
 	settings.visible = false
+
+
+func _on_settings_settings_saved(_settings: Dictionary) -> void:
+	print("settings saved")

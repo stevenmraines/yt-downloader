@@ -1,5 +1,7 @@
 extends Window
 
+signal settings_saved(settings : Dictionary)
+
 @onready var yt_dlp_path_input := %YtDlpPathInput
 @onready var yt_dlp_path_file_dialog := %YtDlpPathFileDialog
 @onready var server_settings_container := %ServerSettingsContainer
@@ -50,3 +52,25 @@ var playlists : Array[Dictionary]:
 		
 		for child in channel_settings_container.get_children():
 			child.playlists = channel_playlists[child.channel.name]
+
+
+func _get_all_data() -> Dictionary:
+	var data = {
+		"servers": [],
+		"channels": [],
+		"playlists": [],
+	}
+	
+	for child in server_settings_container.get_children():
+		data["servers"].append(child.get_data())
+	
+	for child in channel_settings_container.get_children():
+		data["channels"].append(child.get_data())
+		for child2 in child.playlists_container.get_children():
+			data["playlists"].append(child2.get_data())
+	
+	return data
+
+
+func _on_save_config_button_button_up() -> void:
+	settings_saved.emit(_get_all_data())

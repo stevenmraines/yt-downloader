@@ -19,3 +19,13 @@ var credentials : Dictionary:
 		credentials = value
 		user_input.text = credentials.user
 		ssh_key_path_input.text = credentials.ssh_key_path
+
+
+func get_data() -> Dictionary:
+	return {
+		"name": name_input.text,
+		"ip": ip_input.text,
+		"is_default": is_default_input.button_pressed,
+		"user": user_input.text,
+		"ssh_key_path": ssh_key_path_input.text,
+	}

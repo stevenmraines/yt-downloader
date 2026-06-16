@@ -51,6 +51,7 @@ theme_override_constants/separation = 20
 
 [node name="Label" type="Label" parent="ScrollContainer/MarginContainer/VBoxContainer/MarginContainer/YtDlpConfig" unique_id=208130118]
 layout_mode = 2
+theme_override_font_sizes/font_size = 14
 text = "yt-dlp Executable Path:"
 
 [node name="YtDlpBrowseFilesButton" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer/MarginContainer/YtDlpConfig" unique_id=1794353165]
@@ -145,3 +146,5 @@ oversampling_override = 1.0
 initial_position = 2
 size = Vector2i(527, 100)
 dialog_text = "Are you sure you want to save changes to the config?"
+
+[connection signal="button_up" from="ScrollContainer/MarginContainer/VBoxContainer/SaveConfigButton" to="." method="_on_save_config_button_button_up"]

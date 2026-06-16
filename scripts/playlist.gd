@@ -39,6 +39,7 @@ var yt_dlp_wrapper : YtDlpWrapper
 
 func _ready() -> void:
 	console_signal_bus = get_tree().get_nodes_in_group("console_signal_bus")[0]
+	custom_minimum_size = Vector2(0, folded_minimum_height)
 
 
 func populate_preview_queue() -> void:
