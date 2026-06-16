@@ -75,8 +75,9 @@ dialog_text = "Are you sure you want to save changes to the config?"
 [node name="VSplitContainer" type="VSplitContainer" parent="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer" unique_id=1350764089]
 layout_mode = 2
 size_flags_vertical = 3
-split_offsets = PackedInt32Array(0, -103)
+split_offsets = PackedInt32Array(31, 74, 117, 6)
 drag_area_highlight_in_editor = true
+split_offset = 31
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer" unique_id=1315609519]
 layout_mode = 2
@@ -122,11 +123,68 @@ theme_override_styles/pressed = ExtResource("3_qncfr")
 theme_override_styles/hover = ExtResource("4_k52h1")
 text = "Update yt-dlp"
 
+[node name="MarginContainer2" type="MarginContainer" parent="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer" unique_id=1082454022]
+layout_mode = 2
+theme_override_constants/margin_left = 3
+theme_override_constants/margin_right = 3
+
+[node name="SSHKeyConfig" type="HBoxContainer" parent="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/MarginContainer2" unique_id=424670700]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 20
+
+[node name="Label" type="Label" parent="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/MarginContainer2/SSHKeyConfig" unique_id=1797171861]
+layout_mode = 2
+text = "SSH Key Path:"
+
+[node name="SSHKeyBrowseFilesButton" type="Button" parent="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/MarginContainer2/SSHKeyConfig" unique_id=101926166]
+layout_mode = 2
+theme_override_styles/pressed = ExtResource("2_shje2")
+theme_override_styles/hover = ExtResource("3_d8l8o")
+text = "Browse"
+
+[node name="SSHKeyPathInput" type="LineEdit" parent="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/MarginContainer2/SSHKeyConfig" unique_id=944636369]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+editable = false
+
+[node name="SSHKeyPathFileDialog" type="FileDialog" parent="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/MarginContainer2/SSHKeyConfig" unique_id=423852204]
+unique_name_in_owner = true
+oversampling_override = 1.0
+title = "Open a File"
+initial_position = 2
+size = Vector2i(1280, 720)
+ok_button_text = "Select"
+file_mode = 0
+access = 2
+show_hidden_files = true
+
+[node name="MarginContainer3" type="MarginContainer" parent="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer" unique_id=967998991]
+layout_mode = 2
+theme_override_constants/margin_left = 3
+theme_override_constants/margin_right = 3
+
+[node name="RemoteUserConfig" type="HBoxContainer" parent="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/MarginContainer3" unique_id=1447474824]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 20
+
+[node name="Label" type="Label" parent="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/MarginContainer3/RemoteUserConfig" unique_id=1834967957]
+layout_mode = 2
+text = "Remote User:"
+
+[node name="RemoteUserInput" type="LineEdit" parent="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/MarginContainer3/RemoteUserConfig" unique_id=2122059533]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+editable = false
+
 [node name="ChannelContainer" type="VBoxContainer" parent="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer" unique_id=1767764382]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
-size_flags_stretch_ratio = 38.0
+size_flags_stretch_ratio = 10.0
 
 [node name="Console" type="Control" parent="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer" unique_id=63083943]
 layout_mode = 2
@@ -273,6 +331,8 @@ metadata/_custom_type_script = "uid://duwsp24mpyihb"
 [connection signal="button_up" from="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/MarginContainer/YtDlpConfig/YtDlpBrowseFilesButton" to="." method="_on_yt_dlp_browse_files_button_button_up"]
 [connection signal="file_selected" from="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/MarginContainer/YtDlpConfig/YtDlpPathFileDialog" to="." method="_on_yt_dlp_path_file_dialog_file_selected"]
 [connection signal="button_up" from="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/MarginContainer/YtDlpConfig/UpdateYtDlpButton" to="." method="_on_update_yt_dlp_button_button_up"]
+[connection signal="button_up" from="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/MarginContainer2/SSHKeyConfig/SSHKeyBrowseFilesButton" to="." method="_on_ssh_key_browse_files_button_button_up"]
+[connection signal="file_selected" from="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/MarginContainer2/SSHKeyConfig/SSHKeyPathFileDialog" to="." method="_on_ssh_key_path_file_dialog_file_selected"]
 [connection signal="button_up" from="MarginContainer/HSplitContainer/ProcessQueueContainer/VBoxContainer/MarginContainer/VBoxContainer/PlayPauseButtonContainer/PauseButton" to="." method="_on_pause_button_button_up"]
 [connection signal="button_up" from="MarginContainer/HSplitContainer/ProcessQueueContainer/VBoxContainer/MarginContainer/VBoxContainer/PlayPauseButtonContainer/PlayButton" to="." method="_on_play_button_button_up"]
 [connection signal="error_added" from="ConsoleSignalBus" to="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/Console/MarginContainer/ConsoleTextInput" method="_on_console_signal_bus_error_added"]

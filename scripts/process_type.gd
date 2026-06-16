@@ -2,6 +2,7 @@ class_name Process extends Node
 
 signal progress_timer_timeout(process : Process)
 
+# TODO Maybe add a setter to kill/skip all child/sibling processes when this is killed/skipped?
 var status := ProcessState.QUEUED
 var exit_code := 0
 var pid := -1

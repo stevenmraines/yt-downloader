@@ -67,7 +67,7 @@ static func cp(file : String, destination : String) -> int:
 
 static func scp(file : String, destination : String, ip : String, user : String, ssh_key_path : String) -> int:
 	return OS.create_process("cmd.exe", [
-		"/k", "scp %s -i %s %s@%s:%s" % [file, ssh_key_path, user, ip, destination]
+		"/c", "scp -i \"%s\" \"%s\" %s@%s:%s" % [ssh_key_path, file, user, ip, destination]
 	], true)
 
 

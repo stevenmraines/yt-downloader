@@ -258,8 +258,10 @@ func _get_single_video_filename(process : Process) -> void:
 	
 	var content = file.get_as_text()
 	file.close()
-	var regex = RegEx.new()
-	regex.compile(r"^\[Merger\] Merging formats into \"(?<filename>.+\.mp4)\"")
+	var filename_regex = RegEx.new()
+	filename_regex.compile(r"^\[Merger\] Merging formats into \"(?<filename>.+\.mp4)\"")
+	var archived_regex = RegEx.new()
+	archived_regex.compile(r"^\[download\] .+: has already been recorded in the archive")
 	
 	for line in content.split("\n"):
 		line = line.strip_edges()
@@ -267,21 +269,26 @@ func _get_single_video_filename(process : Process) -> void:
 		if line == "":
 			continue
 		
-		var result = regex.search(line)
+		var result1 = filename_regex.search(line)
+		var result2 = archived_regex.search(line)
 		
-		if result:
-			process.parent_process.data.filename = result.get_string("filename")
+		if result1:
+			process.parent_process.data.filename = result1.get_string("filename")
 			console_signal_bus.add_line("Downloaded video: %s" % process.parent_process.data.filename)
 			DirAccess.remove_absolute(temp_file)
 			process.status = Process.ProcessState.COMPLETE
+		
+		if result2:
+			console_signal_bus.add_warning("Download skipped, video already archived")
+			DirAccess.remove_absolute(temp_file)
+			process.status = Process.ProcessState.SKIPPED
 	
-	if ! process.parent_process.data.filename:
+	if ! process.parent_process.data.has("filename") and process.status != Process.ProcessState.SKIPPED:
 		process.status = Process.ProcessState.FAILED
 		console_signal_bus.add_error("Could not parse downloaded video filename")
 
 
 func _copy_to_backup(process : Process) -> int:
-	var download_path = process.playlist.download_path
 	var filename = process.parent_process.data.filename
 	var backup_path = process.playlist.backup_upload_path
 	var pid = -1
@@ -300,20 +307,14 @@ func _copy_to_backup(process : Process) -> int:
 
 
 func _copy_to_remote(process : Process) -> int:
-	var download_path = process.playlist.download_path
 	var filename = process.parent_process.data.filename
 	var remote_path = process.playlist.remote_upload_path
 	var pid = -1
 	
 	if remote_path:
-		pass
-		#var ip = ""
-		#var user = ""
-		#var ssh_key_path = ""
-		# TODO Add error if remote_ip, user, or ssh_key aren't set
-		#pid = Util.scp(filename, remote_path, remote_ip, remote_user, ssh_key_path)
-		#if pid == -1:
-		#	console_signal_bus.add_error("Error uploading to %s, process could not be created" % remote_path)
+		pid = Util.scp(filename, remote_path, remote_ip, remote_user, ssh_key_path)
+		if pid == -1:
+			console_signal_bus.add_error("Error uploading to %s, process could not be created" % remote_path)
 	
 	return pid
 

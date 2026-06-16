@@ -27,7 +27,7 @@ var process : Process:
 			status_label.pop()
 		
 		var killable_states = [Process.ProcessState.QUEUED, Process.ProcessState.IN_PROGRESS]
-		kill_button.disabled = process.killable and ! killable_states.has(process.status)
+		kill_button.disabled = ! process.killable or ! killable_states.has(process.status)
 		
 		is_child_process_icon.visible = process.parent_process != null
 
@@ -37,7 +37,7 @@ var status_colors := {
 	Process.ProcessState.COMPLETE: Color.GREEN,
 	Process.ProcessState.FAILED: Color.ORANGE,
 	Process.ProcessState.KILLED: Color.RED,
-	Process.ProcessState.SKIPPED: Color.BLUE_VIOLET,
+	Process.ProcessState.SKIPPED: Color.VIOLET,
 }
 
 var status_messages := {

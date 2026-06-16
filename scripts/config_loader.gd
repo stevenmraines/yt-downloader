@@ -71,7 +71,7 @@ func get_credentials() -> Array:
 				"section": section,
 				"server": _config_file.get_value(section, "server"),
 				"user": _config_file.get_value(section, "user"),
-				"ssh_key_path": _config_file.get_value(section, "ssh_key_path", "~/.ssh/id_rsa.pub")
+				"ssh_key_path": _config_file.get_value(section, "ssh_key_path", "~/.ssh/id_rsa")
 			})
 	
 	return credentials

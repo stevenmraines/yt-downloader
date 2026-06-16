@@ -10,6 +10,9 @@ extends PanelContainer
 @onready var save_config_confirmation_dialog := %SaveConfigConfirmationDialog
 @onready var yt_dlp_path_input := %YtDlpPathInput
 @onready var yt_dlp_path_file_dialog := %YtDlpPathFileDialog
+@onready var ssh_key_path_input := %SSHKeyPathInput
+@onready var ssh_key_path_file_dialog := %SSHKeyPathFileDialog
+@onready var remote_user_input := %RemoteUserInput
 @onready var channel_container := %ChannelContainer
 @onready var process_container := %ProcessContainer
 @onready var process_queue_background_panel := %ProcessQueueBackgroundPanel
@@ -36,6 +39,8 @@ func _ready() -> void:
 	
 	var server = config_loader.get_servers()[0]
 	var creds = config_loader.get_credentials()[0]
+	ssh_key_path_input.text = creds.ssh_key_path
+	remote_user_input.text = creds.user
 	process_queue.remote_ip = server.ip
 	process_queue.remote_user = creds.user
 	process_queue.ssh_key_path = creds.ssh_key_path
@@ -121,6 +126,7 @@ func _on_save_config_button_button_up():
 
 func _on_save_config_confirmation_dialog_confirmed():
 	# There aren't really going to be any changes to look out for in channels rn
+	# TODO Update servers/creds
 	var changes = {
 		"paths": [],
 		"channels": [],
@@ -207,3 +213,13 @@ func _on_play_button_button_up():
 	console_signal_bus.add_line("Process queue resumed")
 	process_queue_background_panel.add_theme_stylebox_override("panel", process_queue_background_style)
 	pause_status_label.visible = false
+
+
+func _on_ssh_key_browse_files_button_button_up():
+	ssh_key_path_file_dialog.visible = true
+
+
+func _on_ssh_key_path_file_dialog_file_selected(path):
+	ssh_key_path_input.text = path
+	process_queue.ssh_key_path = path
+	console_signal_bus.add_line("SSH key path set to " + path)
