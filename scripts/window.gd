@@ -29,6 +29,8 @@ var selected_server : Dictionary:
 		selected_server = value
 		_set_server_vars()
 
+var selected_server_credentials : Dictionary
+
 
 func _ready() -> void:
 	for config_path in config_loader.get_paths():
@@ -110,23 +112,21 @@ func _populate_servers() -> void:
 func _set_server_vars() -> void:
 	var server_credentials = config_loader.get_credentials()
 	settings.credentials = server_credentials
-	var selected_server_credentials = {}
+	var credentials_set = false
 			
 	for credentials in server_credentials:
 		if credentials.server == selected_server.name:
 			selected_server_credentials = credentials
+			credentials_set = true
 	
-	if ! selected_server_credentials:
+	if ! credentials_set:
 		console_signal_bus.add_error("No credentials found for default server")
 		return
 	
 	process_queue.remote_ip = selected_server.ip
 	process_queue.remote_user = selected_server_credentials.user
 	process_queue.ssh_key_path = selected_server_credentials.ssh_key_path
-
-
-func _on_update_yt_dlp_button_button_up():
-	process_queue.queue_update()
+	console_signal_bus.add_line("SSH Key Path set to %s" % selected_server_credentials.ssh_key_path)
 
 
 func _on_playlist_marked_as_archived(playlist : Dictionary) -> void:
@@ -139,10 +139,6 @@ func _on_playlist_unarchived_videos_downloaded(playlist : Dictionary) -> void:
 
 func _on_playlist_single_video_downloaded(url : String, playlist : Dictionary, delete_download : bool) -> void:
 	process_queue.queue_download_single_video(url, playlist, delete_download)
-
-
-func _on_yt_dlp_path_file_dialog_file_selected(path: String) -> void:
-	yt_dlp_path = path
 
 
 func _on_channel_folding_changed(is_folded : bool, container : FoldableContainer):
@@ -241,6 +237,16 @@ func _on_play_button_button_up():
 	console_signal_bus.add_line("Process queue resumed")
 	process_queue_background_panel.add_theme_stylebox_override("panel", process_queue_background_style)
 	pause_status_label.visible = false
+
+
+func _on_file_menu_index_pressed(_index: int) -> void:
+	# There's only one single file menu item right now
+	settings.visible = true
+
+
+func _on_yt_dlp_menu_index_pressed(_index: int) -> void:
+	# Again, there's only one yt-dlp menu item
+	process_queue.queue_update()
 
 
 func _on_settings_close_requested() -> void:

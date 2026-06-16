@@ -27,22 +27,44 @@ script = ExtResource("1_to7fh")
 layout_mode = 2
 color = Color(0.07200002, 0.35280007, 0.72, 0.21176471)
 
-[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1479611663]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1134815869]
 layout_mode = 2
+
+[node name="MenuBar" type="MenuBar" parent="VBoxContainer" unique_id=147340874]
+layout_mode = 2
+
+[node name="FileMenu" type="PopupMenu" parent="VBoxContainer/MenuBar" unique_id=53723930]
+oversampling_override = 1.0
+title = "File"
+size = Vector2i(102, 100)
+item_count = 1
+item_0/text = "Settings"
+item_0/id = 0
+
+[node name="YtDlpMenu" type="PopupMenu" parent="VBoxContainer/MenuBar" unique_id=227164934]
+oversampling_override = 1.0
+title = "yt-dlp"
+item_count = 1
+item_0/text = "Update"
+item_0/id = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer" unique_id=1479611663]
+layout_mode = 2
+size_flags_vertical = 3
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="HSplitContainer" type="HSplitContainer" parent="MarginContainer" unique_id=326715573]
+[node name="HSplitContainer" type="HSplitContainer" parent="VBoxContainer/MarginContainer" unique_id=326715573]
 layout_mode = 2
 
-[node name="ChannelPlaylistContainer" type="Control" parent="MarginContainer/HSplitContainer" unique_id=1769635895]
+[node name="ChannelPlaylistContainer" type="Control" parent="VBoxContainer/MarginContainer/HSplitContainer" unique_id=1769635895]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 2.0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HSplitContainer/ChannelPlaylistContainer" unique_id=114995756]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/MarginContainer/HSplitContainer/ChannelPlaylistContainer" unique_id=114995756]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -51,38 +73,38 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 10
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer" unique_id=1060766533]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer" unique_id=1060766533]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="Label" type="Label" parent="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/HBoxContainer" unique_id=1052712187]
+[node name="Label" type="Label" parent="VBoxContainer/MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/HBoxContainer" unique_id=1052712187]
 layout_mode = 2
 text = "Server:"
 
-[node name="ServersInput" type="OptionButton" parent="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/HBoxContainer" unique_id=726418963]
+[node name="ServersInput" type="OptionButton" parent="VBoxContainer/MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/HBoxContainer" unique_id=726418963]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="VSplitContainer" type="VSplitContainer" parent="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer" unique_id=1350764089]
+[node name="VSplitContainer" type="VSplitContainer" parent="VBoxContainer/MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer" unique_id=1350764089]
 layout_mode = 2
 size_flags_vertical = 3
 split_offsets = PackedInt32Array(-1)
 drag_area_highlight_in_editor = true
 split_offset = -1
 
-[node name="ChannelContainer" type="VBoxContainer" parent="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer" unique_id=1767764382]
+[node name="ChannelContainer" type="VBoxContainer" parent="VBoxContainer/MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer" unique_id=1767764382]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 10.0
 
-[node name="Console" type="Control" parent="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer" unique_id=63083943]
+[node name="Console" type="Control" parent="VBoxContainer/MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer" unique_id=63083943]
 layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 2.0
 
-[node name="ColorRect" type="ColorRect" parent="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/Console" unique_id=1957696869]
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/Console" unique_id=1957696869]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -91,7 +113,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 1)
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/Console" unique_id=1115192893]
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/Console" unique_id=1115192893]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -101,18 +123,18 @@ grow_vertical = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_right = 10
 
-[node name="ConsoleTextInput" type="RichTextLabel" parent="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/Console/MarginContainer" unique_id=1672509452]
+[node name="ConsoleTextInput" type="RichTextLabel" parent="VBoxContainer/MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/Console/MarginContainer" unique_id=1672509452]
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 2
 selection_enabled = true
 script = ExtResource("2_qnju7")
 
-[node name="ProcessQueueContainer" type="Control" parent="MarginContainer/HSplitContainer" unique_id=659049400]
+[node name="ProcessQueueContainer" type="Control" parent="VBoxContainer/MarginContainer/HSplitContainer" unique_id=659049400]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="ProcessQueueBackgroundPanel" type="Panel" parent="MarginContainer/HSplitContainer/ProcessQueueContainer" unique_id=1934583462]
+[node name="ProcessQueueBackgroundPanel" type="Panel" parent="VBoxContainer/MarginContainer/HSplitContainer/ProcessQueueContainer" unique_id=1934583462]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -122,7 +144,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = ExtResource("11_uxgp5")
 
-[node name="PauseStatusLabel" type="Label" parent="MarginContainer/HSplitContainer/ProcessQueueContainer" unique_id=531285125]
+[node name="PauseStatusLabel" type="Label" parent="VBoxContainer/MarginContainer/HSplitContainer/ProcessQueueContainer" unique_id=531285125]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
@@ -140,7 +162,7 @@ grow_vertical = 2
 theme_override_font_sizes/font_size = 48
 text = "PAUSED"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HSplitContainer/ProcessQueueContainer" unique_id=614514832]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/MarginContainer/HSplitContainer/ProcessQueueContainer" unique_id=614514832]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -148,14 +170,14 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Label" type="Label" parent="MarginContainer/HSplitContainer/ProcessQueueContainer/VBoxContainer" unique_id=791037001]
+[node name="Label" type="Label" parent="VBoxContainer/MarginContainer/HSplitContainer/ProcessQueueContainer/VBoxContainer" unique_id=791037001]
 layout_mode = 2
 theme_override_font_sizes/font_size = 22
 text = "Process Queue"
 horizontal_alignment = 1
 clip_text = true
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HSplitContainer/ProcessQueueContainer/VBoxContainer" unique_id=1119548809]
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MarginContainer/HSplitContainer/ProcessQueueContainer/VBoxContainer" unique_id=1119548809]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/margin_left = 10
@@ -163,26 +185,26 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HSplitContainer/ProcessQueueContainer/VBoxContainer/MarginContainer" unique_id=1186264208]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/MarginContainer/HSplitContainer/ProcessQueueContainer/VBoxContainer/MarginContainer" unique_id=1186264208]
 layout_mode = 2
 
-[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/HSplitContainer/ProcessQueueContainer/VBoxContainer/MarginContainer/VBoxContainer" unique_id=360498502]
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/MarginContainer/HSplitContainer/ProcessQueueContainer/VBoxContainer/MarginContainer/VBoxContainer" unique_id=360498502]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/scrollbar_h_separation = 10
 
-[node name="ProcessContainer" type="VBoxContainer" parent="MarginContainer/HSplitContainer/ProcessQueueContainer/VBoxContainer/MarginContainer/VBoxContainer/ScrollContainer" unique_id=1893584650]
+[node name="ProcessContainer" type="VBoxContainer" parent="VBoxContainer/MarginContainer/HSplitContainer/ProcessQueueContainer/VBoxContainer/MarginContainer/VBoxContainer/ScrollContainer" unique_id=1893584650]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="PlayPauseButtonContainer" type="HBoxContainer" parent="MarginContainer/HSplitContainer/ProcessQueueContainer/VBoxContainer/MarginContainer/VBoxContainer" unique_id=625054047]
+[node name="PlayPauseButtonContainer" type="HBoxContainer" parent="VBoxContainer/MarginContainer/HSplitContainer/ProcessQueueContainer/VBoxContainer/MarginContainer/VBoxContainer" unique_id=625054047]
 layout_mode = 2
 size_flags_vertical = 8
 theme_override_constants/separation = 10
 alignment = 2
 
-[node name="PauseButton" type="Button" parent="MarginContainer/HSplitContainer/ProcessQueueContainer/VBoxContainer/MarginContainer/VBoxContainer/PlayPauseButtonContainer" unique_id=1577683683]
+[node name="PauseButton" type="Button" parent="VBoxContainer/MarginContainer/HSplitContainer/ProcessQueueContainer/VBoxContainer/MarginContainer/VBoxContainer/PlayPauseButtonContainer" unique_id=1577683683]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
@@ -191,7 +213,7 @@ theme_override_styles/hover = ExtResource("3_d8l8o")
 icon = ExtResource("11_qsv56")
 expand_icon = true
 
-[node name="PlayButton" type="Button" parent="MarginContainer/HSplitContainer/ProcessQueueContainer/VBoxContainer/MarginContainer/VBoxContainer/PlayPauseButtonContainer" unique_id=1028650675]
+[node name="PlayButton" type="Button" parent="VBoxContainer/MarginContainer/HSplitContainer/ProcessQueueContainer/VBoxContainer/MarginContainer/VBoxContainer/PlayPauseButtonContainer" unique_id=1028650675]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
@@ -201,6 +223,7 @@ icon = ExtResource("12_yeipv")
 expand_icon = true
 
 [node name="Settings" parent="." unique_id=1145338180 instance=ExtResource("12_atfn8")]
+visible = false
 
 [node name="ConsoleSignalBus" type="Node" parent="." unique_id=1967930258 groups=["console_signal_bus"]]
 script = ExtResource("2_to7fh")
@@ -219,10 +242,12 @@ script = ExtResource("14_cx3k0")
 yt_dlp_wrapper = NodePath("../YtDlpWrapper")
 metadata/_custom_type_script = "uid://duwsp24mpyihb"
 
-[connection signal="button_up" from="MarginContainer/HSplitContainer/ProcessQueueContainer/VBoxContainer/MarginContainer/VBoxContainer/PlayPauseButtonContainer/PauseButton" to="." method="_on_pause_button_button_up"]
-[connection signal="button_up" from="MarginContainer/HSplitContainer/ProcessQueueContainer/VBoxContainer/MarginContainer/VBoxContainer/PlayPauseButtonContainer/PlayButton" to="." method="_on_play_button_button_up"]
+[connection signal="index_pressed" from="VBoxContainer/MenuBar/FileMenu" to="." method="_on_file_menu_index_pressed"]
+[connection signal="index_pressed" from="VBoxContainer/MenuBar/YtDlpMenu" to="." method="_on_yt_dlp_menu_index_pressed"]
+[connection signal="button_up" from="VBoxContainer/MarginContainer/HSplitContainer/ProcessQueueContainer/VBoxContainer/MarginContainer/VBoxContainer/PlayPauseButtonContainer/PauseButton" to="." method="_on_pause_button_button_up"]
+[connection signal="button_up" from="VBoxContainer/MarginContainer/HSplitContainer/ProcessQueueContainer/VBoxContainer/MarginContainer/VBoxContainer/PlayPauseButtonContainer/PlayButton" to="." method="_on_play_button_button_up"]
 [connection signal="close_requested" from="Settings" to="." method="_on_settings_close_requested"]
-[connection signal="error_added" from="ConsoleSignalBus" to="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/Console/MarginContainer/ConsoleTextInput" method="_on_console_signal_bus_error_added"]
-[connection signal="line_added" from="ConsoleSignalBus" to="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/Console/MarginContainer/ConsoleTextInput" method="_on_console_signal_bus_line_added"]
-[connection signal="warning_added" from="ConsoleSignalBus" to="MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/Console/MarginContainer/ConsoleTextInput" method="_on_console_signal_bus_warning_added"]
+[connection signal="error_added" from="ConsoleSignalBus" to="VBoxContainer/MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/Console/MarginContainer/ConsoleTextInput" method="_on_console_signal_bus_error_added"]
+[connection signal="line_added" from="ConsoleSignalBus" to="VBoxContainer/MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/Console/MarginContainer/ConsoleTextInput" method="_on_console_signal_bus_line_added"]
+[connection signal="warning_added" from="ConsoleSignalBus" to="VBoxContainer/MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/Console/MarginContainer/ConsoleTextInput" method="_on_console_signal_bus_warning_added"]
 [connection signal="queue_changed" from="ProcessQueue" to="." method="_on_process_queue_queue_changed"]
