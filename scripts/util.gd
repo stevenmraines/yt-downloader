@@ -1,5 +1,13 @@
 class_name Util extends Object
 
+static var _id := 0
+
+
+static func get_uid() -> int:
+	var id = _id
+	_id += 1
+	return id
+
 
 static func _get_windows_processes() -> Dictionary:
 	var console_output = []

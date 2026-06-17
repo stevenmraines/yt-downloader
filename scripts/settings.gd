@@ -61,12 +61,12 @@ func _get_all_data() -> Dictionary:
 	}
 	
 	for child in server_settings_container.get_children():
-		data["servers"].append(child.get_data())
+		data["servers"].append(child.server)
 	
 	for child in channel_settings_container.get_children():
-		data["channels"].append(child.get_data())
+		data["channels"].append(child.channel)
 		for child2 in child.playlists_container.get_children():
-			data["playlists"].append(child2.get_data())
+			data["playlists"].append(child2.playlist)
 	
 	return data
 
@@ -83,8 +83,9 @@ func _on_new_server_button_button_up() -> void:
 
 func _on_server_deleted(server : Dictionary) -> void:
 	var new_servers : Array[Dictionary]
+	
 	for existing_server in servers:
-		# FIXME How will this work when you have multiple new servers? We might need some uid here
-		if existing_server.section != server.section:
+		if existing_server.id != server.id:
 			new_servers.append(existing_server)
+	
 	servers = new_servers

@@ -8,6 +8,15 @@ var _config_file : ConfigFile:
 
 var console_signal_bus : ConsoleSignalBus
 
+var paths : Array[Dictionary]
+var servers : Array[Dictionary]
+var channels : Array[Dictionary]
+var playlists : Array[Dictionary]
+var paths_loaded := false
+var servers_loaded := false
+var channels_loaded := false
+var playlists_loaded := false
+
 const DEFAULT_CONFIG_PATH := "res://config.cfg"
 const CONFIG_PATH := "user://config.cfg"
 
@@ -17,6 +26,15 @@ func _ready() -> void:
 
 
 func _load_config() -> void:
+	paths = []
+	servers = []
+	channels = []
+	playlists = []
+	paths_loaded = false
+	servers_loaded = false
+	channels_loaded = false
+	playlists_loaded = false
+	
 	console_signal_bus.add_line("Loading config")
 	
 	# Copy default config to user:// if it doesn't exist yet
@@ -35,38 +53,41 @@ func _load_config() -> void:
 
 
 func get_paths() -> Array[Dictionary]:
-	var paths : Array[Dictionary]
-	
-	for section in _config_file.get_sections():
-		if section.begins_with("path"):
-			paths.append({
-				"section": section,
-				"name": _config_file.get_value(section, "name"),
-				"path": _config_file.get_value(section, "path")
-			})
+	if ! paths_loaded:
+		for section in _config_file.get_sections():
+			if section.begins_with("path"):
+				paths.append({
+					"id": Util.get_uid(),
+					"section": section,
+					"name": _config_file.get_value(section, "name"),
+					"path": _config_file.get_value(section, "path")
+				})
+		paths_loaded = true
 	
 	return paths
 
 
 func get_servers() -> Array[Dictionary]:
-	var servers : Array[Dictionary]
-	
-	for section in _config_file.get_sections():
-		if section.begins_with("server"):
-			servers.append({
-				"section": section,
-				"name": _config_file.get_value(section, "name"),
-				"ip": _config_file.get_value(section, "ip"),
-				"user": _config_file.get_value(section, "user"),
-				"ssh_key_path": _config_file.get_value(section, "ssh_key_path", "~/.ssh/id_rsa"),
-				"is_default": _config_file.get_value(section, "is_default", false),
-			})
+	if ! servers_loaded:
+		for section in _config_file.get_sections():
+			if section.begins_with("server"):
+				servers.append({
+					"id": Util.get_uid(),
+					"section": section,
+					"name": _config_file.get_value(section, "name"),
+					"ip": _config_file.get_value(section, "ip"),
+					"user": _config_file.get_value(section, "user"),
+					"ssh_key_path": _config_file.get_value(section, "ssh_key_path", "~/.ssh/id_rsa"),
+					"is_default": _config_file.get_value(section, "is_default", false),
+				})
+		servers_loaded = true
 	
 	return servers
 
 
 func get_empty_server() -> Dictionary:
 	return {
+		"id": Util.get_uid(),
 		"section": "",
 		"name": "",
 		"ip": "",
@@ -77,37 +98,39 @@ func get_empty_server() -> Dictionary:
 
 
 func get_channels() -> Array[Dictionary]:
-	var channels : Array[Dictionary]
-	
-	for section in _config_file.get_sections():
-		if section.begins_with("channel"):
-			channels.append({
-				"section": section,
-				"name" : _config_file.get_value(section, "name"),
-				"start_collapsed" : _config_file.get_value(section, "start_collapsed", false),
-			})
+	if ! channels_loaded:
+		for section in _config_file.get_sections():
+			if section.begins_with("channel"):
+				channels.append({
+					"id": Util.get_uid(),
+					"section": section,
+					"name" : _config_file.get_value(section, "name"),
+					"start_collapsed" : _config_file.get_value(section, "start_collapsed", false),
+				})
+		channels_loaded = true
 	
 	return channels
 
 
 func get_playlists() -> Array[Dictionary]:
-	var playlists : Array[Dictionary]
-	
-	for section in _config_file.get_sections():
-		if section.begins_with("playlist"):
-			playlists.append({
-				"section": section,
-				"channel": _config_file.get_value(section, "channel"),
-				"name": _config_file.get_value(section, "name"),
-				"url": _config_file.get_value(section, "url"),
-				"download_path": _config_file.get_value(section, "download_path"),
-				"backup_upload_path": _config_file.get_value(section, "backup_upload_path"),
-				"remote_upload_path": _config_file.get_value(section, "remote_upload_path"),
-				"download_archive_file_name": _config_file.get_value(section, "download_archive_file_name"),
-				"cookies_from_browser": _config_file.get_value(section, "cookies_from_browser", "firefox"),
-				"delete_download" : _config_file.get_value(section, "delete_download", true),
-				"preview_unarchived_on_startup" : _config_file.get_value(section, "preview_unarchived_on_startup", false)
-			})
+	if ! playlists_loaded:
+		for section in _config_file.get_sections():
+			if section.begins_with("playlist"):
+				playlists.append({
+					"id": Util.get_uid(),
+					"section": section,
+					"channel": _config_file.get_value(section, "channel"),
+					"name": _config_file.get_value(section, "name"),
+					"url": _config_file.get_value(section, "url"),
+					"download_path": _config_file.get_value(section, "download_path"),
+					"backup_upload_path": _config_file.get_value(section, "backup_upload_path"),
+					"remote_upload_path": _config_file.get_value(section, "remote_upload_path"),
+					"download_archive_file_name": _config_file.get_value(section, "download_archive_file_name"),
+					"cookies_from_browser": _config_file.get_value(section, "cookies_from_browser", "firefox"),
+					"delete_download" : _config_file.get_value(section, "delete_download", true),
+					"preview_unarchived_on_startup" : _config_file.get_value(section, "preview_unarchived_on_startup", false)
+				})
+		playlists_loaded = true
 	
 	return playlists
 

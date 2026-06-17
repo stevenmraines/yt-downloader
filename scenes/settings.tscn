@@ -36,7 +36,7 @@ theme_override_constants/margin_bottom = 10
 
 [node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer/MarginContainer" unique_id=152017159]
 layout_mode = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 30
 
 [node name="MarginContainer" type="MarginContainer" parent="ScrollContainer/MarginContainer/VBoxContainer" unique_id=1603536986]
 layout_mode = 2
@@ -130,7 +130,19 @@ theme_override_styles/pressed = ExtResource("3_es4n0")
 theme_override_styles/hover = ExtResource("4_gis3k")
 text = "New Channel"
 
-[node name="SaveConfigButton" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer" unique_id=646708312]
+[node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/MarginContainer/VBoxContainer" unique_id=1493418844]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 20
+
+[node name="UndoChangesButton" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=106767484]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+theme_override_styles/pressed = ExtResource("2_am25x")
+theme_override_styles/hover = ExtResource("3_4ppmf")
+text = "Undo Changes"
+
+[node name="SaveConfigButton" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=646708312]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 8
@@ -138,7 +150,7 @@ theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = ExtResource("4_uhhto")
 theme_override_styles/pressed = ExtResource("5_1g033")
 theme_override_styles/hover = ExtResource("6_01roj")
-text = "Save Config"
+text = "Save Changes"
 
 [node name="SaveConfigConfirmationDialog" type="ConfirmationDialog" parent="." unique_id=125510168]
 unique_name_in_owner = true
@@ -148,4 +160,4 @@ size = Vector2i(527, 100)
 dialog_text = "Are you sure you want to save changes to the config?"
 
 [connection signal="button_up" from="ScrollContainer/MarginContainer/VBoxContainer/FoldableContainer/MarginContainer/VBoxContainer/NewServerButton" to="." method="_on_new_server_button_button_up"]
-[connection signal="button_up" from="ScrollContainer/MarginContainer/VBoxContainer/SaveConfigButton" to="." method="_on_save_config_button_button_up"]
+[connection signal="button_up" from="ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer/SaveConfigButton" to="." method="_on_save_config_button_button_up"]

@@ -1,5 +1,7 @@
 extends FoldableContainer
 
+signal playlist_deleted(playlist : Dictionary)
+
 @onready var name_input := %NameInput
 @onready var url_input := %UrlInput
 @onready var download_path_input := %DownloadPathInput
@@ -9,6 +11,7 @@ extends FoldableContainer
 @onready var cookies_from_browser_input := %CookiesFromBrowserInput
 @onready var delete_download_input := %DeleteDownloadInput
 @onready var preview_unarchived_on_startup_input := %PreviewUnarchivedOnStartupInput
+@onready var delete_button := %DeleteButton
 
 var playlist : Dictionary:
 	set(value):
@@ -22,6 +25,7 @@ var playlist : Dictionary:
 		download_archive_file_name_input.text = playlist.download_archive_file_name
 		delete_download_input.button_pressed = playlist.delete_download
 		preview_unarchived_on_startup_input.button_pressed = playlist.preview_unarchived_on_startup
+		delete_button.text = "Delete Playlist %s" % playlist.name
 		
 		for i in cookies_from_browser_input.get_item_count():
 			var item = cookies_from_browser_input.get_item_text(i)
@@ -30,19 +34,43 @@ var playlist : Dictionary:
 
 
 func _on_name_input_text_changed(new_text: String) -> void:
+	playlist.name = new_text
 	title = new_text
+	delete_button.text = "Delete Playlist %s" % new_text
 
 
-func get_data() -> Dictionary:
-	var id = cookies_from_browser_input.get_selected_id()
-	return {
-		"name": name_input.text,
-		"url": url_input.text,
-		"download_path": download_path_input.text,
-		"backup_upload_path": backup_path_input.text,
-		"remote_upload_path": remote_path_input.text,
-		"download_archive_file_name": download_archive_file_name_input.text,
-		"cookies_from_browser": cookies_from_browser_input.get_item_text(id),
-		"delete_download": delete_download_input.button_pressed,
-		"preview_unarchived_on_startup": preview_unarchived_on_startup_input.button_pressed,
-	}
+func _on_delete_button_button_up():
+	playlist_deleted.emit(playlist)
+
+
+func _on_url_input_text_changed(new_text):
+	playlist.url = new_text
+
+
+func _on_download_path_input_text_changed(new_text):
+	# TODO Handle browse button
+	playlist.download_path = new_text
+
+
+func _on_backup_path_input_text_changed(new_text):
+	playlist.backup_upload_path = new_text
+
+
+func _on_remote_path_input_text_changed(new_text):
+	playlist.remote_upload_path = new_text
+
+
+func _on_download_archive_file_name_input_text_changed(new_text):
+	playlist.download_archive_file_name = new_text
+
+
+func _on_cookies_from_browser_input_item_selected(index):
+	playlist.cookies_from_browser = cookies_from_browser_input.get_item_text(index)
+
+
+func _on_delete_download_input_toggled(toggled_on):
+	playlist.delete_download = toggled_on
+
+
+func _on_preview_unarchived_on_startup_input_toggled(toggled_on):
+	playlist.preview_unarchived_on_startup = toggled_on

@@ -3,6 +3,9 @@
 [ext_resource type="Script" uid="uid://cc463ng0vkxhb" path="res://scripts/playlist_settings.gd" id="1_3ydvd"]
 [ext_resource type="StyleBox" uid="uid://co4550p76db2k" path="res://styles/default_button_pressed.tres" id="2_iu3an"]
 [ext_resource type="StyleBox" uid="uid://caorea2ay4rb4" path="res://styles/default_button_hover.tres" id="3_xf5im"]
+[ext_resource type="StyleBox" uid="uid://b2vscmgcfd1q2" path="res://styles/danger_button_normal.tres" id="4_41tws"]
+[ext_resource type="StyleBox" uid="uid://mj3scniudw06" path="res://styles/danger_button_pressed.tres" id="5_qfdyh"]
+[ext_resource type="StyleBox" uid="uid://p0cmbk4o48q7" path="res://styles/danger_button_hover.tres" id="6_ukuiu"]
 
 [node name="PlaylistSettings" type="FoldableContainer" unique_id=1060512353]
 anchors_preset = 15
@@ -164,4 +167,21 @@ text = "Preview Unarchived Videos On Startup:"
 unique_name_in_owner = true
 layout_mode = 2
 
+[node name="DeleteButton" type="Button" parent="VBoxContainer" unique_id=204930210]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_styles/normal = ExtResource("4_41tws")
+theme_override_styles/pressed = ExtResource("5_qfdyh")
+theme_override_styles/hover = ExtResource("6_ukuiu")
+text = "Delete Playlist"
+
 [connection signal="text_changed" from="VBoxContainer/HBoxContainer9/NameInput" to="." method="_on_name_input_text_changed"]
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer/UrlInput" to="." method="_on_url_input_text_changed"]
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer2/DownloadPathInput" to="." method="_on_download_path_input_text_changed"]
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer3/BackupPathInput" to="." method="_on_backup_path_input_text_changed"]
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer4/RemotePathInput" to="." method="_on_remote_path_input_text_changed"]
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer5/DownloadArchiveFileNameInput" to="." method="_on_download_archive_file_name_input_text_changed"]
+[connection signal="item_selected" from="VBoxContainer/HBoxContainer6/CookiesFromBrowserInput" to="." method="_on_cookies_from_browser_input_item_selected"]
+[connection signal="toggled" from="VBoxContainer/HBoxContainer7/DeleteDownloadInput" to="." method="_on_delete_download_input_toggled"]
+[connection signal="toggled" from="VBoxContainer/HBoxContainer8/PreviewUnarchivedOnStartupInput" to="." method="_on_preview_unarchived_on_startup_input_toggled"]
+[connection signal="button_up" from="VBoxContainer/DeleteButton" to="." method="_on_delete_button_button_up"]

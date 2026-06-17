@@ -1,7 +1,10 @@
 extends FoldableContainer
 
+signal channel_deleted(channel : Dictionary)
+
 @onready var channel_name_input := %ChannelNameInput
 @onready var playlists_container := %PlaylistsContainer
+@onready var delete_button := %DeleteButton
 @onready var new_playlist_button := %NewPlaylistButton
 @onready var playlist_settings_scene := load("res://scenes/playlist_settings.tscn")
 
@@ -10,6 +13,7 @@ var channel : Dictionary:
 		channel = value
 		title = channel.name
 		channel_name_input.text = channel.name
+		delete_button.text = "Delete Channel %s" % channel.name
 
 var playlists : Array[Dictionary]:
 	set(value):
@@ -22,10 +26,16 @@ var playlists : Array[Dictionary]:
 
 
 func _on_channel_name_input_text_changed(new_text: String) -> void:
+	channel.name = new_text
 	title = new_text
+	delete_button.text = "Delete Channel %s" % new_text
+	
+	for playlist in playlists:
+		playlist.channel = new_text
+	
+	for child in playlists_container.get_children():
+		child.playlist.channel = new_text
 
 
-func get_data() -> Dictionary:
-	return {
-		"name": channel_name_input.text,
-	}
+func _on_delete_button_button_up():
+	channel_deleted.emit(channel)
