@@ -1,5 +1,7 @@
 extends FoldableContainer
 
+signal server_deleted(server : Dictionary)
+
 @onready var name_input := %NameInput
 @onready var ip_input := %IPInput
 @onready var user_input := %UserInput
@@ -20,6 +22,10 @@ var server : Dictionary:
 
 func _on_name_input_text_changed(new_text: String) -> void:
 	title = new_text
+
+
+func _on_delete_button_button_up() -> void:
+	server_deleted.emit(server)
 
 
 func get_data() -> Dictionary:

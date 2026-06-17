@@ -147,4 +147,5 @@ initial_position = 2
 size = Vector2i(527, 100)
 dialog_text = "Are you sure you want to save changes to the config?"
 
+[connection signal="button_up" from="ScrollContainer/MarginContainer/VBoxContainer/FoldableContainer/MarginContainer/VBoxContainer/NewServerButton" to="." method="_on_new_server_button_button_up"]
 [connection signal="button_up" from="ScrollContainer/MarginContainer/VBoxContainer/SaveConfigButton" to="." method="_on_save_config_button_button_up"]

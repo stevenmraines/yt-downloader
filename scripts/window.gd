@@ -39,6 +39,7 @@ func _ready() -> void:
 	_create_archive_files()
 	_populate_servers()
 	
+	settings.config_loader = config_loader
 	settings.playlists = config_loader.get_playlists()
 
 

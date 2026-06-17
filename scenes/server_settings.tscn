@@ -3,6 +3,9 @@
 [ext_resource type="StyleBox" uid="uid://co4550p76db2k" path="res://styles/default_button_pressed.tres" id="1_fie54"]
 [ext_resource type="Script" uid="uid://40gx24j6ge6b" path="res://scripts/server_settings.gd" id="1_g5537"]
 [ext_resource type="StyleBox" uid="uid://caorea2ay4rb4" path="res://styles/default_button_hover.tres" id="2_xsv8e"]
+[ext_resource type="StyleBox" uid="uid://b2vscmgcfd1q2" path="res://styles/danger_button_normal.tres" id="4_g5537"]
+[ext_resource type="StyleBox" uid="uid://mj3scniudw06" path="res://styles/danger_button_pressed.tres" id="5_2a22k"]
+[ext_resource type="StyleBox" uid="uid://p0cmbk4o48q7" path="res://styles/danger_button_hover.tres" id="6_nnpw7"]
 
 [node name="ServerSettings" type="FoldableContainer" unique_id=1433611755]
 anchors_preset = 15
@@ -124,4 +127,12 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
+[node name="DeleteButton" type="Button" parent="VBoxContainer" unique_id=994353124]
+layout_mode = 2
+theme_override_styles/normal = ExtResource("4_g5537")
+theme_override_styles/pressed = ExtResource("5_2a22k")
+theme_override_styles/hover = ExtResource("6_nnpw7")
+text = "Delete"
+
 [connection signal="text_changed" from="VBoxContainer/MarginContainer/NameConfig/NameInput" to="." method="_on_name_input_text_changed"]
+[connection signal="button_up" from="VBoxContainer/DeleteButton" to="." method="_on_delete_button_button_up"]

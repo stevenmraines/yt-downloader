@@ -65,6 +65,17 @@ func get_servers() -> Array[Dictionary]:
 	return servers
 
 
+func get_empty_server() -> Dictionary:
+	return {
+		"section": "",
+		"name": "",
+		"ip": "",
+		"user": "",
+		"ssh_key_path": "",
+		"is_default": false,
+	}
+
+
 func get_channels() -> Array[Dictionary]:
 	var channels : Array[Dictionary]
 	
