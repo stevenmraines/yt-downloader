@@ -48,6 +48,9 @@ func _unhandled_input(event: InputEvent) -> void:
 		# TODO Add a confirm dialog before exiting
 		get_viewport().set_input_as_handled()
 		get_tree().quit(0)
+	elif event.is_action_pressed("Settings"):
+		get_viewport().set_input_as_handled()
+		settings.visible = true
 
 
 func _populate_channels() -> void:

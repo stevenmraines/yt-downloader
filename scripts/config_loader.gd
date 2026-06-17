@@ -112,6 +112,15 @@ func get_channels() -> Array[Dictionary]:
 	return channels
 
 
+func get_empty_channel() -> Dictionary:
+	return {
+		"id": Util.get_uid(),
+		"section": "",
+		"name": "",
+		"start_collapsed": false,
+	}
+
+
 func get_playlists() -> Array[Dictionary]:
 	if ! playlists_loaded:
 		for section in _config_file.get_sections():
@@ -133,6 +142,23 @@ func get_playlists() -> Array[Dictionary]:
 		playlists_loaded = true
 	
 	return playlists
+
+
+func get_empty_playlist() -> Dictionary:
+	return {
+		"id": Util.get_uid(),
+		"section": "",
+		"channel": "",
+		"name": "",
+		"url": "",
+		"download_path": "",
+		"backup_upload_path": "",
+		"remote_upload_path": "",
+		"download_archive_file_name": "",
+		"cookies_from_browser": "firefox",
+		"delete_download" : true,
+		"preview_unarchived_on_startup" : false,
+	}
 
 
 func save_changes(changes : Dictionary) -> void:

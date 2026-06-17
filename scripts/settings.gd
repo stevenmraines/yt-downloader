@@ -21,6 +21,7 @@ var servers : Array[Dictionary]:
 		servers = value
 		
 		for child in server_settings_container.get_children():
+			server_settings_container.remove_child(child)
 			child.queue_free()
 		
 		for server in servers:
@@ -32,14 +33,33 @@ var servers : Array[Dictionary]:
 var channels : Array[Dictionary]:
 	set(value):
 		channels = value
+		
+		for child in channel_settings_container.get_children():
+			# queue_free won't happen immediately, and when a channel
+			# is deleted the playlists setter will get an error about
+			# an unknown key for the deleted channel when it loops over
+			# channel_settings_container.get_children.
+			# So we need to remove it first, then free it.
+			channel_settings_container.remove_child(child)
+			child.queue_free()
+		
 		for channel in channels:
 			var channel_node = channel_settings_scene.instantiate()
 			channel_settings_container.add_child(channel_node)
 			channel_node.channel = channel
+			channel_node.channel_deleted.connect(_on_channel_deleted)
+			channel_node.playlist_added.connect(_on_playlist_added)
+			channel_node.playlist_deleted.connect(_on_playlist_deleted)
 
 var playlists : Array[Dictionary]:
 	set(value):
 		playlists = value
+		
+		for child in channel_settings_container.get_children():
+			for child2 in child.playlists_container.get_children():
+				child.playlists_container.remove_child(child2)
+				child2.queue_free()
+		
 		var channel_playlists := {}
 		
 		for channel in channels:
@@ -51,6 +71,13 @@ var playlists : Array[Dictionary]:
 		
 		for child in channel_settings_container.get_children():
 			child.playlists = channel_playlists[child.channel.name]
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("Escape"):
+		get_viewport().set_input_as_handled()
+		# TODO Add confirm dialog
+		visible = false
 
 
 func _get_all_data() -> Dictionary:
@@ -89,3 +116,46 @@ func _on_server_deleted(server : Dictionary) -> void:
 			new_servers.append(existing_server)
 	
 	servers = new_servers
+
+
+func _on_new_channel_button_button_up() -> void:
+	var new_channels = channels
+	new_channels.append(config_loader.get_empty_channel())
+	channels = new_channels
+	playlists = playlists
+
+
+func _on_channel_deleted(channel : Dictionary) -> void:
+	var new_channels : Array[Dictionary]
+	
+	for existing_channel in channels:
+		if existing_channel.id != channel.id:
+			new_channels.append(existing_channel)
+	
+	channels = new_channels
+	
+	var new_playlists : Array[Dictionary]
+
+	for existing_playlist in playlists:
+		if existing_playlist.channel != channel.name:
+			new_playlists.append(existing_playlist)
+	
+	playlists = new_playlists
+
+
+func _on_playlist_added(channel : Dictionary) -> void:
+	var new_playlists = playlists
+	var empty_playlist = config_loader.get_empty_playlist()
+	empty_playlist.channel = channel.name
+	new_playlists.append(empty_playlist)
+	playlists = new_playlists
+
+
+func _on_playlist_deleted(playlist : Dictionary) -> void:
+	var new_playlists : Array[Dictionary]
+	
+	for existing_playlist in playlists:
+		if existing_playlist.id != playlist.id:
+			new_playlists.append(existing_playlist)
+	
+	playlists = new_playlists

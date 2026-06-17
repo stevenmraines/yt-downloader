@@ -1,6 +1,8 @@
 extends FoldableContainer
 
 signal channel_deleted(channel : Dictionary)
+signal playlist_added(channel : Dictionary)
+signal playlist_deleted(playlist : Dictionary)
 
 @onready var channel_name_input := %ChannelNameInput
 @onready var playlists_container := %PlaylistsContainer
@@ -23,6 +25,7 @@ var playlists : Array[Dictionary]:
 			var playlist_node = playlist_settings_scene.instantiate()
 			playlists_container.add_child(playlist_node)
 			playlist_node.playlist = playlist
+			playlist_node.playlist_deleted.connect(_on_playlist_deleted)
 
 
 func _on_channel_name_input_text_changed(new_text: String) -> void:
@@ -39,3 +42,11 @@ func _on_channel_name_input_text_changed(new_text: String) -> void:
 
 func _on_delete_button_button_up():
 	channel_deleted.emit(channel)
+
+
+func _on_new_playlist_button_button_up() -> void:
+	playlist_added.emit(channel)
+
+
+func _on_playlist_deleted(playlist : Dictionary) -> void:
+	playlist_deleted.emit(playlist)
