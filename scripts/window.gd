@@ -20,7 +20,6 @@ extends PanelContainer
 var yt_dlp_path := "":
 	set(value):
 		yt_dlp_path = value
-		settings.yt_dlp_path = yt_dlp_path
 		yt_dlp_wrapper.yt_dlp_path = yt_dlp_path
 		console_signal_bus.add_line("yt-dlp path set to " + yt_dlp_path)
 
@@ -38,9 +37,7 @@ func _ready() -> void:
 	_populate_channels()
 	_create_archive_files()
 	_populate_servers()
-	
-	settings.config_loader = config_loader
-	settings.playlists = config_loader.get_playlists()
+	_setup_settings()
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -55,7 +52,6 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _populate_channels() -> void:
 	var channels = config_loader.get_channels()
-	settings.channels = channels
 	
 	for channel in channels:
 		var channel_node = channel_scene.instantiate()
@@ -94,7 +90,6 @@ func _create_archive_files() -> void:
 
 func _populate_servers() -> void:
 	var servers = config_loader.get_servers()
-	settings.servers = servers
 	var default_server_found = false
 	
 	for i in servers.size():
@@ -117,6 +112,16 @@ func _set_server_vars() -> void:
 	process_queue.ssh_key_path = selected_server.ssh_key_path
 	console_signal_bus.add_line("Server credentials set to %s@%s" % [selected_server.user, selected_server.ip])
 	console_signal_bus.add_line("SSH Key Path set to %s" % selected_server.ssh_key_path)
+
+
+func _setup_settings() -> void:
+	settings.yt_dlp_path = yt_dlp_path
+	settings.config_loader = config_loader
+	# Use duplicate so we don't pass by ref, otherwise any unsaved changes to
+	# settings will be persisted here even when undo changes is clicked.
+	settings.servers = config_loader.get_servers().duplicate(true)
+	settings.channels = config_loader.get_channels().duplicate(true)
+	settings.playlists = config_loader.get_playlists().duplicate(true)
 
 
 func _on_playlist_marked_as_archived(playlist : Dictionary) -> void:
@@ -244,4 +249,9 @@ func _on_settings_close_requested() -> void:
 
 
 func _on_settings_settings_saved(_settings: Dictionary) -> void:
-	print("settings saved")
+	console_signal_bus.add_line("Saving changes to settings")
+
+
+func _on_settings_settings_reset() -> void:
+	console_signal_bus.add_line("Undoing changes to settings")
+	_setup_settings()

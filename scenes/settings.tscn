@@ -152,13 +152,23 @@ theme_override_styles/pressed = ExtResource("5_1g033")
 theme_override_styles/hover = ExtResource("6_01roj")
 text = "Save Changes"
 
-[node name="SaveConfigConfirmationDialog" type="ConfirmationDialog" parent="." unique_id=125510168]
+[node name="SaveChangesConfirmationDialog" type="ConfirmationDialog" parent="." unique_id=125510168]
 unique_name_in_owner = true
 oversampling_override = 1.0
 initial_position = 2
 size = Vector2i(527, 100)
 dialog_text = "Are you sure you want to save changes to the config?"
 
+[node name="UndoChangesConfirmationDialog" type="ConfirmationDialog" parent="." unique_id=2104599585]
+unique_name_in_owner = true
+oversampling_override = 1.0
+initial_position = 2
+size = Vector2i(527, 100)
+dialog_text = "Are you sure you want to undo changes to the config?"
+
 [connection signal="button_up" from="ScrollContainer/MarginContainer/VBoxContainer/FoldableContainer/MarginContainer/VBoxContainer/NewServerButton" to="." method="_on_new_server_button_button_up"]
 [connection signal="button_up" from="ScrollContainer/MarginContainer/VBoxContainer/FoldableContainer2/MarginContainer/VBoxContainer/NewChannelButton" to="." method="_on_new_channel_button_button_up"]
+[connection signal="button_up" from="ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer/UndoChangesButton" to="." method="_on_undo_changes_button_button_up"]
 [connection signal="button_up" from="ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer/SaveConfigButton" to="." method="_on_save_config_button_button_up"]
+[connection signal="confirmed" from="SaveChangesConfirmationDialog" to="." method="_on_save_config_confirmation_dialog_confirmed"]
+[connection signal="confirmed" from="UndoChangesConfirmationDialog" to="." method="_on_undo_changes_confirmation_dialog_confirmed"]

@@ -247,6 +247,7 @@ metadata/_custom_type_script = "uid://duwsp24mpyihb"
 [connection signal="button_up" from="VBoxContainer/MarginContainer/HSplitContainer/ProcessQueueContainer/VBoxContainer/MarginContainer/VBoxContainer/PlayPauseButtonContainer/PauseButton" to="." method="_on_pause_button_button_up"]
 [connection signal="button_up" from="VBoxContainer/MarginContainer/HSplitContainer/ProcessQueueContainer/VBoxContainer/MarginContainer/VBoxContainer/PlayPauseButtonContainer/PlayButton" to="." method="_on_play_button_button_up"]
 [connection signal="close_requested" from="Settings" to="." method="_on_settings_close_requested"]
+[connection signal="settings_reset" from="Settings" to="." method="_on_settings_settings_reset"]
 [connection signal="settings_saved" from="Settings" to="." method="_on_settings_settings_saved"]
 [connection signal="error_added" from="ConsoleSignalBus" to="VBoxContainer/MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/Console/MarginContainer/ConsoleTextInput" method="_on_console_signal_bus_error_added"]
 [connection signal="line_added" from="ConsoleSignalBus" to="VBoxContainer/MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/VSplitContainer/Console/MarginContainer/ConsoleTextInput" method="_on_console_signal_bus_line_added"]

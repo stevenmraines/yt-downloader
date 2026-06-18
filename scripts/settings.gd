@@ -1,11 +1,14 @@
 extends Window
 
 signal settings_saved(settings : Dictionary)
+signal settings_reset
 
 @onready var yt_dlp_path_input := %YtDlpPathInput
 @onready var yt_dlp_path_file_dialog := %YtDlpPathFileDialog
 @onready var server_settings_container := %ServerSettingsContainer
 @onready var channel_settings_container := %ChannelSettingsContainer
+@onready var save_changes_confirmation_dialog := %SaveChangesConfirmationDialog
+@onready var undo_changes_confirmation_dialog := %UndoChangesConfirmationDialog
 @onready var server_settings_scene := load("res://scenes/server_settings.tscn")
 @onready var channel_settings_scene := load("res://scenes/channel_settings.tscn")
 
@@ -98,8 +101,20 @@ func _get_all_data() -> Dictionary:
 	return data
 
 
-func _on_save_config_button_button_up() -> void:
+func _on_save_config_confirmation_dialog_confirmed() -> void:
 	settings_saved.emit(_get_all_data())
+
+
+func _on_save_config_button_button_up() -> void:
+	save_changes_confirmation_dialog.visible = true
+
+
+func _on_undo_changes_button_button_up() -> void:
+	undo_changes_confirmation_dialog.visible = true
+
+
+func _on_undo_changes_confirmation_dialog_confirmed() -> void:
+	settings_reset.emit()
 
 
 func _on_new_server_button_button_up() -> void:
