@@ -2,7 +2,6 @@ class_name Process extends Node
 
 signal progress_timer_timeout(process : Process)
 
-# TODO Maybe add a setter to kill/skip all child/sibling processes when this is killed/skipped?
 var status := ProcessState.QUEUED
 var exit_code := 0
 var pid := -1
@@ -13,8 +12,6 @@ var data := {}
 var progress_timer := Timer.new()
 var parent_process : Process
 var child_processes : Array[Process]
-# TODO Figure out how to handle skipping dependent child/sibling processes
-var dependent_processes : Array[Process]
 
 const PROGRESS_CHECK_DURATION := 0.5
 
