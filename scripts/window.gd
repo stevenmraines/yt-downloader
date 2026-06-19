@@ -115,10 +115,10 @@ func _set_server_vars() -> void:
 
 
 func _setup_settings() -> void:
-	settings.yt_dlp_path = yt_dlp_path
 	settings.config_loader = config_loader
 	# Use duplicate so we don't pass by ref, otherwise any unsaved changes to
 	# settings will be persisted here even when undo changes is clicked.
+	settings.paths = config_loader.get_paths().duplicate(true)
 	settings.servers = config_loader.get_servers().duplicate(true)
 	settings.channels = config_loader.get_channels().duplicate(true)
 	settings.playlists = config_loader.get_playlists().duplicate(true)
@@ -141,50 +141,6 @@ func _on_channel_folding_changed(is_folded : bool, container : FoldableContainer
 		container.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 	else:
 		container.size_flags_vertical = Control.SIZE_EXPAND_FILL
-
-
-func _on_save_config_confirmation_dialog_confirmed():
-	# There aren't really going to be any changes to look out for in channels rn
-	# TODO Update servers/creds
-	var changes = {
-		"paths": [],
-		"channels": [],
-		"playlists": [],
-	}
-	
-	for config_path in config_loader.get_paths():
-		if config_path.name == "yt-dlp" and config_path.path != yt_dlp_path:
-			config_path.path = yt_dlp_path
-			changes["paths"].append(config_path)
-	
-	for config_playlist in config_loader.get_playlists():
-		# Need to find the node matching this playlist
-		for channel_node in channel_container.get_children():
-			if channel_node.channel_name != config_playlist.channel:
-				continue
-			
-			for playlist_node in channel_node.get_playlist_nodes():
-				if playlist_node.playlist_name != config_playlist.name:
-					continue
-				
-				# Everything matches, now overwrite the vars if anything has changed
-				if config_playlist.url != playlist_node.url \
-						or config_playlist.download_path != playlist_node.download_path \
-						or config_playlist.backup_upload_path != playlist_node.backup_upload_path \
-						or config_playlist.remote_upload_path != playlist_node.remote_upload_path \
-						or config_playlist.download_archive_file_name != playlist_node.download_archive_file_name \
-						or config_playlist.cookies_from_browser != playlist_node.cookies_from_browser \
-						or config_playlist.delete_download != playlist_node.delete_download:
-					config_playlist.url = playlist_node.url
-					config_playlist.download_path = playlist_node.download_path
-					config_playlist.backup_upload_path = playlist_node.backup_upload_path
-					config_playlist.remote_upload_path = playlist_node.remote_upload_path
-					config_playlist.download_archive_file_name = playlist_node.download_archive_file_name
-					config_playlist.cookies_from_browser = playlist_node.cookies_from_browser
-					config_playlist.delete_download = playlist_node.delete_download
-					changes["playlists"].append(config_playlist)
-	
-	config_loader.save_changes(changes)
 
 
 func _on_process_queue_queue_changed(processes):
@@ -248,8 +204,9 @@ func _on_settings_close_requested() -> void:
 	settings.visible = false
 
 
-func _on_settings_settings_saved(_settings: Dictionary) -> void:
+func _on_settings_settings_saved(new_settings: Dictionary) -> void:
 	console_signal_bus.add_line("Saving changes to settings")
+	config_loader.save_changes(new_settings)
 
 
 func _on_settings_settings_reset() -> void:

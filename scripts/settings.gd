@@ -3,21 +3,29 @@ extends Window
 signal settings_saved(settings : Dictionary)
 signal settings_reset
 
-@onready var yt_dlp_path_input := %YtDlpPathInput
-@onready var yt_dlp_path_file_dialog := %YtDlpPathFileDialog
+@onready var path_settings_container := %PathSettingsContainer
 @onready var server_settings_container := %ServerSettingsContainer
 @onready var channel_settings_container := %ChannelSettingsContainer
 @onready var save_changes_confirmation_dialog := %SaveChangesConfirmationDialog
 @onready var undo_changes_confirmation_dialog := %UndoChangesConfirmationDialog
+@onready var path_settings_scene := load("res://scenes/path_settings.tscn")
 @onready var server_settings_scene := load("res://scenes/server_settings.tscn")
 @onready var channel_settings_scene := load("res://scenes/channel_settings.tscn")
 
 var config_loader : ConfigLoader
 
-var yt_dlp_path : String:
+var paths : Array[Dictionary]:
 	set(value):
-		yt_dlp_path = value
-		yt_dlp_path_input.text = yt_dlp_path
+		paths = value
+		
+		for child in path_settings_container.get_children():
+			path_settings_container.remove_child(child)
+			child.queue_free()
+		
+		for path in paths:
+			var path_node = path_settings_scene.instantiate()
+			path_settings_container.add_child(path_node)
+			path_node.path = path
 
 var servers : Array[Dictionary]:
 	set(value):
@@ -85,10 +93,14 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _get_all_data() -> Dictionary:
 	var data = {
+		"paths": [],
 		"servers": [],
 		"channels": [],
 		"playlists": [],
 	}
+	
+	for child in path_settings_container.get_children():
+		data["paths"].append(child.path)
 	
 	for child in server_settings_container.get_children():
 		data["servers"].append(child.server)

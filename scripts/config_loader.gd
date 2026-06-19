@@ -67,6 +67,15 @@ func get_paths() -> Array[Dictionary]:
 	return paths
 
 
+func get_empty_path() -> Dictionary:
+	return {
+		"id": Util.get_uid(),
+		"section": "",
+		"name": "",
+		"path": "",
+	}
+
+
 func get_servers() -> Array[Dictionary]:
 	if ! servers_loaded:
 		for section in _config_file.get_sections():
@@ -161,34 +170,30 @@ func get_empty_playlist() -> Dictionary:
 	}
 
 
-func save_changes(changes : Dictionary) -> void:
-	console_signal_bus.add_line("Saving config changes")
+func save_changes(settings : Dictionary) -> void:
+	_config_file.clear()
 	
-	for config_path in changes.paths:
-		for key in config_path.keys():
-			if key == "section":
-				continue
+	var config_section_names = {
+		"paths": "path_",
+		"servers": "server_",
+		"channels": "channel_",
+		"playlists": "playlist_",
+	}
+	
+	for key in settings.keys():
+		var section_count = 1
+		
+		for config_entry in settings[key]:
+			var section = config_section_names[key] + str(section_count)
 			
-			var value = config_path[key]
-			_config_file.set_value(config_path.section, key, value)
-	
-	# TODO Save servers and credentials
-	
-	for config_channel in changes.channels:
-		for key in config_channel.keys():
-			if key == "section":
-				continue
+			for entry_var in config_entry.keys():
+				if entry_var == "id" or entry_var == "section":
+					continue
+				
+				var value = config_entry[entry_var]
+				_config_file.set_value(section, entry_var, value)
 			
-			var value = config_channel[key]
-			_config_file.set_value(config_channel.section, key, value)
-	
-	for config_playlist in changes.playlists:
-		for key in config_playlist.keys():
-			if key == "section":
-				continue
-			
-			var value = config_playlist[key]
-			_config_file.set_value(config_playlist.section, key, value)
+			section_count += 1
 	
 	_config_file.save(CONFIG_PATH)
 	

@@ -102,5 +102,5 @@ func _on_foldable_container_folding_changed(is_folded: bool) -> void:
 		else Vector2(0, unfolded_minimum_height)
 
 
-func _on_single_video_url_input_text_submitted(new_text):
+func _on_single_video_url_input_text_submitted(_new_text):
 	_confirm_download_single_video()
