@@ -12,6 +12,7 @@ signal playlist_deleted(playlist : Dictionary)
 @onready var delete_download_input := %DeleteDownloadInput
 @onready var preview_unarchived_on_startup_input := %PreviewUnarchivedOnStartupInput
 @onready var delete_button := %DeleteButton
+@onready var delete_playlist_confirmation_dialog := $DeletePlaylistConfirmationDialog
 
 var playlist : Dictionary:
 	set(value):
@@ -40,7 +41,8 @@ func _on_name_input_text_changed(new_text: String) -> void:
 
 
 func _on_delete_button_button_up():
-	playlist_deleted.emit(playlist)
+	delete_playlist_confirmation_dialog.dialog_text = "Are you sure you want to delete the %s playlist?" % playlist.name
+	delete_playlist_confirmation_dialog.visible = true
 
 
 func _on_url_input_text_changed(new_text):
@@ -74,3 +76,7 @@ func _on_delete_download_input_toggled(toggled_on):
 
 func _on_preview_unarchived_on_startup_input_toggled(toggled_on):
 	playlist.preview_unarchived_on_startup = toggled_on
+
+
+func _on_delete_playlist_confirmation_dialog_confirmed():
+	playlist_deleted.emit(playlist)

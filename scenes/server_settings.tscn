@@ -135,9 +135,16 @@ theme_override_styles/pressed = ExtResource("5_2a22k")
 theme_override_styles/hover = ExtResource("6_nnpw7")
 text = "Delete Server"
 
+[node name="DeleteServerConfirmationDialog" type="ConfirmationDialog" parent="." unique_id=1223903797]
+oversampling_override = 1.0
+initial_position = 2
+size = Vector2i(440, 100)
+dialog_text = "Are you sure you want to delete this server?"
+
 [connection signal="text_changed" from="VBoxContainer/MarginContainer/NameConfig/NameInput" to="." method="_on_name_input_text_changed"]
 [connection signal="text_changed" from="VBoxContainer/MarginContainer2/IPConfig/IPInput" to="." method="_on_ip_input_text_changed"]
 [connection signal="text_changed" from="VBoxContainer/MarginContainer3/UserConfig/UserInput" to="." method="_on_user_input_text_changed"]
 [connection signal="text_changed" from="VBoxContainer/MarginContainer4/SSHKeyPathConfig/SSHKeyPathInput" to="." method="_on_ssh_key_path_input_text_changed"]
 [connection signal="toggled" from="VBoxContainer/MarginContainer5/IsDefaultConfig/IsDefaultInput" to="." method="_on_is_default_input_toggled"]
 [connection signal="button_up" from="VBoxContainer/DeleteButton" to="." method="_on_delete_button_button_up"]
+[connection signal="confirmed" from="DeleteServerConfirmationDialog" to="." method="_on_delete_server_confirmation_dialog_confirmed"]

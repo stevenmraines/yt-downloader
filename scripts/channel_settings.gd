@@ -8,6 +8,7 @@ signal playlist_deleted(playlist : Dictionary)
 @onready var playlists_container := %PlaylistsContainer
 @onready var delete_button := %DeleteButton
 @onready var new_playlist_button := %NewPlaylistButton
+@onready var delete_channel_confirmation_dialog := $DeleteChannelConfirmationDialog
 @onready var playlist_settings_scene := load("res://scenes/playlist_settings.tscn")
 
 var channel : Dictionary:
@@ -41,7 +42,8 @@ func _on_channel_name_input_text_changed(new_text: String) -> void:
 
 
 func _on_delete_button_button_up():
-	channel_deleted.emit(channel)
+	delete_channel_confirmation_dialog.dialog_text = "Are you sure you want to delete the %s channel?" % channel.name
+	delete_channel_confirmation_dialog.visible = true
 
 
 func _on_new_playlist_button_button_up() -> void:
@@ -50,3 +52,7 @@ func _on_new_playlist_button_button_up() -> void:
 
 func _on_playlist_deleted(playlist : Dictionary) -> void:
 	playlist_deleted.emit(playlist)
+
+
+func _on_delete_channel_confirmation_dialog_confirmed():
+	channel_deleted.emit(channel)
