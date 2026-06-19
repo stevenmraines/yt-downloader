@@ -26,10 +26,16 @@ var yt_dlp_path := "":
 var selected_server : Dictionary:
 	set(value):
 		selected_server = value
-		_set_server_vars()
+		process_queue.selected_server = selected_server
+		console_signal_bus.add_line("Server credentials set to %s@%s" % [selected_server.user, selected_server.ip])
+		console_signal_bus.add_line("SSH Key Path set to %s" % selected_server.ssh_key_path)
 
 
 func _ready() -> void:
+	_initialize()
+
+
+func _initialize() -> void:
 	for config_path in config_loader.get_paths():
 		if config_path.name == "yt-dlp":
 			yt_dlp_path = config_path.path
@@ -51,6 +57,10 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _populate_channels() -> void:
+	for child in channel_container.get_children():
+		channel_container.remove_child(child)
+		child.queue_free()
+	
 	var channels = config_loader.get_channels()
 	
 	for channel in channels:
@@ -91,6 +101,7 @@ func _create_archive_files() -> void:
 func _populate_servers() -> void:
 	var servers = config_loader.get_servers()
 	var default_server_found = false
+	servers_input.clear()
 	
 	for i in servers.size():
 		var server = servers[i]
@@ -104,14 +115,6 @@ func _populate_servers() -> void:
 	
 	if ! default_server_found:
 		console_signal_bus.add_warning("No default server found")
-
-
-func _set_server_vars() -> void:
-	process_queue.remote_ip = selected_server.ip
-	process_queue.remote_user = selected_server.user
-	process_queue.ssh_key_path = selected_server.ssh_key_path
-	console_signal_bus.add_line("Server credentials set to %s@%s" % [selected_server.user, selected_server.ip])
-	console_signal_bus.add_line("SSH Key Path set to %s" % selected_server.ssh_key_path)
 
 
 func _setup_settings() -> void:
@@ -207,8 +210,16 @@ func _on_settings_close_requested() -> void:
 func _on_settings_settings_saved(new_settings: Dictionary) -> void:
 	console_signal_bus.add_line("Saving changes to settings")
 	config_loader.save_changes(new_settings)
+	_initialize()
 
 
 func _on_settings_settings_reset() -> void:
 	console_signal_bus.add_line("Undoing changes to settings")
 	_setup_settings()
+
+
+func _on_servers_input_item_selected(index):
+	for server in config_loader.get_servers():
+		if server.name == servers_input.get_item_text(index):
+			selected_server = server
+			break

@@ -244,6 +244,7 @@ metadata/_custom_type_script = "uid://duwsp24mpyihb"
 
 [connection signal="index_pressed" from="VBoxContainer/MenuBar/FileMenu" to="." method="_on_file_menu_index_pressed"]
 [connection signal="index_pressed" from="VBoxContainer/MenuBar/YtDlpMenu" to="." method="_on_yt_dlp_menu_index_pressed"]
+[connection signal="item_selected" from="VBoxContainer/MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/HBoxContainer/ServersInput" to="." method="_on_servers_input_item_selected"]
 [connection signal="button_up" from="VBoxContainer/MarginContainer/HSplitContainer/ProcessQueueContainer/VBoxContainer/MarginContainer/VBoxContainer/PlayPauseButtonContainer/PauseButton" to="." method="_on_pause_button_button_up"]
 [connection signal="button_up" from="VBoxContainer/MarginContainer/HSplitContainer/ProcessQueueContainer/VBoxContainer/MarginContainer/VBoxContainer/PlayPauseButtonContainer/PlayButton" to="." method="_on_play_button_button_up"]
 [connection signal="close_requested" from="Settings" to="." method="_on_settings_close_requested"]

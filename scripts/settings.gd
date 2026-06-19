@@ -85,10 +85,13 @@ var playlists : Array[Dictionary]:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("Escape"):
+	if event.is_action_released("Escape"):
 		get_viewport().set_input_as_handled()
 		# TODO Add confirm dialog
 		visible = false
+	elif event.is_action_pressed("Save Settings"):
+		get_viewport().set_input_as_handled()
+		_on_save_config_button_button_up()
 
 
 func _get_all_data() -> Dictionary:

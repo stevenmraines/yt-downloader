@@ -7,9 +7,7 @@ signal queue_changed(processes : Array[Process])
 var processes : Array[Process]
 var current_process_index := 0
 var console_signal_bus : ConsoleSignalBus
-var remote_ip : String
-var remote_user : String
-var ssh_key_path : String
+var selected_server : Dictionary
 
 
 func _ready() -> void:
@@ -313,7 +311,7 @@ func _copy_to_remote(process : Process) -> int:
 	var pid = -1
 	
 	if remote_path:
-		pid = Util.scp(filename, remote_path, remote_ip, remote_user, ssh_key_path)
+		pid = Util.scp(filename, remote_path, selected_server.ip, selected_server.user, selected_server.ssh_key_path)
 		if pid == -1:
 			console_signal_bus.add_error("Error uploading to %s, process could not be created" % remote_path)
 	
