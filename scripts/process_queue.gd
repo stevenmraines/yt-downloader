@@ -42,42 +42,39 @@ func _process(_delta):
 
 
 func _start_queued_process(process : Process) -> void:
+	console_signal_bus.add_line("Starting queued process %s" % process.process_name)
 	process.status = Process.ProcessState.IN_PROGRESS
 	var pid = -1
 	
 	if process.process_name == "update":
-		console_signal_bus.add_line("Starting queued process %s" % process.process_name)
 		pid = yt_dlp_wrapper.update()
 	elif process.process_name == "download_playlist":
-		console_signal_bus.add_line("Starting queued process %s" % process.process_name)
-		pid = yt_dlp_wrapper.download_playlist(process.playlist)
+		process.data.temp_file = OS.get_user_data_dir() + "/download_playlist_temp.txt"
+		pid = yt_dlp_wrapper.download_playlist(process)
+	elif process.process_name == "get_video_filenames":
+		_get_video_filenames(process)
 	elif process.process_name == "download_single_video":
-		console_signal_bus.add_line("Starting queued process %s" % process.process_name)
 		process.data.temp_file = OS.get_user_data_dir() + "/download_single_video_temp.txt"
 		pid = yt_dlp_wrapper.download_single_video(process)
 	elif process.process_name == "get_single_video_filename":
-		console_signal_bus.add_line("Starting queued process %s" % process.process_name)
 		_get_single_video_filename(process)
 	elif process.process_name == "mark_playlist_as_archived":
-		console_signal_bus.add_line("Starting queued process %s" % process.process_name)
 		process.data.temp_file = OS.get_user_data_dir() + "/mark_playlist_as_archived_temp.txt"
 		pid = yt_dlp_wrapper.mark_playlist_as_archived(process)
 	elif process.process_name == "populate_archive_file":
-		console_signal_bus.add_line("Starting queued process %s" % process.process_name)
 		_populate_archive_file(process)
 	elif process.process_name == "copy_to_backup":
-		console_signal_bus.add_line("Starting queued process %s" % process.process_name)
 		pid = _copy_to_backup(process)
 	elif process.process_name == "copy_to_remote":
-		console_signal_bus.add_line("Starting queued process %s" % process.process_name)
 		pid = _copy_to_remote(process)
 	elif process.process_name == "delete_download":
-		console_signal_bus.add_line("Starting queued process %s" % process.process_name)
 		pid = _delete_download(process)
 	
 	process.pid = pid
+	
 	if process.killable:
 		process.progress_timer.start()
+	
 	queue_changed.emit(processes)
 
 
@@ -109,6 +106,20 @@ func queue_download_playlist(playlist : Dictionary) -> void:
 	process.progress_timer_timeout.connect(_on_process_progress_timer_timeout)
 	processes.append(process)
 	add_child(process)
+	
+	var get_video_filenames_process = Process.new()
+	get_video_filenames_process.process_name = "get_video_filenames"
+	get_video_filenames_process.playlist = playlist
+	get_video_filenames_process.killable = false
+	get_video_filenames_process.parent_process = process
+	process.child_processes.append(get_video_filenames_process)
+	processes.append(get_video_filenames_process)
+	add_child(get_video_filenames_process)
+	
+	# TODO queue backup
+	# TODO queue remote
+	# TODO queue delete
+	
 	console_signal_bus.add_line("Queueing process download_playlist")
 	queue_changed.emit(processes)
 
@@ -251,7 +262,8 @@ func _get_single_video_filename(process : Process) -> void:
 	
 	if not file:
 		console_signal_bus.add_error("Failed to read temp file: %s" % temp_file)
-		process.status = Process.ProcessState.FAILED
+		for child_process in process.parent_process.child_processes:
+			child_process.status = Process.ProcessState.FAILED
 		return
 	
 	var content = file.get_as_text()
@@ -283,8 +295,63 @@ func _get_single_video_filename(process : Process) -> void:
 				child_process.status = Process.ProcessState.SKIPPED
 	
 	if ! process.parent_process.data.has("filename") and process.status != Process.ProcessState.SKIPPED:
-		process.status = Process.ProcessState.FAILED
+		for child_process in process.parent_process.child_processes:
+			child_process.status = Process.ProcessState.FAILED
 		console_signal_bus.add_error("Could not parse downloaded video filename")
+
+
+func _get_video_filenames(process : Process) -> void:
+	var temp_file = process.parent_process.data.temp_file
+	var file = FileAccess.open(temp_file, FileAccess.READ)
+	
+	if not file:
+		console_signal_bus.add_error("Failed to read temp file: %s" % temp_file)
+		for child_process in process.parent_process.child_processes:
+			child_process.status = Process.ProcessState.FAILED
+		return
+	
+	var content = file.get_as_text()
+	file.close()
+	var filename_regex = RegEx.new()
+	filename_regex.compile(r"^\[Merger\] Merging formats into \"(?<filename>.+\.mp4)\"")
+	var archived_regex = RegEx.new()
+	archived_regex.compile(r"^\[download\] (?<skipped>.+): has already been recorded in the archive")
+	var file_parsed = false
+	
+	for line in content.split("\n"):
+		line = line.strip_edges()
+		
+		if line == "":
+			continue
+		
+		var result1 = filename_regex.search(line)
+		var result2 = archived_regex.search(line)
+		
+		if result1:
+			file_parsed = true
+			var filename = result1.get_string("filename")
+			if ! process.parent_process.data.has("filenames"):
+				process.parent_process.data.filenames = []
+			process.parent_process.data.filenames.append(filename)
+			console_signal_bus.add_line("Downloaded video: %s" % filename)
+			process.status = Process.ProcessState.COMPLETE
+		
+		if result2:
+			file_parsed = true
+			console_signal_bus.add_warning("Download %s skipped, video already archived" % result2.get_string("skipped"))
+	
+	if ! file_parsed:
+		console_signal_bus.add_error("Could not parse downloaded video filename")
+		for child_process in process.parent_process.child_processes:
+			child_process.status = Process.ProcessState.FAILED
+	elif ! process.parent_process.data.has("filenames"):
+		console_signal_bus.add_warning("Downloads skipped, no new videos found")
+		for child_process in process.parent_process.child_processes:
+			child_process.status = Process.ProcessState.SKIPPED
+	elif process.parent_process.data.filenames.size() > 0:
+		console_signal_bus.add_line("%d new videos found" % process.parent_process.data.filenames.size())
+		process.status = Process.ProcessState.COMPLETE
+		DirAccess.remove_absolute(temp_file)
 
 
 func _copy_to_backup(process : Process) -> int:
