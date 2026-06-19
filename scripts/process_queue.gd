@@ -281,7 +281,8 @@ func _get_single_video_filename(process : Process) -> void:
 		if result2:
 			console_signal_bus.add_warning("Download skipped, video already archived")
 			DirAccess.remove_absolute(temp_file)
-			process.status = Process.ProcessState.SKIPPED
+			for child_process in process.parent_process.child_processes:
+				child_process.status = Process.ProcessState.SKIPPED
 	
 	if ! process.parent_process.data.has("filename") and process.status != Process.ProcessState.SKIPPED:
 		process.status = Process.ProcessState.FAILED

@@ -37,12 +37,13 @@ texture = ExtResource("2_ify2r")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer" unique_id=839656425]
+[node name="ParentLabelsContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer" unique_id=839656425]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 2.0
 
-[node name="ChannelAndPlaylistLabel" type="Label" parent="VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1906076249]
+[node name="ChannelAndPlaylistLabel" type="Label" parent="VBoxContainer/HBoxContainer/ParentLabelsContainer" unique_id=1906076249]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 1
@@ -50,9 +51,16 @@ size_flags_stretch_ratio = 2.0
 clip_text = true
 text_overrun_behavior = 5
 
-[node name="ProcessTypeLabel" type="Label" parent="VBoxContainer/HBoxContainer/VBoxContainer" unique_id=321379629]
+[node name="ProcessTypeLabel" type="Label" parent="VBoxContainer/HBoxContainer/ParentLabelsContainer" unique_id=321379629]
 unique_name_in_owner = true
 layout_mode = 2
+
+[node name="ChildProcessTypeLabel" type="Label" parent="VBoxContainer/HBoxContainer" unique_id=1380540141]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
 
 [node name="StatusLabel" type="RichTextLabel" parent="VBoxContainer/HBoxContainer" unique_id=548722286]
 unique_name_in_owner = true
