@@ -13,6 +13,9 @@ signal playlist_deleted(playlist : Dictionary)
 @onready var preview_unarchived_on_startup_input := %PreviewUnarchivedOnStartupInput
 @onready var delete_button := %DeleteButton
 @onready var delete_playlist_confirmation_dialog := $DeletePlaylistConfirmationDialog
+@onready var download_path_dialog := $DownloadPathDialog
+@onready var backup_upload_path_dialog := $BackupUploadPathDialog
+@onready var remote_upload_path_dialog := $RemoteUploadPathDialog
 
 var playlist : Dictionary:
 	set(value):

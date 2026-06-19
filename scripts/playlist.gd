@@ -12,13 +12,10 @@ signal download_single_video_button_clicked(url : String, list : Dictionary, del
 @onready var preview_container := %PreviewContainer
 @onready var archive_confirmation_dialog := $ArchiveConfirmationDialog
 @onready var download_unarchived_videos_button := %DownloadUnarchivedVideosButton
-@onready var download_unarchived_videos_confirmation_dialog := %DownloadUnarchivedVideosConfirmationDialog
+@onready var download_unarchived_videos_confirmation_dialog := $DownloadUnarchivedVideosConfirmationDialog
 @onready var download_single_video_window := %DownloadSingleVideoWindow
 @onready var single_video_url_input := %SingleVideoUrlInput
 @onready var delete_single_download_input := %DeleteSingleDownloadInput
-@onready var download_path_dialog := $DownloadPathDialog
-@onready var backup_upload_path_dialog := $BackupUploadPathDialog
-@onready var remote_upload_path_dialog := $RemoteUploadPathDialog
 @onready var preview_scene := load("res://scenes/preview.tscn")
 
 var playlist : Dictionary:

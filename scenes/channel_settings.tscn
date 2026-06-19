@@ -26,7 +26,6 @@ theme_override_constants/separation = 20
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer" unique_id=1287385736]
 layout_mode = 2
-theme_override_font_sizes/font_size = 14
 text = "Channel Name:"
 
 [node name="ChannelNameInput" type="LineEdit" parent="VBoxContainer/HBoxContainer" unique_id=1785597204]

@@ -106,7 +106,6 @@ theme_override_constants/separation = 20
 
 [node name="UndoChangesButton" type="Button" parent="ScrollContainer/MarginContainer/SettingsBlockContainer/HBoxContainer" unique_id=106767484]
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
 theme_override_styles/pressed = ExtResource("2_am25x")
 theme_override_styles/hover = ExtResource("3_4ppmf")
 text = "Undo Changes"
@@ -115,7 +114,6 @@ text = "Undo Changes"
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 8
-theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = ExtResource("4_uhhto")
 theme_override_styles/pressed = ExtResource("5_1g033")
 theme_override_styles/hover = ExtResource("6_01roj")

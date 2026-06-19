@@ -54,6 +54,9 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif event.is_action_pressed("Settings"):
 		get_viewport().set_input_as_handled()
 		settings.visible = true
+	elif event.is_action_released("Toggle Pause"):
+		get_viewport().set_input_as_handled()
+		_toggle_pause_process_queue()
 
 
 func _populate_channels() -> void:
@@ -127,6 +130,24 @@ func _setup_settings() -> void:
 	settings.playlists = config_loader.get_playlists().duplicate(true)
 
 
+func _toggle_pause_process_queue() -> void:
+	var paused = process_queue.process_mode == Node.PROCESS_MODE_DISABLED
+	_pause_process_queue(! paused)
+
+
+func _pause_process_queue(pause := true) -> void:
+	if pause:
+		process_queue.process_mode = Node.PROCESS_MODE_DISABLED
+		console_signal_bus.add_line("Process queue paused")
+		process_queue_background_panel.add_theme_stylebox_override("panel", process_queue_background_paused_style)
+		pause_status_label.visible = true
+	else:
+		process_queue.process_mode = Node.PROCESS_MODE_INHERIT
+		console_signal_bus.add_line("Process queue resumed")
+		process_queue_background_panel.add_theme_stylebox_override("panel", process_queue_background_style)
+		pause_status_label.visible = false
+
+
 func _on_playlist_marked_as_archived(playlist : Dictionary) -> void:
 	process_queue.queue_mark_playlist_as_archived(playlist)
 
@@ -180,17 +201,11 @@ func _on_process_killed(process : Process) -> void:
 
 
 func _on_pause_button_button_up():
-	process_queue.process_mode = Node.PROCESS_MODE_DISABLED
-	console_signal_bus.add_line("Process queue paused")
-	process_queue_background_panel.add_theme_stylebox_override("panel", process_queue_background_paused_style)
-	pause_status_label.visible = true
+	_pause_process_queue()
 
 
 func _on_play_button_button_up():
-	process_queue.process_mode = Node.PROCESS_MODE_INHERIT
-	console_signal_bus.add_line("Process queue resumed")
-	process_queue_background_panel.add_theme_stylebox_override("panel", process_queue_background_style)
-	pause_status_label.visible = false
+	_pause_process_queue(false)
 
 
 func _on_file_menu_index_pressed(_index: int) -> void:

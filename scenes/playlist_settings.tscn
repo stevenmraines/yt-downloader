@@ -25,7 +25,6 @@ theme_override_constants/separation = 20
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer9" unique_id=310572894]
 layout_mode = 2
-theme_override_font_sizes/font_size = 14
 text = "Playlist Name:"
 
 [node name="NameInput" type="LineEdit" parent="VBoxContainer/HBoxContainer9" unique_id=1109045438]
@@ -39,7 +38,6 @@ theme_override_constants/separation = 10
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer" unique_id=1965120622]
 layout_mode = 2
-theme_override_font_sizes/font_size = 14
 text = "URL:"
 
 [node name="UrlInput" type="LineEdit" parent="VBoxContainer/HBoxContainer" unique_id=1290243954]
@@ -53,7 +51,6 @@ theme_override_constants/separation = 10
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer2" unique_id=838937134]
 layout_mode = 2
-theme_override_font_sizes/font_size = 14
 text = "Download Path:"
 
 [node name="DownloadPathButton" type="Button" parent="VBoxContainer/HBoxContainer2" unique_id=1778634578]
@@ -73,7 +70,6 @@ theme_override_constants/separation = 10
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer3" unique_id=1404351751]
 layout_mode = 2
-theme_override_font_sizes/font_size = 14
 text = "Backup Upload Path:"
 
 [node name="BackupPathButton" type="Button" parent="VBoxContainer/HBoxContainer3" unique_id=577285441]
@@ -93,7 +89,6 @@ theme_override_constants/separation = 10
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer4" unique_id=1130064365]
 layout_mode = 2
-theme_override_font_sizes/font_size = 14
 text = "Remote Upload Path:"
 
 [node name="RemotePathButton" type="Button" parent="VBoxContainer/HBoxContainer4" unique_id=1282101230]
@@ -113,7 +108,6 @@ theme_override_constants/separation = 10
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5" unique_id=1315785400]
 layout_mode = 2
-theme_override_font_sizes/font_size = 14
 text = "Download Archive File Name:"
 
 [node name="DownloadArchiveFileNameInput" type="LineEdit" parent="VBoxContainer/HBoxContainer5" unique_id=1811834309]
@@ -127,7 +121,6 @@ theme_override_constants/separation = 10
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer6" unique_id=788768365]
 layout_mode = 2
-theme_override_font_sizes/font_size = 14
 text = "Cookies From Browser:"
 
 [node name="CookiesFromBrowserInput" type="OptionButton" parent="VBoxContainer/HBoxContainer6" unique_id=1611184706]
@@ -147,7 +140,6 @@ theme_override_constants/separation = 10
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer7" unique_id=373871632]
 layout_mode = 2
-theme_override_font_sizes/font_size = 14
 text = "Delete Download After Upload:"
 
 [node name="DeleteDownloadInput" type="CheckBox" parent="VBoxContainer/HBoxContainer7" unique_id=1465689548]
@@ -160,7 +152,6 @@ theme_override_constants/separation = 10
 
 [node name="Label" type="Label" parent="VBoxContainer/HBoxContainer8" unique_id=1473376312]
 layout_mode = 2
-theme_override_font_sizes/font_size = 14
 text = "Preview Unarchived Videos On Startup:"
 
 [node name="PreviewUnarchivedOnStartupInput" type="CheckBox" parent="VBoxContainer/HBoxContainer8" unique_id=1149875628]
@@ -177,6 +168,33 @@ text = "Delete Playlist"
 
 [node name="DeletePlaylistConfirmationDialog" type="ConfirmationDialog" parent="." unique_id=822571339]
 initial_position = 2
+
+[node name="DownloadPathDialog" type="FileDialog" parent="." unique_id=138947709]
+oversampling_override = 1.0
+title = "Open a Directory"
+initial_position = 2
+size = Vector2i(1280, 720)
+file_mode = 2
+access = 2
+show_hidden_files = true
+
+[node name="BackupUploadPathDialog" type="FileDialog" parent="." unique_id=1717159765]
+oversampling_override = 1.0
+title = "Open a Directory"
+initial_position = 2
+size = Vector2i(1280, 720)
+file_mode = 2
+access = 2
+show_hidden_files = true
+
+[node name="RemoteUploadPathDialog" type="FileDialog" parent="." unique_id=1779855769]
+oversampling_override = 1.0
+title = "Open a Directory"
+initial_position = 2
+size = Vector2i(1280, 720)
+file_mode = 2
+access = 2
+show_hidden_files = true
 
 [connection signal="text_changed" from="VBoxContainer/HBoxContainer9/NameInput" to="." method="_on_name_input_text_changed"]
 [connection signal="text_changed" from="VBoxContainer/HBoxContainer/UrlInput" to="." method="_on_url_input_text_changed"]

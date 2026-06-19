@@ -61,12 +61,6 @@ theme_override_styles/pressed = ExtResource("5_8votw")
 theme_override_styles/hover = ExtResource("6_wdmaq")
 text = "Mark Playlist As Archived"
 
-[node name="DownloadUnarchivedVideosConfirmationDialog" type="ConfirmationDialog" parent="VBoxContainer/HBoxContainer7" unique_id=43132464]
-unique_name_in_owner = true
-oversampling_override = 1.0
-initial_position = 2
-size = Vector2i(364, 100)
-
 [node name="PreviewParentContainer" type="MarginContainer" parent="VBoxContainer" unique_id=1880220991]
 unique_name_in_owner = true
 visible = false
@@ -89,11 +83,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 30
-
-[node name="ArchiveConfirmationDialog" type="ConfirmationDialog" parent="." unique_id=1942883403]
-oversampling_override = 1.0
-initial_position = 2
-size = Vector2i(976, 100)
 
 [node name="DownloadSingleVideoWindow" type="Window" parent="." unique_id=1321881364]
 unique_name_in_owner = true
@@ -162,40 +151,20 @@ theme_override_styles/pressed = ExtResource("8_xais8")
 theme_override_styles/hover = ExtResource("9_8605i")
 text = "Download"
 
-[node name="DownloadPathDialog" type="FileDialog" parent="." unique_id=1171291283]
+[node name="DownloadUnarchivedVideosConfirmationDialog" type="ConfirmationDialog" parent="." unique_id=43132464]
 oversampling_override = 1.0
-title = "Open a Directory"
 initial_position = 2
-size = Vector2i(1280, 720)
-file_mode = 2
-access = 2
-show_hidden_files = true
+size = Vector2i(364, 100)
 
-[node name="BackupUploadPathDialog" type="FileDialog" parent="." unique_id=467450347]
+[node name="ArchiveConfirmationDialog" type="ConfirmationDialog" parent="." unique_id=1942883403]
 oversampling_override = 1.0
-title = "Open a Directory"
 initial_position = 2
-size = Vector2i(1280, 720)
-file_mode = 2
-access = 2
-show_hidden_files = true
-
-[node name="RemoteUploadPathDialog" type="FileDialog" parent="." unique_id=1619137532]
-oversampling_override = 1.0
-title = "Open a Directory"
-initial_position = 2
-size = Vector2i(1280, 720)
-file_mode = 2
-access = 2
-show_hidden_files = true
+size = Vector2i(976, 100)
 
 [connection signal="pressed" from="VBoxContainer/HBoxContainer7/DownloadSingleVideoButton" to="." method="_on_download_single_video_button_pressed"]
 [connection signal="button_up" from="VBoxContainer/HBoxContainer7/MarkAsArchivedButton" to="." method="_on_mark_as_archived_button_button_up"]
-[connection signal="confirmed" from="VBoxContainer/HBoxContainer7/DownloadUnarchivedVideosConfirmationDialog" to="." method="_on_download_unarchived_videos_confirmation_dialog_confirmed"]
-[connection signal="confirmed" from="ArchiveConfirmationDialog" to="." method="_on_archive_confirmation_dialog_confirmed"]
 [connection signal="close_requested" from="DownloadSingleVideoWindow" to="." method="_on_download_single_video_window_close_requested"]
 [connection signal="text_submitted" from="DownloadSingleVideoWindow/Control/MarginContainer/VBoxContainer/HBoxContainer/SingleVideoUrlInput" to="." method="_on_single_video_url_input_text_submitted"]
 [connection signal="button_up" from="DownloadSingleVideoWindow/Control/MarginContainer/VBoxContainer/DownloadSingleVideoConfirmButton" to="." method="_on_download_single_video_confirm_button_button_up"]
-[connection signal="dir_selected" from="DownloadPathDialog" to="." method="_on_download_path_dialog_dir_selected"]
-[connection signal="dir_selected" from="BackupUploadPathDialog" to="." method="_on_backup_upload_path_dialog_dir_selected"]
-[connection signal="dir_selected" from="RemoteUploadPathDialog" to="." method="_on_remote_upload_path_dialog_dir_selected"]
+[connection signal="confirmed" from="DownloadUnarchivedVideosConfirmationDialog" to="." method="_on_download_unarchived_videos_confirmation_dialog_confirmed"]
+[connection signal="confirmed" from="ArchiveConfirmationDialog" to="." method="_on_archive_confirmation_dialog_confirmed"]

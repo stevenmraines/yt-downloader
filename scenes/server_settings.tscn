@@ -30,7 +30,6 @@ theme_override_constants/separation = 20
 
 [node name="Label" type="Label" parent="VBoxContainer/MarginContainer/NameConfig" unique_id=350308172]
 layout_mode = 2
-theme_override_font_sizes/font_size = 14
 text = "Server Name: "
 
 [node name="NameInput" type="LineEdit" parent="VBoxContainer/MarginContainer/NameConfig" unique_id=1443427879]
@@ -48,7 +47,6 @@ theme_override_constants/separation = 20
 
 [node name="Label" type="Label" parent="VBoxContainer/MarginContainer2/IPConfig" unique_id=759755597]
 layout_mode = 2
-theme_override_font_sizes/font_size = 14
 text = "IP Address:"
 
 [node name="IPInput" type="LineEdit" parent="VBoxContainer/MarginContainer2/IPConfig" unique_id=205005802]
@@ -66,7 +64,6 @@ theme_override_constants/separation = 20
 
 [node name="Label" type="Label" parent="VBoxContainer/MarginContainer3/UserConfig" unique_id=811039170]
 layout_mode = 2
-theme_override_font_sizes/font_size = 14
 text = "User:"
 
 [node name="UserInput" type="LineEdit" parent="VBoxContainer/MarginContainer3/UserConfig" unique_id=1948384981]
@@ -84,7 +81,6 @@ theme_override_constants/separation = 20
 
 [node name="Label" type="Label" parent="VBoxContainer/MarginContainer4/SSHKeyPathConfig" unique_id=243952574]
 layout_mode = 2
-theme_override_font_sizes/font_size = 14
 text = "SSH Key Path:"
 
 [node name="SSHKeyBrowseFilesButton" type="Button" parent="VBoxContainer/MarginContainer4/SSHKeyPathConfig" unique_id=361111258]
@@ -119,7 +115,6 @@ theme_override_constants/separation = 20
 
 [node name="Label" type="Label" parent="VBoxContainer/MarginContainer5/IsDefaultConfig" unique_id=1197515647]
 layout_mode = 2
-theme_override_font_sizes/font_size = 14
 text = "Is Default:"
 
 [node name="IsDefaultInput" type="CheckBox" parent="VBoxContainer/MarginContainer5/IsDefaultConfig" unique_id=2085409422]

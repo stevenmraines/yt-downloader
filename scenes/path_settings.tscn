@@ -19,7 +19,6 @@ script = ExtResource("1_wf3h5")
 [node name="NameLabel" type="Label" parent="." unique_id=1662971384]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 14
 
 [node name="BrowseButton" type="Button" parent="." unique_id=761373128]
 layout_mode = 2
