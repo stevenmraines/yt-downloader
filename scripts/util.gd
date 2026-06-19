@@ -73,6 +73,14 @@ static func cp(file : String, destination : String) -> int:
 	return OS.create_process("cmd.exe", ["/c", "copy \"" + file + "\" \"" + destination + "\""], true)
 
 
+static func cp_multi(files : Array[String], origin : String, destination : String) -> int:
+	for i in files.size():
+		# Get filename without path and wrap it in quotes
+		files[i] = "\"%s\"" % files[i].get_slice(origin + "/", 1)
+	var files_str = " ".join(files)
+	return OS.create_process("cmd.exe", ["/c", "robocopy \"%s\" \"%s\" %s" % [origin, destination, files_str]], true)
+
+
 static func scp(file : String, destination : String, ip : String, user : String, ssh_key_path : String) -> int:
 	return OS.create_process("cmd.exe", [
 		"/c", "scp -i \"%s\" \"%s\" %s@%s:%s" % [ssh_key_path, file, user, ip, destination]

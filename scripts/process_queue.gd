@@ -63,12 +63,14 @@ func _start_queued_process(process : Process) -> void:
 		pid = yt_dlp_wrapper.mark_playlist_as_archived(process)
 	elif process.process_name == "populate_archive_file":
 		_populate_archive_file(process)
-	elif process.process_name == "copy_to_backup":
-		pid = _copy_to_backup(process)
+	elif process.process_name == "copy_single_to_backup":
+		pid = _copy_single_to_backup(process)
 	elif process.process_name == "copy_to_remote":
 		pid = _copy_to_remote(process)
 	elif process.process_name == "delete_download":
 		pid = _delete_download(process)
+	elif process.process_name == "copy_multiple_to_backup":
+		pid = _copy_multiple_to_backup(process)
 	
 	process.pid = pid
 	
@@ -112,11 +114,19 @@ func queue_download_playlist(playlist : Dictionary) -> void:
 	get_video_filenames_process.playlist = playlist
 	get_video_filenames_process.killable = false
 	get_video_filenames_process.parent_process = process
-	process.child_processes.append(get_video_filenames_process)
 	processes.append(get_video_filenames_process)
+	process.child_processes.append(get_video_filenames_process)
 	add_child(get_video_filenames_process)
 	
-	# TODO queue backup
+	var copy_multiple_to_backup_process = Process.new()
+	copy_multiple_to_backup_process.process_name = "copy_multiple_to_backup"
+	copy_multiple_to_backup_process.playlist = playlist
+	copy_multiple_to_backup_process.progress_timer_timeout.connect(_on_process_progress_timer_timeout)
+	copy_multiple_to_backup_process.parent_process = process
+	processes.append(copy_multiple_to_backup_process)
+	process.child_processes.append(copy_multiple_to_backup_process)
+	add_child(copy_multiple_to_backup_process)
+	
 	# TODO queue remote
 	# TODO queue delete
 	
@@ -144,14 +154,14 @@ func queue_download_single_video(url : String, playlist : Dictionary, delete_dow
 	process.child_processes.append(get_filename_process)
 	add_child(get_filename_process)
 	
-	var copy_to_backup_process = Process.new()
-	copy_to_backup_process.process_name = "copy_to_backup"
-	copy_to_backup_process.playlist = playlist
-	copy_to_backup_process.progress_timer_timeout.connect(_on_process_progress_timer_timeout)
-	copy_to_backup_process.parent_process = process
-	processes.append(copy_to_backup_process)
-	process.child_processes.append(copy_to_backup_process)
-	add_child(copy_to_backup_process)
+	var copy_single_to_backup_process = Process.new()
+	copy_single_to_backup_process.process_name = "copy_single_to_backup"
+	copy_single_to_backup_process.playlist = playlist
+	copy_single_to_backup_process.progress_timer_timeout.connect(_on_process_progress_timer_timeout)
+	copy_single_to_backup_process.parent_process = process
+	processes.append(copy_single_to_backup_process)
+	process.child_processes.append(copy_single_to_backup_process)
+	add_child(copy_single_to_backup_process)
 	
 	var copy_to_remote_process = Process.new()
 	copy_to_remote_process.process_name = "copy_to_remote"
@@ -312,10 +322,11 @@ func _get_video_filenames(process : Process) -> void:
 	
 	var content = file.get_as_text()
 	file.close()
+	# TODO Handle when file already exists: [download] C:\Users\steve\Videos\Astrogoblin\the_repair_shop\2025-07-01 Repair_Shop_e1_-_UNCUT.mp4 has already been downloaded
 	var filename_regex = RegEx.new()
 	filename_regex.compile(r"^\[Merger\] Merging formats into \"(?<filename>.+\.mp4)\"")
 	var archived_regex = RegEx.new()
-	archived_regex.compile(r"^\[download\] (?<skipped>.+): has already been recorded in the archive")
+	archived_regex.compile(r"^\[download\] (?<id>.+): (?<title>.+) has already been recorded in the archive")
 	var file_parsed = false
 	
 	for line in content.split("\n"):
@@ -338,7 +349,7 @@ func _get_video_filenames(process : Process) -> void:
 		
 		if result2:
 			file_parsed = true
-			console_signal_bus.add_warning("Download %s skipped, video already archived" % result2.get_string("skipped"))
+			console_signal_bus.add_warning("Download %s skipped, video already archived" % result2.get_string("title"))
 	
 	if ! file_parsed:
 		console_signal_bus.add_error("Could not parse downloaded video filename")
@@ -354,7 +365,7 @@ func _get_video_filenames(process : Process) -> void:
 		DirAccess.remove_absolute(temp_file)
 
 
-func _copy_to_backup(process : Process) -> int:
+func _copy_single_to_backup(process : Process) -> int:
 	var filename = process.parent_process.data.filename
 	var backup_path = process.playlist.backup_upload_path
 	var pid = -1
@@ -367,6 +378,25 @@ func _copy_to_backup(process : Process) -> int:
 				console_signal_bus.add_error("Error copying download to %s, process could not be created" % backup_path)
 		else:
 			console_signal_bus.add_error("Error copying download to %s, dir does not exist" % backup_path)
+			process.status = Process.ProcessState.FAILED
+	
+	return pid
+
+
+func _copy_multiple_to_backup(process : Process) -> int:
+	var filenames = process.parent_process.data.filenames
+	var download_path = process.playlist.download_path
+	var backup_path = process.playlist.backup_upload_path
+	var pid = -1
+	
+	if backup_path:
+		if DirAccess.dir_exists_absolute(backup_path):
+			console_signal_bus.add_line("Copying downloads to %s" % backup_path)
+			pid = Util.cp_multi(filenames, download_path, backup_path)
+			if pid == -1:
+				console_signal_bus.add_error("Error copying downloads to %s, process could not be created" % backup_path)
+		else:
+			console_signal_bus.add_error("Error copying downloads to %s, dir does not exist" % backup_path)
 			process.status = Process.ProcessState.FAILED
 	
 	return pid

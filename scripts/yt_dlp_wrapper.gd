@@ -73,7 +73,6 @@ func download_playlist(process : Process) -> int:
 		OPTS.format, FORMAT_STRING,
 		temp_file
 	])
-	print(command_str)
 	
 	return OS.create_process("cmd.exe", ["/c", command_str], true)
 
