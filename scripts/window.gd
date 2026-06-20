@@ -154,10 +154,10 @@ func _on_playlist_marked_as_archived(playlist : Dictionary) -> void:
 	process_queue.queue_mark_playlist_as_archived(playlist)
 
 
-func _on_playlist_unarchived_videos_downloaded(playlist : Dictionary) -> void:
+func _on_playlist_unarchived_videos_downloaded(playlist : Dictionary, start_index : String, end_index : String) -> void:
 	# TODO Also add custom filename formatting string option
 	# TODO Add download range option
-	process_queue.queue_download_playlist(playlist)
+	process_queue.queue_download_playlist(playlist, start_index, end_index)
 
 
 func _on_playlist_single_video_downloaded(url : String, playlist : Dictionary, copy_to_backup : bool, copy_to_remote : bool, delete_download : bool) -> void:

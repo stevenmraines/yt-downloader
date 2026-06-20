@@ -1,7 +1,7 @@
 extends MarginContainer
 
 signal mark_as_archived_clicked(list : Dictionary)
-signal download_unarchived_videos_button_clicked(list : Dictionary)
+signal download_unarchived_videos_button_clicked(list : Dictionary, start_index : String, end_index : String)
 signal download_single_video_button_clicked(url : String, list : Dictionary, copy_to_backup : bool, copy_to_remote : bool, delete_download : bool)
 
 @export var folded_minimum_height := 50.0
@@ -11,8 +11,8 @@ signal download_single_video_button_clicked(url : String, list : Dictionary, cop
 @onready var preview_parent_container := %PreviewParentContainer
 @onready var preview_container := %PreviewContainer
 @onready var archive_confirmation_dialog := $ArchiveConfirmationDialog
-@onready var download_unarchived_videos_button := %DownloadUnarchivedVideosButton
 @onready var download_unarchived_videos_confirmation_dialog := $DownloadUnarchivedVideosConfirmationDialog
+@onready var download_playlist_window := $DownloadPlaylistWindow
 @onready var download_single_video_window := $DownloadSingleVideoWindow
 @onready var preview_scene := load("res://scenes/preview.tscn")
 
@@ -24,10 +24,7 @@ var playlist : Dictionary:
 		label.text = playlist.name
 		preview_parent_container.visible = playlist.preview_unarchived_on_startup
 		
-		# Need to connect this here rather than in _ready because
-		# playlist won't be set yet when _ready is fired.
-		download_unarchived_videos_button.connect("button_up", _on_download_unarchived_videos_button_button_up.bind(playlist))
-		
+		download_playlist_window.playlist = playlist
 		download_single_video_window.playlist = playlist
 
 var console_signal_bus : ConsoleSignalBus
@@ -71,14 +68,8 @@ func _on_archive_confirmation_dialog_confirmed():
 	mark_as_archived_clicked.emit(playlist)
 
 
-func _on_download_unarchived_videos_button_button_up(list : Dictionary):
-	# FIXME Changing our text after the fact like this is messing with the window positioning
-	download_unarchived_videos_confirmation_dialog.dialog_text = "Are you sure you want to download unarchived videos from the " + list.name + " playlist?"
-	download_unarchived_videos_confirmation_dialog.visible = true
-
-
-func _on_download_unarchived_videos_confirmation_dialog_confirmed():
-	download_unarchived_videos_button_clicked.emit(playlist)
+func _on_download_unarchived_videos_button_button_up():
+	download_playlist_window.visible = true
 
 
 func _on_foldable_container_folding_changed(is_folded: bool) -> void:
@@ -100,3 +91,7 @@ func _on_download_single_video_window_download_single_video_form_submitted(optio
 	)
 	
 	download_single_video_window.visible = false
+
+
+func _on_download_playlist_window_download_clicked(start_index: String, end_index: String) -> void:
+	download_unarchived_videos_button_clicked.emit(playlist, start_index, end_index)
