@@ -37,9 +37,11 @@ layout_mode = 2
 oversampling_override = 1.0
 title = "File"
 size = Vector2i(102, 100)
-item_count = 1
-item_0/text = "Settings"
+item_count = 2
+item_0/text = "Open Config Directory"
 item_0/id = 0
+item_1/text = "Settings"
+item_1/id = 1
 
 [node name="YtDlpMenu" type="PopupMenu" parent="VBoxContainer/MenuBar" unique_id=227164934]
 oversampling_override = 1.0

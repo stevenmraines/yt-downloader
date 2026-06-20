@@ -93,14 +93,21 @@ func kill_process(process : Process) -> void:
 	
 	console_signal_bus.add_warning("Process %s (%d) killed with exit code %s" % [process.process_name, process.pid, kill_exit_code])
 	
-	# yt-dlp sometimes spawns two processes with the same name, for some reason.
-	# Both need to be killed.
-	var os_processes = Util.get_processes()
-	for os_pid in os_processes:
-		var process_name = os_processes[os_pid]
-		if process_name == "yt-dlp.exe" and os_pid != process.pid:
-			var second_kill_exit_code = error_string(OS.kill(os_pid))
-			console_signal_bus.add_warning("Secondary process %s (%d) killed with exit code %s" % [process_name, os_pid, second_kill_exit_code])
+	var yt_dlp_processes = [
+		Process.DOWNLOAD_PLAYLIST_PROCESS,
+		Process.DOWNLOAD_SINGLE_VIDEO_PROCESS,
+		Process.MARK_PLAYLIST_AS_ARCHIVED_PROCESS
+	]
+	
+	if yt_dlp_processes.has(process.process_name):
+		# yt-dlp sometimes spawns two processes with the same name, for some reason.
+		# Both need to be killed.
+		var os_processes = Util.get_processes()
+		for os_pid in os_processes:
+			var process_name = os_processes[os_pid]
+			if process_name == "yt-dlp.exe" and os_pid != process.pid:
+				var second_kill_exit_code = error_string(OS.kill(os_pid))
+				console_signal_bus.add_warning("Secondary process %s (%d) killed with exit code %s" % [process_name, os_pid, second_kill_exit_code])
 	
 	queue_changed.emit(processes)
 
@@ -300,7 +307,7 @@ func _get_single_video_filename(process : Process) -> void:
 	var filename_regex = RegEx.new()
 	filename_regex.compile(r"^\[Merger\] Merging formats into \"(?<filename>.+\.mp4)\"")
 	var archived_regex = RegEx.new()
-	archived_regex.compile(r"^\[download\] (?<id>.+): (?<title>.+) has already been recorded in the archive")
+	archived_regex.compile(r"^\[download\] (?<id>.+):\s*(?<title>.*?)\s*has already been recorded in the archive")
 	var downloaded_regex = RegEx.new()
 	downloaded_regex.compile(r"^\[download\] (?<filename>.+) has already been downloaded")
 	
@@ -325,7 +332,7 @@ func _get_single_video_filename(process : Process) -> void:
 			for child_process in process.parent_process.child_processes:
 				child_process.status = Process.ProcessState.SKIPPED
 		elif result3:
-			console_signal_bus.add_warning("Download %s skipped, video already downloaded" % result2.get_string("filename"))
+			console_signal_bus.add_warning("Download %s skipped, video already downloaded" % result3.get_string("filename"))
 			DirAccess.remove_absolute(temp_file)
 			for child_process in process.parent_process.child_processes:
 				child_process.status = Process.ProcessState.SKIPPED
@@ -351,7 +358,8 @@ func _get_video_filenames(process : Process) -> void:
 	var filename_regex = RegEx.new()
 	filename_regex.compile(r"^\[Merger\] Merging formats into \"(?<filename>.+\.mp4)\"")
 	var archived_regex = RegEx.new()
-	archived_regex.compile(r"^\[download\] (?<id>.+): (?<title>.+) has already been recorded in the archive")
+	# FIXME Title issue: ERROR: Unicode parsing error, some characters were replaced with � (U+FFFD): Invalid UTF-8 leading byte (92), try with Taskmaster season 21 ep 8
+	archived_regex.compile(r"^\[download\] (?<id>.+):\s*(?<title>.*?)\s*has already been recorded in the archive")
 	var downloaded_regex = RegEx.new()
 	downloaded_regex.compile(r"^\[download\] (?<filename>.+) has already been downloaded")
 	var file_parsed = false
@@ -379,7 +387,7 @@ func _get_video_filenames(process : Process) -> void:
 			console_signal_bus.add_warning("Download %s skipped, video already archived" % result2.get_string("title"))
 		elif result3:
 			file_parsed = true
-			console_signal_bus.add_warning("Download %s skipped, video already downloaded" % result2.get_string("filename"))
+			console_signal_bus.add_warning("Download %s skipped, video already downloaded" % result3.get_string("filename"))
 	
 	if ! file_parsed:
 		console_signal_bus.add_error("Could not parse downloaded video filename")
@@ -414,7 +422,7 @@ func _copy_single_to_backup(process : Process) -> int:
 
 
 func _copy_multiple_to_backup(process : Process) -> int:
-	var filenames = process.parent_process.data.filenames
+	var filenames = process.parent_process.data.filenames as Array[String]
 	var download_path = process.playlist.download_path
 	var backup_path = process.playlist.backup_upload_path
 	var pid = -1
@@ -446,7 +454,7 @@ func _copy_single_to_remote(process : Process) -> int:
 
 
 func _copy_multiple_to_remote(process : Process) -> int:
-	var filenames = process.parent_process.data.filenames
+	var filenames = process.parent_process.data.filenames as Array[String]
 	var remote_path = process.playlist.remote_upload_path
 	var pid = -1
 	
@@ -471,7 +479,7 @@ func _delete_single_download(process : Process) -> int:
 
 func _delete_multiple_downloads(process : Process) -> int:
 	var download_path = process.playlist.download_path
-	var filenames = process.parent_process.data.filenames
+	var filenames = process.parent_process.data.filenames as Array[String]
 	var pid = Util.rm_multi(filenames)
 	
 	if pid == -1:

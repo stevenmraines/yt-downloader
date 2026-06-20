@@ -38,9 +38,9 @@ func _load_config() -> void:
 	console_signal_bus.add_line("Loading config")
 	
 	# Copy default config to user:// if it doesn't exist yet
-	#if ! FileAccess.file_exists(CONFIG_PATH):
-	console_signal_bus.add_line("Copying config to " + OS.get_user_data_dir() + "/config.cfg")
-	DirAccess.copy_absolute(DEFAULT_CONFIG_PATH, CONFIG_PATH)
+	if ! FileAccess.file_exists(CONFIG_PATH):
+		console_signal_bus.add_line("Copying config to " + OS.get_user_data_dir() + "/config.cfg")
+		DirAccess.copy_absolute(DEFAULT_CONFIG_PATH, CONFIG_PATH)
 	
 	_config_file = ConfigFile.new()
 	var err = _config_file.load(CONFIG_PATH)

@@ -118,6 +118,8 @@ func _populate_servers() -> void:
 	
 	if ! default_server_found:
 		console_signal_bus.add_warning("No default server found")
+	elif selected_server.ip == "" or selected_server.user == "":
+		console_signal_bus.add_warning("Missing server ip or user name")
 
 
 func _setup_settings() -> void:
@@ -153,10 +155,14 @@ func _on_playlist_marked_as_archived(playlist : Dictionary) -> void:
 
 
 func _on_playlist_unarchived_videos_downloaded(playlist : Dictionary) -> void:
+	# TODO Add checkboxes for copy to backup, remote, and delete download
+	# TODO Also add custom filename formatting string option
+	# TODO Add download range option
 	process_queue.queue_download_playlist(playlist)
 
 
 func _on_playlist_single_video_downloaded(url : String, playlist : Dictionary, delete_download : bool) -> void:
+	# TODO Add checkboxes for copy to backup and remote
 	process_queue.queue_download_single_video(url, playlist, delete_download)
 
 
@@ -208,9 +214,11 @@ func _on_play_button_button_up():
 	_pause_process_queue(false)
 
 
-func _on_file_menu_index_pressed(_index: int) -> void:
-	# There's only one single file menu item right now
-	settings.visible = true
+func _on_file_menu_index_pressed(index: int) -> void:
+	if index == 0:
+		OS.shell_open(OS.get_user_data_dir())
+	elif index == 1:
+		settings.visible = true
 
 
 func _on_yt_dlp_menu_index_pressed(_index: int) -> void:
