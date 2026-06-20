@@ -12,6 +12,7 @@ var path : Dictionary:
 
 
 func _on_browse_button_button_up():
+	path_file_dialog.current_file = path.path
 	path_file_dialog.visible = true
 
 

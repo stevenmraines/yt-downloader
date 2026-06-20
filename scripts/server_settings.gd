@@ -43,7 +43,6 @@ func _on_user_input_text_changed(new_text):
 
 
 func _on_ssh_key_path_input_text_changed(new_text):
-	# TODO Also handle when browse button is used
 	server.ssh_key_path = new_text
 
 
@@ -53,3 +52,13 @@ func _on_is_default_input_toggled(toggled_on):
 
 func _on_delete_server_confirmation_dialog_confirmed():
 	server_deleted.emit(server)
+
+
+func _on_ssh_key_browse_files_button_button_up() -> void:
+	ssh_key_path_file_dialog.current_path = server.ssh_key_path
+	ssh_key_path_file_dialog.visible = true
+
+
+func _on_ssh_key_path_file_dialog_file_selected(path: String) -> void:
+	server.ssh_key_path = path
+	ssh_key_path_input.text = path

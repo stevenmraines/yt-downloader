@@ -15,7 +15,6 @@ signal playlist_deleted(playlist : Dictionary)
 @onready var delete_playlist_confirmation_dialog := $DeletePlaylistConfirmationDialog
 @onready var download_path_dialog := $DownloadPathDialog
 @onready var backup_upload_path_dialog := $BackupUploadPathDialog
-@onready var remote_upload_path_dialog := $RemoteUploadPathDialog
 
 var playlist : Dictionary:
 	set(value):
@@ -53,7 +52,6 @@ func _on_url_input_text_changed(new_text):
 
 
 func _on_download_path_input_text_changed(new_text):
-	# TODO Handle browse button
 	playlist.download_path = new_text
 
 
@@ -83,3 +81,23 @@ func _on_preview_unarchived_on_startup_input_toggled(toggled_on):
 
 func _on_delete_playlist_confirmation_dialog_confirmed():
 	playlist_deleted.emit(playlist)
+
+
+func _on_download_path_button_button_up() -> void:
+	download_path_dialog.current_dir = playlist.download_path
+	download_path_dialog.visible = true
+
+
+func _on_backup_path_button_button_up() -> void:
+	backup_upload_path_dialog.current_dir = playlist.backup_upload_path
+	backup_upload_path_dialog.visible = true
+
+
+func _on_download_path_dialog_dir_selected(dir: String) -> void:
+	playlist.download_path = dir
+	download_path_input.text = dir
+
+
+func _on_backup_upload_path_dialog_dir_selected(dir: String) -> void:
+	playlist.backup_upload_path = dir
+	backup_path_input.text = dir

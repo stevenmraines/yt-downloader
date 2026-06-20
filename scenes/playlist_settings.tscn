@@ -91,12 +91,6 @@ theme_override_constants/separation = 10
 layout_mode = 2
 text = "Remote Upload Path:"
 
-[node name="RemotePathButton" type="Button" parent="VBoxContainer/HBoxContainer4" unique_id=1282101230]
-layout_mode = 2
-theme_override_styles/pressed = ExtResource("2_iu3an")
-theme_override_styles/hover = ExtResource("3_xf5im")
-text = "Browse"
-
 [node name="RemotePathInput" type="LineEdit" parent="VBoxContainer/HBoxContainer4" unique_id=134707847]
 unique_name_in_owner = true
 layout_mode = 2
@@ -187,18 +181,11 @@ file_mode = 2
 access = 2
 show_hidden_files = true
 
-[node name="RemoteUploadPathDialog" type="FileDialog" parent="." unique_id=1779855769]
-oversampling_override = 1.0
-title = "Open a Directory"
-initial_position = 2
-size = Vector2i(1280, 720)
-file_mode = 2
-access = 2
-show_hidden_files = true
-
 [connection signal="text_changed" from="VBoxContainer/HBoxContainer9/NameInput" to="." method="_on_name_input_text_changed"]
 [connection signal="text_changed" from="VBoxContainer/HBoxContainer/UrlInput" to="." method="_on_url_input_text_changed"]
+[connection signal="button_up" from="VBoxContainer/HBoxContainer2/DownloadPathButton" to="." method="_on_download_path_button_button_up"]
 [connection signal="text_changed" from="VBoxContainer/HBoxContainer2/DownloadPathInput" to="." method="_on_download_path_input_text_changed"]
+[connection signal="button_up" from="VBoxContainer/HBoxContainer3/BackupPathButton" to="." method="_on_backup_path_button_button_up"]
 [connection signal="text_changed" from="VBoxContainer/HBoxContainer3/BackupPathInput" to="." method="_on_backup_path_input_text_changed"]
 [connection signal="text_changed" from="VBoxContainer/HBoxContainer4/RemotePathInput" to="." method="_on_remote_path_input_text_changed"]
 [connection signal="text_changed" from="VBoxContainer/HBoxContainer5/DownloadArchiveFileNameInput" to="." method="_on_download_archive_file_name_input_text_changed"]
@@ -207,3 +194,5 @@ show_hidden_files = true
 [connection signal="toggled" from="VBoxContainer/HBoxContainer8/PreviewUnarchivedOnStartupInput" to="." method="_on_preview_unarchived_on_startup_input_toggled"]
 [connection signal="button_up" from="VBoxContainer/DeleteButton" to="." method="_on_delete_button_button_up"]
 [connection signal="confirmed" from="DeletePlaylistConfirmationDialog" to="." method="_on_delete_playlist_confirmation_dialog_confirmed"]
+[connection signal="dir_selected" from="DownloadPathDialog" to="." method="_on_download_path_dialog_dir_selected"]
+[connection signal="dir_selected" from="BackupUploadPathDialog" to="." method="_on_backup_upload_path_dialog_dir_selected"]
