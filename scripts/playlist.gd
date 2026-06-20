@@ -2,7 +2,7 @@ extends MarginContainer
 
 signal mark_as_archived_clicked(list : Dictionary)
 signal download_unarchived_videos_button_clicked(list : Dictionary)
-signal download_single_video_button_clicked(url : String, list : Dictionary, delete_download : bool)
+signal download_single_video_button_clicked(url : String, list : Dictionary, copy_to_backup : bool, copy_to_remote : bool, delete_download : bool)
 
 @export var folded_minimum_height := 50.0
 @export var unfolded_minimum_height := 450.0
@@ -13,9 +13,7 @@ signal download_single_video_button_clicked(url : String, list : Dictionary, del
 @onready var archive_confirmation_dialog := $ArchiveConfirmationDialog
 @onready var download_unarchived_videos_button := %DownloadUnarchivedVideosButton
 @onready var download_unarchived_videos_confirmation_dialog := $DownloadUnarchivedVideosConfirmationDialog
-@onready var download_single_video_window := %DownloadSingleVideoWindow
-@onready var single_video_url_input := %SingleVideoUrlInput
-@onready var delete_single_download_input := %DeleteSingleDownloadInput
+@onready var download_single_video_window := $DownloadSingleVideoWindow
 @onready var preview_scene := load("res://scenes/preview.tscn")
 
 var playlist : Dictionary:
@@ -50,14 +48,6 @@ func populate_preview_queue() -> void:
 		preview_node.title = title
 
 
-func _confirm_download_single_video() -> void:
-	if ! single_video_url_input.text:
-		console_signal_bus.add_error("No video URL provided")
-		return
-	download_single_video_button_clicked.emit(single_video_url_input.text, playlist, delete_single_download_input.button_pressed)
-	download_single_video_window.visible = false
-
-
 func _on_mark_as_archived_button_button_up():
 	archive_confirmation_dialog.dialog_text = "Are you sure you want to mark the " \
 		+ playlist.name + " playlist as archived? This will overwrite the archive file."
@@ -65,23 +55,18 @@ func _on_mark_as_archived_button_button_up():
 
 
 func _on_download_single_video_button_pressed():
-	single_video_url_input.text = ""
+	download_single_video_window.single_video_url_input.text = ""
 	download_single_video_window.title = "Download video using " + playlist.name + " options"
 	download_single_video_window.visible = true
-	single_video_url_input.grab_focus.call_deferred()
+	download_single_video_window.single_video_url_input.grab_focus.call_deferred()
 
 
 func _on_download_single_video_window_close_requested():
 	download_single_video_window.visible = false
-	single_video_url_input.text = ""
 
 
 func _on_archive_confirmation_dialog_confirmed():
 	mark_as_archived_clicked.emit(playlist)
-
-
-func _on_download_single_video_confirm_button_button_up():
-	_confirm_download_single_video()
 
 
 func _on_download_unarchived_videos_button_button_up(list : Dictionary):
@@ -99,5 +84,17 @@ func _on_foldable_container_folding_changed(is_folded: bool) -> void:
 		else Vector2(0, unfolded_minimum_height)
 
 
-func _on_single_video_url_input_text_submitted(_new_text):
-	_confirm_download_single_video()
+func _on_download_single_video_window_download_single_video_form_submitted(options: Dictionary) -> void:
+	if ! options.url:
+		console_signal_bus.add_error("No video URL provided")
+		return
+	
+	download_single_video_button_clicked.emit(
+		options.url,
+		playlist,
+		options.copy_to_backup,
+		options.copy_to_remote,
+		options.delete_download
+	)
+	
+	download_single_video_window.visible = false

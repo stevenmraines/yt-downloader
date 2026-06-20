@@ -161,9 +161,8 @@ func _on_playlist_unarchived_videos_downloaded(playlist : Dictionary) -> void:
 	process_queue.queue_download_playlist(playlist)
 
 
-func _on_playlist_single_video_downloaded(url : String, playlist : Dictionary, delete_download : bool) -> void:
-	# TODO Add checkboxes for copy to backup and remote
-	process_queue.queue_download_single_video(url, playlist, delete_download)
+func _on_playlist_single_video_downloaded(url : String, playlist : Dictionary, copy_to_backup : bool, copy_to_remote : bool, delete_download : bool) -> void:
+	process_queue.queue_download_single_video(url, playlist, copy_to_backup, copy_to_remote, delete_download)
 
 
 func _on_channel_folding_changed(is_folded : bool, container : FoldableContainer):

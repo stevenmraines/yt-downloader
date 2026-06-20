@@ -9,6 +9,7 @@
 [ext_resource type="StyleBox" uid="uid://b5cwgpibw4xld" path="res://styles/success_button_normal.tres" id="7_r2mhf"]
 [ext_resource type="StyleBox" uid="uid://cyjp84k0pbqf3" path="res://styles/success_button_pressed.tres" id="8_xais8"]
 [ext_resource type="StyleBox" uid="uid://caep6kc0fjn86" path="res://styles/success_button_hover.tres" id="9_8605i"]
+[ext_resource type="PackedScene" uid="uid://bjnaxn2kjnos3" path="res://scenes/download_single_video_window.tscn" id="10_xais8"]
 
 [node name="Playlist" type="MarginContainer" unique_id=1021777078]
 custom_minimum_size = Vector2(0, 450)
@@ -84,72 +85,8 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 30
 
-[node name="DownloadSingleVideoWindow" type="Window" parent="." unique_id=1321881364]
-unique_name_in_owner = true
-oversampling_override = 1.0
-title = "Download Single Video"
-initial_position = 2
-size = Vector2i(500, 100)
+[node name="DownloadSingleVideoWindow" parent="." unique_id=880697865 instance=ExtResource("10_xais8")]
 visible = false
-
-[node name="Control" type="Control" parent="DownloadSingleVideoWindow" unique_id=1455578856]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="MarginContainer" type="MarginContainer" parent="DownloadSingleVideoWindow/Control" unique_id=1771894487]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
-
-[node name="VBoxContainer" type="VBoxContainer" parent="DownloadSingleVideoWindow/Control/MarginContainer" unique_id=679740724]
-layout_mode = 2
-theme_override_constants/separation = 10
-
-[node name="HBoxContainer" type="HBoxContainer" parent="DownloadSingleVideoWindow/Control/MarginContainer/VBoxContainer" unique_id=1324636174]
-layout_mode = 2
-theme_override_constants/separation = 10
-
-[node name="Label" type="Label" parent="DownloadSingleVideoWindow/Control/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1674067674]
-layout_mode = 2
-text = "URL:"
-
-[node name="SingleVideoUrlInput" type="LineEdit" parent="DownloadSingleVideoWindow/Control/MarginContainer/VBoxContainer/HBoxContainer" unique_id=2136473963]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="HBoxContainer2" type="HBoxContainer" parent="DownloadSingleVideoWindow/Control/MarginContainer/VBoxContainer" unique_id=299667324]
-layout_mode = 2
-theme_override_constants/separation = 10
-
-[node name="Label" type="Label" parent="DownloadSingleVideoWindow/Control/MarginContainer/VBoxContainer/HBoxContainer2" unique_id=857574761]
-layout_mode = 2
-text = "Delete Download After Upload:"
-
-[node name="DeleteSingleDownloadInput" type="CheckBox" parent="DownloadSingleVideoWindow/Control/MarginContainer/VBoxContainer/HBoxContainer2" unique_id=1484555906]
-unique_name_in_owner = true
-layout_mode = 2
-button_pressed = true
-
-[node name="DownloadSingleVideoConfirmButton" type="Button" parent="DownloadSingleVideoWindow/Control/MarginContainer/VBoxContainer" unique_id=753713983]
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 6
-theme_override_styles/normal = ExtResource("7_r2mhf")
-theme_override_styles/pressed = ExtResource("8_xais8")
-theme_override_styles/hover = ExtResource("9_8605i")
-text = "Download"
 
 [node name="DownloadUnarchivedVideosConfirmationDialog" type="ConfirmationDialog" parent="." unique_id=43132464]
 oversampling_override = 1.0
@@ -164,7 +101,6 @@ size = Vector2i(976, 100)
 [connection signal="pressed" from="VBoxContainer/HBoxContainer7/DownloadSingleVideoButton" to="." method="_on_download_single_video_button_pressed"]
 [connection signal="button_up" from="VBoxContainer/HBoxContainer7/MarkAsArchivedButton" to="." method="_on_mark_as_archived_button_button_up"]
 [connection signal="close_requested" from="DownloadSingleVideoWindow" to="." method="_on_download_single_video_window_close_requested"]
-[connection signal="text_submitted" from="DownloadSingleVideoWindow/Control/MarginContainer/VBoxContainer/HBoxContainer/SingleVideoUrlInput" to="." method="_on_single_video_url_input_text_submitted"]
-[connection signal="button_up" from="DownloadSingleVideoWindow/Control/MarginContainer/VBoxContainer/DownloadSingleVideoConfirmButton" to="." method="_on_download_single_video_confirm_button_button_up"]
+[connection signal="download_single_video_form_submitted" from="DownloadSingleVideoWindow" to="." method="_on_download_single_video_window_download_single_video_form_submitted"]
 [connection signal="confirmed" from="DownloadUnarchivedVideosConfirmationDialog" to="." method="_on_download_unarchived_videos_confirmation_dialog_confirmed"]
 [connection signal="confirmed" from="ArchiveConfirmationDialog" to="." method="_on_archive_confirmation_dialog_confirmed"]

@@ -161,7 +161,7 @@ func queue_download_playlist(playlist : Dictionary) -> void:
 	queue_changed.emit(processes)
 
 
-func queue_download_single_video(url : String, playlist : Dictionary, delete_download : bool) -> void:
+func queue_download_single_video(url : String, playlist : Dictionary, copy_to_backup : bool, copy_to_remote : bool, delete_download : bool) -> void:
 	var process = Process.new()
 	process.process_name = Process.DOWNLOAD_SINGLE_VIDEO_PROCESS
 	# Overwrite the playlist's delete_download option for this single video
@@ -181,23 +181,25 @@ func queue_download_single_video(url : String, playlist : Dictionary, delete_dow
 	process.child_processes.append(get_filename_process)
 	add_child(get_filename_process)
 	
-	var copy_single_to_backup_process = Process.new()
-	copy_single_to_backup_process.process_name = Process.COPY_SINGLE_TO_BACKUP_PROCESS
-	copy_single_to_backup_process.playlist = playlist
-	copy_single_to_backup_process.progress_timer_timeout.connect(_on_process_progress_timer_timeout)
-	copy_single_to_backup_process.parent_process = process
-	processes.append(copy_single_to_backup_process)
-	process.child_processes.append(copy_single_to_backup_process)
-	add_child(copy_single_to_backup_process)
+	if copy_to_backup:
+		var copy_single_to_backup_process = Process.new()
+		copy_single_to_backup_process.process_name = Process.COPY_SINGLE_TO_BACKUP_PROCESS
+		copy_single_to_backup_process.playlist = playlist
+		copy_single_to_backup_process.progress_timer_timeout.connect(_on_process_progress_timer_timeout)
+		copy_single_to_backup_process.parent_process = process
+		processes.append(copy_single_to_backup_process)
+		process.child_processes.append(copy_single_to_backup_process)
+		add_child(copy_single_to_backup_process)
 	
-	var copy_single_to_remote_process = Process.new()
-	copy_single_to_remote_process.process_name = Process.COPY_SINGLE_TO_REMOTE_PROCESS
-	copy_single_to_remote_process.playlist = playlist
-	copy_single_to_remote_process.progress_timer_timeout.connect(_on_process_progress_timer_timeout)
-	copy_single_to_remote_process.parent_process = process
-	processes.append(copy_single_to_remote_process)
-	process.child_processes.append(copy_single_to_remote_process)
-	add_child(copy_single_to_remote_process)
+	if copy_to_remote:
+		var copy_single_to_remote_process = Process.new()
+		copy_single_to_remote_process.process_name = Process.COPY_SINGLE_TO_REMOTE_PROCESS
+		copy_single_to_remote_process.playlist = playlist
+		copy_single_to_remote_process.progress_timer_timeout.connect(_on_process_progress_timer_timeout)
+		copy_single_to_remote_process.parent_process = process
+		processes.append(copy_single_to_remote_process)
+		process.child_processes.append(copy_single_to_remote_process)
+		add_child(copy_single_to_remote_process)
 	
 	if delete_download:
 		var delete_single_download_process = Process.new()
