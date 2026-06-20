@@ -224,6 +224,12 @@ theme_override_styles/hover = ExtResource("3_d8l8o")
 icon = ExtResource("12_yeipv")
 expand_icon = true
 
+[node name="ExitConfirmationDialog" type="ConfirmationDialog" parent="." unique_id=1224107571]
+oversampling_override = 1.0
+initial_position = 2
+size = Vector2i(353, 100)
+dialog_text = "Are you sure you want to exit the program?"
+
 [node name="Settings" parent="." unique_id=1145338180 instance=ExtResource("12_atfn8")]
 visible = false
 
@@ -249,6 +255,7 @@ metadata/_custom_type_script = "uid://duwsp24mpyihb"
 [connection signal="item_selected" from="VBoxContainer/MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/HBoxContainer/ServersInput" to="." method="_on_servers_input_item_selected"]
 [connection signal="button_up" from="VBoxContainer/MarginContainer/HSplitContainer/ProcessQueueContainer/VBoxContainer/MarginContainer/VBoxContainer/PlayPauseButtonContainer/PauseButton" to="." method="_on_pause_button_button_up"]
 [connection signal="button_up" from="VBoxContainer/MarginContainer/HSplitContainer/ProcessQueueContainer/VBoxContainer/MarginContainer/VBoxContainer/PlayPauseButtonContainer/PlayButton" to="." method="_on_play_button_button_up"]
+[connection signal="confirmed" from="ExitConfirmationDialog" to="." method="_on_confirmation_dialog_confirmed"]
 [connection signal="close_requested" from="Settings" to="." method="_on_settings_close_requested"]
 [connection signal="settings_reset" from="Settings" to="." method="_on_settings_settings_reset"]
 [connection signal="settings_saved" from="Settings" to="." method="_on_settings_settings_saved"]

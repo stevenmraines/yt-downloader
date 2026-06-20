@@ -10,6 +10,7 @@ extends PanelContainer
 @onready var config_loader := $ConfigLoader
 @onready var yt_dlp_wrapper := $YtDlpWrapper
 @onready var process_queue := $ProcessQueue
+@onready var exit_confirmation_dialog := $ExitConfirmationDialog
 @onready var settings := $Settings
 @onready var channel_scene := load("res://scenes/channel.tscn")
 @onready var process_scene := load("res://scenes/process.tscn")
@@ -48,9 +49,8 @@ func _initialize() -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("Escape"):
-		# TODO Add a confirm dialog before exiting
 		get_viewport().set_input_as_handled()
-		get_tree().quit(0)
+		exit_confirmation_dialog.visible = true
 	elif event.is_action_pressed("Settings"):
 		get_viewport().set_input_as_handled()
 		settings.visible = true
@@ -155,7 +155,6 @@ func _on_playlist_marked_as_archived(playlist : Dictionary) -> void:
 
 
 func _on_playlist_unarchived_videos_downloaded(playlist : Dictionary) -> void:
-	# TODO Add checkboxes for copy to backup, remote, and delete download
 	# TODO Also add custom filename formatting string option
 	# TODO Add download range option
 	process_queue.queue_download_playlist(playlist)
@@ -245,3 +244,7 @@ func _on_servers_input_item_selected(index):
 		if server.name == servers_input.get_item_text(index):
 			selected_server = server
 			break
+
+
+func _on_confirmation_dialog_confirmed() -> void:
+	get_tree().quit(0)

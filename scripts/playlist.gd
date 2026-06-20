@@ -27,6 +27,8 @@ var playlist : Dictionary:
 		# Need to connect this here rather than in _ready because
 		# playlist won't be set yet when _ready is fired.
 		download_unarchived_videos_button.connect("button_up", _on_download_unarchived_videos_button_button_up.bind(playlist))
+		
+		download_single_video_window.playlist = playlist
 
 var console_signal_bus : ConsoleSignalBus
 var yt_dlp_wrapper : YtDlpWrapper

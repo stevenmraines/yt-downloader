@@ -14,6 +14,13 @@ var options = {
 	"delete_download": true,
 }
 
+var playlist : Dictionary:
+	set(value):
+		playlist = value
+		copy_to_backup_input.button_pressed = playlist.backup_upload_path != ""
+		copy_to_remote_input.button_pressed = playlist.remote_upload_path != ""
+		delete_single_download_input.button_pressed = playlist.delete_download
+
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_released("Escape"):
