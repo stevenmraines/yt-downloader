@@ -89,9 +89,13 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 		# TODO Add confirm dialog
 		visible = false
+	# TODO Maintain foldable states when saving/undoing/deleting/creating new
 	elif event.is_action_pressed("Save Settings"):
 		get_viewport().set_input_as_handled()
 		_on_save_config_button_button_up()
+	elif event.is_action_pressed("Undo Settings"):
+		get_viewport().set_input_as_handled()
+		_on_undo_changes_button_button_up()
 
 
 func _get_all_data() -> Dictionary:

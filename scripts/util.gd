@@ -87,8 +87,26 @@ static func scp(file : String, destination : String, ip : String, user : String,
 	], true)
 
 
+static func scp_multi(files : Array[String], destination : String, ip : String, user : String, ssh_key_path : String) -> int:
+	for i in files.size():
+		# Wrap filenames in quotes
+		files[i] = "\"%s\""
+	var files_str = " ".join(files)
+	return OS.create_process("cmd.exe", [
+		"/c", "scp -i \"%s\" %s %s@%s:%s" % [ssh_key_path, files_str, user, ip, destination]
+	], true)
+
+
 static func rm(file : String) -> int:
 	return OS.create_process("cmd.exe", ["/c", "del \"" + file + "\""], true)
+
+
+static func rm_multi(files : Array[String]) -> int:
+	for i in files.size():
+		# Wrap filenames in quotes
+		files[i] = "\"%s\""
+	var files_str = " ".join(files)
+	return OS.create_process("cmd.exe", ["/c", "del \"" + files_str + "\""], true)
 
 
 static func get_archive_file_path(playlist : Dictionary) -> String:

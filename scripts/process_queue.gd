@@ -46,31 +46,35 @@ func _start_queued_process(process : Process) -> void:
 	process.status = Process.ProcessState.IN_PROGRESS
 	var pid = -1
 	
-	if process.process_name == "update":
+	if process.process_name == Process.UPDATE_PROCESS:
 		pid = yt_dlp_wrapper.update()
-	elif process.process_name == "download_playlist":
+	elif process.process_name == Process.DOWNLOAD_PLAYLIST_PROCESS:
 		process.data.temp_file = OS.get_user_data_dir() + "/download_playlist_temp.txt"
 		pid = yt_dlp_wrapper.download_playlist(process)
-	elif process.process_name == "get_video_filenames":
+	elif process.process_name == Process.GET_VIDEO_FILENAMES_PROCESS:
 		_get_video_filenames(process)
-	elif process.process_name == "download_single_video":
+	elif process.process_name == Process.DOWNLOAD_SINGLE_VIDEO_PROCESS:
 		process.data.temp_file = OS.get_user_data_dir() + "/download_single_video_temp.txt"
 		pid = yt_dlp_wrapper.download_single_video(process)
-	elif process.process_name == "get_single_video_filename":
+	elif process.process_name == Process.GET_SINGLE_VIDEO_FILENAME_PROCESS:
 		_get_single_video_filename(process)
-	elif process.process_name == "mark_playlist_as_archived":
+	elif process.process_name == Process.MARK_PLAYLIST_AS_ARCHIVED_PROCESS:
 		process.data.temp_file = OS.get_user_data_dir() + "/mark_playlist_as_archived_temp.txt"
 		pid = yt_dlp_wrapper.mark_playlist_as_archived(process)
-	elif process.process_name == "populate_archive_file":
+	elif process.process_name == Process.POPULATE_ARCHIVE_FILE_PROCESS:
 		_populate_archive_file(process)
-	elif process.process_name == "copy_single_to_backup":
+	elif process.process_name == Process.COPY_SINGLE_TO_BACKUP_PROCESS:
 		pid = _copy_single_to_backup(process)
-	elif process.process_name == "copy_to_remote":
-		pid = _copy_to_remote(process)
-	elif process.process_name == "delete_download":
-		pid = _delete_download(process)
-	elif process.process_name == "copy_multiple_to_backup":
+	elif process.process_name == Process.COPY_SINGLE_TO_REMOTE_PROCESS:
+		pid = _copy_single_to_remote(process)
+	elif process.process_name == Process.DELETE_SINGLE_DOWNLOAD_PROCESS:
+		pid = _delete_single_download(process)
+	elif process.process_name == Process.COPY_MULTIPLE_TO_BACKUP_PROCESS:
 		pid = _copy_multiple_to_backup(process)
+	elif process.process_name == Process.COPY_MULTIPLE_TO_REMOTE_PROCESS:
+		pid = _copy_multiple_to_remote(process)
+	elif process.process_name == Process.DELETE_MULTIPLE_DOWNLOADS_PROCESS:
+		pid = _delete_multiple_downloads(process)
 	
 	process.pid = pid
 	
@@ -103,14 +107,14 @@ func kill_process(process : Process) -> void:
 
 func queue_download_playlist(playlist : Dictionary) -> void:
 	var process = Process.new()
-	process.process_name = "download_playlist"
+	process.process_name = Process.DOWNLOAD_PLAYLIST_PROCESS
 	process.playlist = playlist
 	process.progress_timer_timeout.connect(_on_process_progress_timer_timeout)
 	processes.append(process)
 	add_child(process)
 	
 	var get_video_filenames_process = Process.new()
-	get_video_filenames_process.process_name = "get_video_filenames"
+	get_video_filenames_process.process_name = Process.GET_VIDEO_FILENAMES_PROCESS
 	get_video_filenames_process.playlist = playlist
 	get_video_filenames_process.killable = false
 	get_video_filenames_process.parent_process = process
@@ -119,7 +123,7 @@ func queue_download_playlist(playlist : Dictionary) -> void:
 	add_child(get_video_filenames_process)
 	
 	var copy_multiple_to_backup_process = Process.new()
-	copy_multiple_to_backup_process.process_name = "copy_multiple_to_backup"
+	copy_multiple_to_backup_process.process_name = Process.COPY_MULTIPLE_TO_BACKUP_PROCESS
 	copy_multiple_to_backup_process.playlist = playlist
 	copy_multiple_to_backup_process.progress_timer_timeout.connect(_on_process_progress_timer_timeout)
 	copy_multiple_to_backup_process.parent_process = process
@@ -127,16 +131,32 @@ func queue_download_playlist(playlist : Dictionary) -> void:
 	process.child_processes.append(copy_multiple_to_backup_process)
 	add_child(copy_multiple_to_backup_process)
 	
-	# TODO queue remote
-	# TODO queue delete
+	var copy_multiple_to_remote_process = Process.new()
+	copy_multiple_to_remote_process.process_name = Process.COPY_MULTIPLE_TO_REMOTE_PROCESS
+	copy_multiple_to_remote_process.playlist = playlist
+	copy_multiple_to_remote_process.progress_timer_timeout.connect(_on_process_progress_timer_timeout)
+	copy_multiple_to_remote_process.parent_process = process
+	processes.append(copy_multiple_to_remote_process)
+	process.child_processes.append(copy_multiple_to_remote_process)
+	add_child(copy_multiple_to_remote_process)
 	
-	console_signal_bus.add_line("Queueing process download_playlist")
+	if process.playlist.delete_download:
+		var delete_multiple_downloads_process = Process.new()
+		delete_multiple_downloads_process.process_name = Process.DELETE_MULTIPLE_DOWNLOADS_PROCESS
+		delete_multiple_downloads_process.playlist = playlist
+		delete_multiple_downloads_process.progress_timer_timeout.connect(_on_process_progress_timer_timeout)
+		delete_multiple_downloads_process.parent_process = process
+		processes.append(delete_multiple_downloads_process)
+		process.child_processes.append(delete_multiple_downloads_process)
+		add_child(delete_multiple_downloads_process)
+	
+	console_signal_bus.add_line("Queueing process %s" % process.process_name)
 	queue_changed.emit(processes)
 
 
 func queue_download_single_video(url : String, playlist : Dictionary, delete_download : bool) -> void:
 	var process = Process.new()
-	process.process_name = "download_single_video"
+	process.process_name = Process.DOWNLOAD_SINGLE_VIDEO_PROCESS
 	# Overwrite the playlist's delete_download option for this single video
 	playlist.delete_download = delete_download
 	playlist.url = url
@@ -146,7 +166,7 @@ func queue_download_single_video(url : String, playlist : Dictionary, delete_dow
 	add_child(process)
 	
 	var get_filename_process = Process.new()
-	get_filename_process.process_name = "get_single_video_filename"
+	get_filename_process.process_name = Process.GET_SINGLE_VIDEO_FILENAME_PROCESS
 	get_filename_process.playlist = playlist
 	get_filename_process.killable = false
 	get_filename_process.parent_process = process
@@ -155,7 +175,7 @@ func queue_download_single_video(url : String, playlist : Dictionary, delete_dow
 	add_child(get_filename_process)
 	
 	var copy_single_to_backup_process = Process.new()
-	copy_single_to_backup_process.process_name = "copy_single_to_backup"
+	copy_single_to_backup_process.process_name = Process.COPY_SINGLE_TO_BACKUP_PROCESS
 	copy_single_to_backup_process.playlist = playlist
 	copy_single_to_backup_process.progress_timer_timeout.connect(_on_process_progress_timer_timeout)
 	copy_single_to_backup_process.parent_process = process
@@ -163,58 +183,57 @@ func queue_download_single_video(url : String, playlist : Dictionary, delete_dow
 	process.child_processes.append(copy_single_to_backup_process)
 	add_child(copy_single_to_backup_process)
 	
-	var copy_to_remote_process = Process.new()
-	copy_to_remote_process.process_name = "copy_to_remote"
-	copy_to_remote_process.playlist = playlist
-	copy_to_remote_process.progress_timer_timeout.connect(_on_process_progress_timer_timeout)
-	copy_to_remote_process.parent_process = process
-	processes.append(copy_to_remote_process)
-	process.child_processes.append(copy_to_remote_process)
-	add_child(copy_to_remote_process)
+	var copy_single_to_remote_process = Process.new()
+	copy_single_to_remote_process.process_name = Process.COPY_SINGLE_TO_REMOTE_PROCESS
+	copy_single_to_remote_process.playlist = playlist
+	copy_single_to_remote_process.progress_timer_timeout.connect(_on_process_progress_timer_timeout)
+	copy_single_to_remote_process.parent_process = process
+	processes.append(copy_single_to_remote_process)
+	process.child_processes.append(copy_single_to_remote_process)
+	add_child(copy_single_to_remote_process)
 	
 	if delete_download:
-		var delete_download_process = Process.new()
-		delete_download_process.process_name = "delete_download"
-		delete_download_process.playlist = playlist
-		delete_download_process.progress_timer_timeout.connect(_on_process_progress_timer_timeout)
-		delete_download_process.parent_process = process
-		processes.append(delete_download_process)
-		process.child_processes.append(delete_download_process)
-		add_child(delete_download_process)
+		var delete_single_download_process = Process.new()
+		delete_single_download_process.process_name = Process.DELETE_SINGLE_DOWNLOAD_PROCESS
+		delete_single_download_process.playlist = playlist
+		delete_single_download_process.progress_timer_timeout.connect(_on_process_progress_timer_timeout)
+		delete_single_download_process.parent_process = process
+		processes.append(delete_single_download_process)
+		process.child_processes.append(delete_single_download_process)
+		add_child(delete_single_download_process)
 	
-	console_signal_bus.add_line("Queueing process download_single_video")
+	console_signal_bus.add_line("Queueing process %s" % process.process_name)
 	queue_changed.emit(processes)
 
 
 func queue_mark_playlist_as_archived(playlist : Dictionary) -> void:
 	var process = Process.new()
-	process.process_name = "mark_playlist_as_archived"
+	process.process_name = Process.MARK_PLAYLIST_AS_ARCHIVED_PROCESS
 	process.playlist = playlist
 	process.progress_timer_timeout.connect(_on_process_progress_timer_timeout)
 	processes.append(process)
 	add_child(process)
-	console_signal_bus.add_line("Queueing process mark_playlist_as_archived")
 	
 	var child_process = Process.new()
-	child_process.process_name = "populate_archive_file"
+	child_process.process_name = Process.POPULATE_ARCHIVE_FILE_PROCESS
 	child_process.killable = false
 	child_process.playlist = playlist
 	child_process.parent_process = process
 	processes.append(child_process)
 	add_child(child_process)
-	console_signal_bus.add_line("Queueing process populate_archive_file")
 	process.child_processes.append(child_process)
 	
+	console_signal_bus.add_line("Queueing process %s" % process.process_name)
 	queue_changed.emit(processes)
 
 
 func queue_update() -> void:
 	var process = Process.new()
-	process.process_name = "update"
+	process.process_name = Process.UPDATE_PROCESS
 	process.progress_timer_timeout.connect(_on_process_progress_timer_timeout)
 	processes.append(process)
 	add_child(process)
-	console_signal_bus.add_line("Queueing process update")
+	console_signal_bus.add_line("Queueing process %s" % process.process_name)
 	queue_changed.emit(processes)
 
 
@@ -281,7 +300,9 @@ func _get_single_video_filename(process : Process) -> void:
 	var filename_regex = RegEx.new()
 	filename_regex.compile(r"^\[Merger\] Merging formats into \"(?<filename>.+\.mp4)\"")
 	var archived_regex = RegEx.new()
-	archived_regex.compile(r"^\[download\] .+: has already been recorded in the archive")
+	archived_regex.compile(r"^\[download\] (?<id>.+): (?<title>.+) has already been recorded in the archive")
+	var downloaded_regex = RegEx.new()
+	downloaded_regex.compile(r"^\[download\] (?<filename>.+) has already been downloaded")
 	
 	for line in content.split("\n"):
 		line = line.strip_edges()
@@ -291,15 +312,20 @@ func _get_single_video_filename(process : Process) -> void:
 		
 		var result1 = filename_regex.search(line)
 		var result2 = archived_regex.search(line)
+		var result3 = downloaded_regex.search(line)
 		
 		if result1:
 			process.parent_process.data.filename = result1.get_string("filename")
 			console_signal_bus.add_line("Downloaded video: %s" % process.parent_process.data.filename)
 			DirAccess.remove_absolute(temp_file)
 			process.status = Process.ProcessState.COMPLETE
-		
-		if result2:
-			console_signal_bus.add_warning("Download skipped, video already archived")
+		elif result2:
+			console_signal_bus.add_warning("Download %s skipped, video already archived" % result2.get_string("title"))
+			DirAccess.remove_absolute(temp_file)
+			for child_process in process.parent_process.child_processes:
+				child_process.status = Process.ProcessState.SKIPPED
+		elif result3:
+			console_signal_bus.add_warning("Download %s skipped, video already downloaded" % result2.get_string("filename"))
 			DirAccess.remove_absolute(temp_file)
 			for child_process in process.parent_process.child_processes:
 				child_process.status = Process.ProcessState.SKIPPED
@@ -322,11 +348,12 @@ func _get_video_filenames(process : Process) -> void:
 	
 	var content = file.get_as_text()
 	file.close()
-	# TODO Handle when file already exists: [download] C:\Users\steve\Videos\Astrogoblin\the_repair_shop\2025-07-01 Repair_Shop_e1_-_UNCUT.mp4 has already been downloaded
 	var filename_regex = RegEx.new()
 	filename_regex.compile(r"^\[Merger\] Merging formats into \"(?<filename>.+\.mp4)\"")
 	var archived_regex = RegEx.new()
 	archived_regex.compile(r"^\[download\] (?<id>.+): (?<title>.+) has already been recorded in the archive")
+	var downloaded_regex = RegEx.new()
+	downloaded_regex.compile(r"^\[download\] (?<filename>.+) has already been downloaded")
 	var file_parsed = false
 	
 	for line in content.split("\n"):
@@ -337,6 +364,7 @@ func _get_video_filenames(process : Process) -> void:
 		
 		var result1 = filename_regex.search(line)
 		var result2 = archived_regex.search(line)
+		var result3 = downloaded_regex.search(line)
 		
 		if result1:
 			file_parsed = true
@@ -346,10 +374,12 @@ func _get_video_filenames(process : Process) -> void:
 			process.parent_process.data.filenames.append(filename)
 			console_signal_bus.add_line("Downloaded video: %s" % filename)
 			process.status = Process.ProcessState.COMPLETE
-		
-		if result2:
+		elif result2:
 			file_parsed = true
 			console_signal_bus.add_warning("Download %s skipped, video already archived" % result2.get_string("title"))
+		elif result3:
+			file_parsed = true
+			console_signal_bus.add_warning("Download %s skipped, video already downloaded" % result2.get_string("filename"))
 	
 	if ! file_parsed:
 		console_signal_bus.add_error("Could not parse downloaded video filename")
@@ -402,7 +432,7 @@ func _copy_multiple_to_backup(process : Process) -> int:
 	return pid
 
 
-func _copy_to_remote(process : Process) -> int:
+func _copy_single_to_remote(process : Process) -> int:
 	var filename = process.parent_process.data.filename
 	var remote_path = process.playlist.remote_upload_path
 	var pid = -1
@@ -415,12 +445,36 @@ func _copy_to_remote(process : Process) -> int:
 	return pid
 
 
-func _delete_download(process : Process) -> int:
+func _copy_multiple_to_remote(process : Process) -> int:
+	var filenames = process.parent_process.data.filenames
+	var remote_path = process.playlist.remote_upload_path
+	var pid = -1
+	
+	if remote_path:
+		pid = Util.scp_multi(filenames, remote_path, selected_server.ip, selected_server.user, selected_server.ssh_key_path)
+		if pid == -1:
+			console_signal_bus.add_error("Error uploading to %s, process could not be created" % remote_path)
+	
+	return pid
+
+
+func _delete_single_download(process : Process) -> int:
 	var download_path = process.playlist.download_path
 	var filename = process.parent_process.data.filename
 	var pid = Util.rm(filename)
 	
 	if pid == -1:
 		console_signal_bus.add_error("Error deleting download from %s, process could not be created" % download_path)
+	
+	return pid
+
+
+func _delete_multiple_downloads(process : Process) -> int:
+	var download_path = process.playlist.download_path
+	var filenames = process.parent_process.data.filenames
+	var pid = Util.rm_multi(filenames)
+	
+	if pid == -1:
+		console_signal_bus.add_error("Error deleting downloads from %s, process could not be created" % download_path)
 	
 	return pid
