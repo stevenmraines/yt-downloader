@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://ckgdhixfte4lu"]
 
 [ext_resource type="Script" uid="uid://bv4vvsk2pwjqc" path="res://scripts/path_settings.gd" id="1_wf3h5"]
+[ext_resource type="Texture2D" uid="uid://b63se3blxpcee" path="res://assets/youtube-logo.png" id="2_24ulp"]
 
 [node name="PathSettings" type="HBoxContainer" unique_id=837135334]
 anchors_preset = 14
@@ -16,7 +17,17 @@ size_flags_vertical = 4
 theme_override_constants/separation = 20
 script = ExtResource("1_wf3h5")
 
-[node name="NameLabel" type="Label" parent="." unique_id=1662971384]
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=836601442]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="TextureRect" type="TextureRect" parent="HBoxContainer" unique_id=1316612303]
+layout_mode = 2
+texture = ExtResource("2_24ulp")
+expand_mode = 2
+stretch_mode = 4
+
+[node name="NameLabel" type="Label" parent="HBoxContainer" unique_id=1662971384]
 unique_name_in_owner = true
 layout_mode = 2
 
