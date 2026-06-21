@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://chlnbf3x14pw8" path="res://scripts/download_playlist_window.gd" id="1_yspac"]
 [ext_resource type="StyleBox" uid="uid://cyjp84k0pbqf3" path="res://styles/success_button_pressed.tres" id="2_yspac"]
 [ext_resource type="StyleBox" uid="uid://caep6kc0fjn86" path="res://styles/success_button_hover.tres" id="3_scfh5"]
+[ext_resource type="Texture2D" uid="uid://cyjon24xssqf2" path="res://assets/download-playlist.png" id="5_scfh5"]
 
 [node name="DownloadPlaylistWindow" type="Window" unique_id=174133340]
 oversampling_override = 1.0
@@ -56,16 +57,33 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Button" type="Button" parent="Control/MarginContainer/VBoxContainer" unique_id=808480935]
+[node name="Control" type="Control" parent="Control/MarginContainer/VBoxContainer" unique_id=1527793022]
 layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Button" type="Button" parent="Control/MarginContainer/VBoxContainer/Control" unique_id=808480935]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -73.0
+offset_top = -14.0
+offset_right = 73.0
+offset_bottom = 14.0
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_horizontal = 4
 theme_override_styles/normal = ExtResource("1_ihaxv")
 theme_override_styles/pressed = ExtResource("2_yspac")
 theme_override_styles/hover = ExtResource("3_scfh5")
 text = "Download"
+icon = ExtResource("5_scfh5")
+expand_icon = true
 
 [connection signal="text_changed" from="Control/MarginContainer/VBoxContainer/HBoxContainer/StartInput" to="." method="_on_start_input_text_changed"]
 [connection signal="text_submitted" from="Control/MarginContainer/VBoxContainer/HBoxContainer/StartInput" to="." method="_on_text_submitted"]
 [connection signal="text_changed" from="Control/MarginContainer/VBoxContainer/HBoxContainer/EndInput" to="." method="_on_end_input_text_changed"]
 [connection signal="text_submitted" from="Control/MarginContainer/VBoxContainer/HBoxContainer/EndInput" to="." method="_on_text_submitted"]
-[connection signal="button_up" from="Control/MarginContainer/VBoxContainer/Button" to="." method="_on_button_button_up"]
+[connection signal="button_up" from="Control/MarginContainer/VBoxContainer/Control/Button" to="." method="_on_button_button_up"]
