@@ -50,7 +50,7 @@ func _start_queued_process(process : Process) -> void:
 		pid = yt_dlp_wrapper.update()
 	elif process.process_name == Process.DOWNLOAD_PLAYLIST_PROCESS:
 		process.data.temp_file = OS.get_user_data_dir() + "/download_playlist_temp.txt"
-		pid = yt_dlp_wrapper.download_playlist(process)
+		pid = yt_dlp_wrapper.download_playlist(process, process.data.start_index, process.data.end_index)
 	elif process.process_name == Process.GET_VIDEO_FILENAMES_PROCESS:
 		_get_video_filenames(process)
 	elif process.process_name == Process.DOWNLOAD_SINGLE_VIDEO_PROCESS:
@@ -112,10 +112,12 @@ func kill_process(process : Process) -> void:
 	queue_changed.emit(processes)
 
 
-func queue_download_playlist(playlist : Dictionary, start_index : String, end_index : String) -> void:
+func queue_download_playlist(playlist : Dictionary, start_index : int, end_index : int) -> void:
 	var process = Process.new()
 	process.process_name = Process.DOWNLOAD_PLAYLIST_PROCESS
 	process.playlist = playlist
+	process.data.start_index = start_index
+	process.data.end_index = end_index
 	process.progress_timer_timeout.connect(_on_process_progress_timer_timeout)
 	processes.append(process)
 	add_child(process)

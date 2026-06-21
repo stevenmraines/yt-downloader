@@ -1,7 +1,7 @@
 extends MarginContainer
 
 signal mark_as_archived_clicked(list : Dictionary)
-signal download_unarchived_videos_button_clicked(list : Dictionary, start_index : String, end_index : String)
+signal download_unarchived_videos_button_clicked(list : Dictionary, start_index : int, end_index : int)
 signal download_single_video_button_clicked(url : String, list : Dictionary, copy_to_backup : bool, copy_to_remote : bool, delete_download : bool)
 
 @export var folded_minimum_height := 50.0
@@ -93,5 +93,5 @@ func _on_download_single_video_window_download_single_video_form_submitted(optio
 	download_single_video_window.visible = false
 
 
-func _on_download_playlist_window_download_clicked(start_index: String, end_index: String) -> void:
+func _on_download_playlist_window_download_clicked(start_index: int, end_index: int) -> void:
 	download_unarchived_videos_button_clicked.emit(playlist, start_index, end_index)
