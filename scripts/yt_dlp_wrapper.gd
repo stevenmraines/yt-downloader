@@ -29,10 +29,6 @@ func _ready() -> void:
 
 
 func _run_command(args : PackedStringArray) -> int:
-	if yt_dlp_path == "":
-		console_signal_bus.add_error("yt-dlp executable path not provided")
-		return -1
-	print(" ".join(args))
 	return OS.create_process(yt_dlp_path, args, true)
 
 

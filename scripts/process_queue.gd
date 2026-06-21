@@ -290,7 +290,6 @@ func _populate_archive_file(process : Process) -> void:
 	
 	out.close()
 	process.status = Process.ProcessState.COMPLETE
-	DirAccess.remove_absolute(temp_file)
 
 
 # TODO I guess this won't be killable, unless we use multithreading or something, idk
@@ -326,16 +325,13 @@ func _get_single_video_filename(process : Process) -> void:
 		if result1:
 			process.parent_process.data.filename = result1.get_string("filename")
 			console_signal_bus.add_line("Downloaded video: %s" % process.parent_process.data.filename)
-			DirAccess.remove_absolute(temp_file)
 			process.status = Process.ProcessState.COMPLETE
 		elif result2:
 			console_signal_bus.add_warning("Download %s skipped, video already archived" % result2.get_string("title"))
-			DirAccess.remove_absolute(temp_file)
 			for child_process in process.parent_process.child_processes:
 				child_process.status = Process.ProcessState.SKIPPED
 		elif result3:
 			console_signal_bus.add_warning("Download %s skipped, video already downloaded" % result3.get_string("filename"))
-			DirAccess.remove_absolute(temp_file)
 			for child_process in process.parent_process.child_processes:
 				child_process.status = Process.ProcessState.SKIPPED
 	
@@ -402,7 +398,6 @@ func _get_video_filenames(process : Process) -> void:
 	elif process.parent_process.data.filenames.size() > 0:
 		console_signal_bus.add_line("%d new videos found" % process.parent_process.data.filenames.size())
 		process.status = Process.ProcessState.COMPLETE
-		DirAccess.remove_absolute(temp_file)
 
 
 func _copy_single_to_backup(process : Process) -> int:
