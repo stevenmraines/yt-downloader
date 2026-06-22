@@ -29,9 +29,9 @@ theme_override_constants/separation = 10
 
 [node name="IsChildProcessIcon" type="TextureRect" parent="VBoxContainer/HBoxContainer" unique_id=926696738]
 unique_name_in_owner = true
-self_modulate = Color(0.31667995, 0.78, 0.14819999, 1)
 custom_minimum_size = Vector2(25, 25)
 layout_mode = 2
+size_flags_vertical = 0
 tooltip_text = "This is a child process."
 texture = ExtResource("2_ify2r")
 expand_mode = 1
