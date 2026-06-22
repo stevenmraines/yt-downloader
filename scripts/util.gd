@@ -73,7 +73,7 @@ static func cp(file : String, destination : String) -> int:
 	return OS.create_process("cmd.exe", ["/c", "copy \"" + file + "\" \"" + destination + "\""], true)
 
 
-static func cp_multi(files : Array[String], origin : String, destination : String) -> int:
+static func cp_multi(files : Array, origin : String, destination : String) -> int:
 	for i in files.size():
 		# Get filename without path and wrap it in quotes
 		files[i] = "\"%s\"" % files[i].get_slice(origin + "/", 1)
@@ -87,7 +87,7 @@ static func scp(file : String, destination : String, ip : String, user : String,
 	], true)
 
 
-static func scp_multi(files : Array[String], destination : String, ip : String, user : String, ssh_key_path : String) -> int:
+static func scp_multi(files : Array, destination : String, ip : String, user : String, ssh_key_path : String) -> int:
 	for i in files.size():
 		# Wrap filenames in quotes
 		files[i] = "\"%s\""
@@ -101,7 +101,7 @@ static func rm(file : String) -> int:
 	return OS.create_process("cmd.exe", ["/c", "del \"" + file + "\""], true)
 
 
-static func rm_multi(files : Array[String]) -> int:
+static func rm_multi(files : Array) -> int:
 	for i in files.size():
 		# Wrap filenames in quotes
 		files[i] = "\"%s\""

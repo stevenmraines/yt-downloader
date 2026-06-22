@@ -421,7 +421,7 @@ func _copy_single_to_backup(process : Process) -> int:
 
 
 func _copy_multiple_to_backup(process : Process) -> int:
-	var filenames = process.parent_process.data.filenames as Array[String]
+	var filenames = process.parent_process.data.filenames
 	var download_path = process.playlist.download_path
 	var backup_path = process.playlist.backup_upload_path
 	var pid = -1
@@ -453,7 +453,7 @@ func _copy_single_to_remote(process : Process) -> int:
 
 
 func _copy_multiple_to_remote(process : Process) -> int:
-	var filenames = process.parent_process.data.filenames as Array[String]
+	var filenames = process.parent_process.data.filenames
 	var remote_path = process.playlist.remote_upload_path
 	var pid = -1
 	
@@ -478,7 +478,7 @@ func _delete_single_download(process : Process) -> int:
 
 func _delete_multiple_downloads(process : Process) -> int:
 	var download_path = process.playlist.download_path
-	var filenames = process.parent_process.data.filenames as Array[String]
+	var filenames = process.parent_process.data.filenames
 	var pid = Util.rm_multi(filenames)
 	
 	if pid == -1:
