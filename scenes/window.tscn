@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://2866mpf2bn32"]
 
 [ext_resource type="Script" uid="uid://bbh3xqmfw1vbe" path="res://scripts/window.gd" id="1_to7fh"]
+[ext_resource type="Texture2D" uid="uid://ljkqr67s2uhq" path="res://assets/server.png" id="2_4hy5e"]
 [ext_resource type="Script" uid="uid://cq6rkpt6rlx77" path="res://scripts/console_text_input.gd" id="2_qnju7"]
 [ext_resource type="StyleBox" uid="uid://co4550p76db2k" path="res://styles/default_button_pressed.tres" id="2_shje2"]
 [ext_resource type="Script" uid="uid://bsefncd1fxkyf" path="res://scripts/console_signal_bus.gd" id="2_to7fh"]
@@ -77,9 +78,19 @@ theme_override_constants/separation = 10
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer" unique_id=1060766533]
 layout_mode = 2
-theme_override_constants/separation = 20
 
-[node name="Label" type="Label" parent="VBoxContainer/MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/HBoxContainer" unique_id=1052712187]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/HBoxContainer" unique_id=1221476516]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/HBoxContainer/HBoxContainer" unique_id=1447908328]
+layout_mode = 2
+size_flags_horizontal = 0
+texture = ExtResource("2_4hy5e")
+expand_mode = 2
+stretch_mode = 4
+
+[node name="Label" type="Label" parent="VBoxContainer/MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/HBoxContainer/HBoxContainer" unique_id=1052712187]
 layout_mode = 2
 text = "Server:"
 
@@ -174,6 +185,7 @@ grow_vertical = 2
 
 [node name="Label" type="Label" parent="VBoxContainer/MarginContainer/HSplitContainer/ProcessQueueContainer/VBoxContainer" unique_id=791037001]
 layout_mode = 2
+size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 22
 text = "Process Queue"
 horizontal_alignment = 1
