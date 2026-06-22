@@ -1,7 +1,7 @@
 extends FoldableContainer
 
 signal playlist_marked_as_archived(list : Dictionary)
-signal playlist_unarchived_videos_downloaded(list : Dictionary, start_index : int, end_index : int)
+signal playlist_unarchived_videos_downloaded(list : Dictionary, start_index : String, end_index : String)
 signal playlist_single_video_downloaded(url : String, list : Dictionary, copy_to_backup : bool, copy_to_remote : bool, delete_download : bool)
 
 @export var channel_name := "":
@@ -42,7 +42,7 @@ func _on_playlist_mark_as_archived_clicked(list : Dictionary) -> void:
 	playlist_marked_as_archived.emit(list)
 
 
-func _on_download_unarchived_videos_button_clicked(list : Dictionary, start_index : int, end_index : int) -> void:
+func _on_download_unarchived_videos_button_clicked(list : Dictionary, start_index : String, end_index : String) -> void:
 	playlist_unarchived_videos_downloaded.emit(list, start_index, end_index)
 
 

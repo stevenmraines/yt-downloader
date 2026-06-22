@@ -51,7 +51,7 @@ func mark_playlist_as_archived(process : Process) -> int:
 	return OS.create_process("cmd.exe", args, true)
 
 
-func download_playlist(process : Process, start_index : int, end_index : int) -> int:
+func download_playlist(process : Process, start_index : String, end_index : String) -> int:
 	var archive_file = Util.get_archive_file_path(process.playlist)
 	var output = process.playlist.download_path + "/%(upload_date>%Y-%m-%d)s %(title)s.%(ext)s"
 	var temp_file = process.data.temp_file
@@ -69,7 +69,7 @@ func download_playlist(process : Process, start_index : int, end_index : int) ->
 		temp_file
 	])
 	
-	if start_index > -1 and end_index > -1:
+	if start_index != "" and end_index != "":
 		command_str = ("\"%s\" \"%s\" %s \"%s\" %s %s %s \"%s\" \"%s\" %s \"mp4\" %s \"%s\" %s %d:%d > \"%s\"" % [
 			yt_dlp_path,
 			process.playlist.url,
@@ -79,7 +79,7 @@ func download_playlist(process : Process, start_index : int, end_index : int) ->
 			OPTS.output, output,
 			OPTS.output_format,
 			OPTS.format, FORMAT_STRING,
-			OPTS.items, start_index, end_index,
+			OPTS.items, start_index.to_int(), end_index.to_int(),
 			temp_file
 		])
 		console_signal_bus.add_line("Downloading playlist %s (%s) items %d to %d" % [process.playlist.name, process.playlist.channel, start_index, end_index])

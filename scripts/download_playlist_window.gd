@@ -1,13 +1,13 @@
 extends Window
 
-signal download_clicked(start_index : int, end_index : int)
+signal download_clicked(start_index : String, end_index : String)
 
 # TODO Give focus when made visible
 @onready var start_input := %StartInput
 @onready var end_input := %EndInput
 
-var start_index := "-1"
-var end_index := "-1"
+var start_index := ""
+var end_index := ""
 
 var playlist : Dictionary:
 	set(value):
@@ -30,10 +30,10 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _reset_indices() -> void:
-	start_index = "-1"
-	start_input.text = "-1"
-	end_index = "-1"
-	end_input.text = "-1"
+	start_index = ""
+	start_input.text = ""
+	end_index = ""
+	end_input.text = ""
 
 
 func _on_start_input_text_changed(new_text: String) -> void:
@@ -53,25 +53,30 @@ func _on_text_submitted(_new_text : String) -> void:
 
 
 func _submit_form() -> void:
-	# FIXME Figure this shit out
 	if start_index == "" and end_index == "":
 		download_clicked.emit(start_index, end_index)
+		return
 	
-	if ! start_index.is_valid_int() or ! end_index.is_valid_int():
-		if ! start_index.is_valid_int():
+	if (start_index == "" and end_index != "") or (start_index != "" and end_index == ""):
+		console_signal_bus.add_error("Invalid start and end index values: %s to %s" % [start_index, end_index])
+		return
+	
+	# If anything was submitted, validate start and end as ints but emit them as strings
+	var start_is_valid_int = start_index.is_valid_int()
+	var end_is_valid_int = end_index.is_valid_int()
+	
+	if ! start_is_valid_int or ! end_is_valid_int:
+		if ! start_is_valid_int:
 			console_signal_bus.add_error("Invalid start index value given: %s" % start_index)
-		if ! end_index.is_valid_int():
+		if ! end_is_valid_int:
 			console_signal_bus.add_error("Invalid end index value given: %s" % end_index)
 		return
 	
-	var start = start_index.to_int() if start_index != "" else null
-	var end = end_index.to_int() if end_index != "" else null
-	
-	if end < start:
+	if end_index.to_int() < start_index.to_int():
 		console_signal_bus.add_error("End index must be greater than start index: %s to %s is invalid" % [start_index, end_index])
 		return
 	
-	download_clicked.emit(start, end)
+	download_clicked.emit(start_index, end_index)
 
 
 func _on_visibility_changed() -> void:

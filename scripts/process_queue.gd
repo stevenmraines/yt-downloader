@@ -112,7 +112,7 @@ func kill_process(process : Process) -> void:
 	queue_changed.emit(processes)
 
 
-func queue_download_playlist(playlist : Dictionary, start_index : int, end_index : int) -> void:
+func queue_download_playlist(playlist : Dictionary, start_index : String, end_index : String) -> void:
 	var process = Process.new()
 	process.process_name = Process.DOWNLOAD_PLAYLIST_PROCESS
 	process.playlist = playlist
