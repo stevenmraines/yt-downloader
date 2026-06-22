@@ -55,6 +55,7 @@ func _on_text_submitted(_new_text : String) -> void:
 func _submit_form() -> void:
 	if start_index == "" and end_index == "":
 		download_clicked.emit(start_index, end_index)
+		visible = false
 		return
 	
 	if (start_index == "" and end_index != "") or (start_index != "" and end_index == ""):
@@ -77,6 +78,7 @@ func _submit_form() -> void:
 		return
 	
 	download_clicked.emit(start_index, end_index)
+	visible = false
 
 
 func _on_visibility_changed() -> void:
