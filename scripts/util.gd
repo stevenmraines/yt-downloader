@@ -1,5 +1,13 @@
 class_name Util extends Object
 
+static var _id := 0
+
+
+static func get_uid() -> int:
+	var id = _id
+	_id += 1
+	return id
+
 
 static func _get_windows_processes() -> Dictionary:
 	var console_output = []
@@ -65,14 +73,41 @@ static func cp(file : String, destination : String) -> int:
 	return OS.create_process("cmd.exe", ["/c", "copy \"" + file + "\" \"" + destination + "\""], true)
 
 
+static func cp_multi(files : Array, origin : String, destination : String) -> int:
+	for i in files.size():
+		# Get filename without path and wrap it in quotes
+		files[i] = "\"%s\"" % files[i].get_slice(origin + "/", 1)
+	var files_str = " ".join(files)
+	return OS.create_process("cmd.exe", ["/c", "robocopy \"%s\" \"%s\" %s" % [origin, destination, files_str]], true)
+
+
+# TODO Skip download if it already exists at the destination? Might need to use rsync with --ignore-existing
 static func scp(file : String, destination : String, ip : String, user : String, ssh_key_path : String) -> int:
 	return OS.create_process("cmd.exe", [
 		"/c", "scp -i \"%s\" \"%s\" %s@%s:%s" % [ssh_key_path, file, user, ip, destination]
 	], true)
 
 
+static func scp_multi(files : Array, destination : String, ip : String, user : String, ssh_key_path : String) -> int:
+	for i in files.size():
+		# Wrap filenames in quotes
+		files[i] = "\"%s\""
+	var files_str = " ".join(files)
+	return OS.create_process("cmd.exe", [
+		"/c", "scp -i \"%s\" %s %s@%s:%s" % [ssh_key_path, files_str, user, ip, destination]
+	], true)
+
+
 static func rm(file : String) -> int:
 	return OS.create_process("cmd.exe", ["/c", "del \"" + file + "\""], true)
+
+
+static func rm_multi(files : Array) -> int:
+	for i in files.size():
+		# Wrap filenames in quotes
+		files[i] = "\"%s\""
+	var files_str = " ".join(files)
+	return OS.create_process("cmd.exe", ["/c", "del \"" + files_str + "\""], true)
 
 
 static func get_archive_file_path(playlist : Dictionary) -> String:

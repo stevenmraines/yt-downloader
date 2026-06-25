@@ -1,0 +1,147 @@
+[gd_scene format=3 uid="uid://cd70rxweyd5"]
+
+[ext_resource type="StyleBox" uid="uid://co4550p76db2k" path="res://styles/default_button_pressed.tres" id="1_fie54"]
+[ext_resource type="Script" uid="uid://40gx24j6ge6b" path="res://scripts/server_settings.gd" id="1_g5537"]
+[ext_resource type="StyleBox" uid="uid://caorea2ay4rb4" path="res://styles/default_button_hover.tres" id="2_xsv8e"]
+[ext_resource type="StyleBox" uid="uid://b2vscmgcfd1q2" path="res://styles/danger_button_normal.tres" id="4_g5537"]
+[ext_resource type="StyleBox" uid="uid://mj3scniudw06" path="res://styles/danger_button_pressed.tres" id="5_2a22k"]
+[ext_resource type="StyleBox" uid="uid://p0cmbk4o48q7" path="res://styles/danger_button_hover.tres" id="6_nnpw7"]
+
+[node name="ServerSettings" type="FoldableContainer" unique_id=1433611755]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_g5537")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=862091601]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+theme_override_constants/separation = 10
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer" unique_id=1417217202]
+layout_mode = 2
+
+[node name="NameConfig" type="HBoxContainer" parent="VBoxContainer/MarginContainer" unique_id=631358322]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Label" type="Label" parent="VBoxContainer/MarginContainer/NameConfig" unique_id=350308172]
+layout_mode = 2
+text = "Server Name: "
+
+[node name="NameInput" type="LineEdit" parent="VBoxContainer/MarginContainer/NameConfig" unique_id=1443427879]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer" unique_id=2075190213]
+layout_mode = 2
+
+[node name="IPConfig" type="HBoxContainer" parent="VBoxContainer/MarginContainer2" unique_id=853864377]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 20
+
+[node name="Label" type="Label" parent="VBoxContainer/MarginContainer2/IPConfig" unique_id=759755597]
+layout_mode = 2
+text = "IP Address:"
+
+[node name="IPInput" type="LineEdit" parent="VBoxContainer/MarginContainer2/IPConfig" unique_id=205005802]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer3" type="MarginContainer" parent="VBoxContainer" unique_id=1011567619]
+layout_mode = 2
+
+[node name="UserConfig" type="HBoxContainer" parent="VBoxContainer/MarginContainer3" unique_id=255122592]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 20
+
+[node name="Label" type="Label" parent="VBoxContainer/MarginContainer3/UserConfig" unique_id=811039170]
+layout_mode = 2
+text = "User:"
+
+[node name="UserInput" type="LineEdit" parent="VBoxContainer/MarginContainer3/UserConfig" unique_id=1948384981]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer4" type="MarginContainer" parent="VBoxContainer" unique_id=61995131]
+layout_mode = 2
+
+[node name="SSHKeyPathConfig" type="HBoxContainer" parent="VBoxContainer/MarginContainer4" unique_id=1807373106]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 20
+
+[node name="Label" type="Label" parent="VBoxContainer/MarginContainer4/SSHKeyPathConfig" unique_id=243952574]
+layout_mode = 2
+text = "SSH Key Path:"
+
+[node name="SSHKeyBrowseFilesButton" type="Button" parent="VBoxContainer/MarginContainer4/SSHKeyPathConfig" unique_id=361111258]
+layout_mode = 2
+theme_override_styles/pressed = ExtResource("1_fie54")
+theme_override_styles/hover = ExtResource("2_xsv8e")
+text = "Browse"
+
+[node name="SSHKeyPathInput" type="LineEdit" parent="VBoxContainer/MarginContainer4/SSHKeyPathConfig" unique_id=753186423]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer5" type="MarginContainer" parent="VBoxContainer" unique_id=1673083496]
+layout_mode = 2
+
+[node name="IsDefaultConfig" type="HBoxContainer" parent="VBoxContainer/MarginContainer5" unique_id=312082239]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 20
+
+[node name="Label" type="Label" parent="VBoxContainer/MarginContainer5/IsDefaultConfig" unique_id=1197515647]
+layout_mode = 2
+text = "Is Default:"
+
+[node name="IsDefaultInput" type="CheckBox" parent="VBoxContainer/MarginContainer5/IsDefaultConfig" unique_id=2085409422]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="DeleteButton" type="Button" parent="VBoxContainer" unique_id=994353124]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_styles/normal = ExtResource("4_g5537")
+theme_override_styles/pressed = ExtResource("5_2a22k")
+theme_override_styles/hover = ExtResource("6_nnpw7")
+text = "Delete Server"
+
+[node name="SSHKeyPathFileDialog" type="FileDialog" parent="." unique_id=1258410081]
+unique_name_in_owner = true
+oversampling_override = 1.0
+title = "Open a File"
+initial_position = 2
+size = Vector2i(1280, 720)
+ok_button_text = "Select"
+file_mode = 0
+access = 2
+show_hidden_files = true
+
+[node name="DeleteServerConfirmationDialog" type="ConfirmationDialog" parent="." unique_id=1223903797]
+oversampling_override = 1.0
+initial_position = 2
+size = Vector2i(440, 100)
+dialog_text = "Are you sure you want to delete this server?"
+
+[connection signal="text_changed" from="VBoxContainer/MarginContainer/NameConfig/NameInput" to="." method="_on_name_input_text_changed"]
+[connection signal="text_changed" from="VBoxContainer/MarginContainer2/IPConfig/IPInput" to="." method="_on_ip_input_text_changed"]
+[connection signal="text_changed" from="VBoxContainer/MarginContainer3/UserConfig/UserInput" to="." method="_on_user_input_text_changed"]
+[connection signal="button_up" from="VBoxContainer/MarginContainer4/SSHKeyPathConfig/SSHKeyBrowseFilesButton" to="." method="_on_ssh_key_browse_files_button_button_up"]
+[connection signal="text_changed" from="VBoxContainer/MarginContainer4/SSHKeyPathConfig/SSHKeyPathInput" to="." method="_on_ssh_key_path_input_text_changed"]
+[connection signal="toggled" from="VBoxContainer/MarginContainer5/IsDefaultConfig/IsDefaultInput" to="." method="_on_is_default_input_toggled"]
+[connection signal="button_up" from="VBoxContainer/DeleteButton" to="." method="_on_delete_button_button_up"]
+[connection signal="file_selected" from="SSHKeyPathFileDialog" to="." method="_on_ssh_key_path_file_dialog_file_selected"]
+[connection signal="confirmed" from="DeleteServerConfirmationDialog" to="." method="_on_delete_server_confirmation_dialog_confirmed"]

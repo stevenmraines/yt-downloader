@@ -1,0 +1,74 @@
+[gd_scene format=3 uid="uid://ydycxmrw05yx"]
+
+[ext_resource type="StyleBox" uid="uid://b5cwgpibw4xld" path="res://styles/success_button_normal.tres" id="1_ihaxv"]
+[ext_resource type="Script" uid="uid://chlnbf3x14pw8" path="res://scripts/download_playlist_window.gd" id="1_yspac"]
+[ext_resource type="StyleBox" uid="uid://cyjp84k0pbqf3" path="res://styles/success_button_pressed.tres" id="2_yspac"]
+[ext_resource type="StyleBox" uid="uid://caep6kc0fjn86" path="res://styles/success_button_hover.tres" id="3_scfh5"]
+
+[node name="DownloadPlaylistWindow" type="Window" unique_id=174133340]
+oversampling_override = 1.0
+title = "Download Playlist"
+initial_position = 2
+size = Vector2i(500, 90)
+script = ExtResource("1_yspac")
+
+[node name="Control" type="Control" parent="." unique_id=174442963]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Control" unique_id=1288215765]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/MarginContainer" unique_id=790680297]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Control/MarginContainer/VBoxContainer" unique_id=1457755832]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Control/MarginContainer/VBoxContainer/HBoxContainer" unique_id=848489785]
+layout_mode = 2
+text = "Start Index:"
+
+[node name="StartInput" type="LineEdit" parent="Control/MarginContainer/VBoxContainer/HBoxContainer" unique_id=706410590]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label2" type="Label" parent="Control/MarginContainer/VBoxContainer/HBoxContainer" unique_id=621210813]
+layout_mode = 2
+text = "End Index:"
+
+[node name="EndInput" type="LineEdit" parent="Control/MarginContainer/VBoxContainer/HBoxContainer" unique_id=401930104]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Button" type="Button" parent="Control/MarginContainer/VBoxContainer" unique_id=808480935]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/normal = ExtResource("1_ihaxv")
+theme_override_styles/pressed = ExtResource("2_yspac")
+theme_override_styles/hover = ExtResource("3_scfh5")
+text = "Download"
+
+[connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
+[connection signal="focus_entered" from="Control/MarginContainer/VBoxContainer/HBoxContainer/StartInput" to="." method="_on_start_input_focus_entered"]
+[connection signal="text_changed" from="Control/MarginContainer/VBoxContainer/HBoxContainer/StartInput" to="." method="_on_start_input_text_changed"]
+[connection signal="text_submitted" from="Control/MarginContainer/VBoxContainer/HBoxContainer/StartInput" to="." method="_on_text_submitted"]
+[connection signal="focus_entered" from="Control/MarginContainer/VBoxContainer/HBoxContainer/EndInput" to="." method="_on_end_input_focus_entered"]
+[connection signal="text_changed" from="Control/MarginContainer/VBoxContainer/HBoxContainer/EndInput" to="." method="_on_end_input_text_changed"]
+[connection signal="text_submitted" from="Control/MarginContainer/VBoxContainer/HBoxContainer/EndInput" to="." method="_on_text_submitted"]
+[connection signal="button_up" from="Control/MarginContainer/VBoxContainer/Button" to="." method="_on_button_button_up"]

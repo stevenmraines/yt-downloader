@@ -1,0 +1,198 @@
+[gd_scene format=3 uid="uid://dtba3fdy6y31"]
+
+[ext_resource type="Script" uid="uid://cc463ng0vkxhb" path="res://scripts/playlist_settings.gd" id="1_3ydvd"]
+[ext_resource type="StyleBox" uid="uid://co4550p76db2k" path="res://styles/default_button_pressed.tres" id="2_iu3an"]
+[ext_resource type="StyleBox" uid="uid://caorea2ay4rb4" path="res://styles/default_button_hover.tres" id="3_xf5im"]
+[ext_resource type="StyleBox" uid="uid://b2vscmgcfd1q2" path="res://styles/danger_button_normal.tres" id="4_41tws"]
+[ext_resource type="StyleBox" uid="uid://mj3scniudw06" path="res://styles/danger_button_pressed.tres" id="5_qfdyh"]
+[ext_resource type="StyleBox" uid="uid://p0cmbk4o48q7" path="res://styles/danger_button_hover.tres" id="6_ukuiu"]
+
+[node name="PlaylistSettings" type="FoldableContainer" unique_id=1060512353]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_3ydvd")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1494284431]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="HBoxContainer9" type="HBoxContainer" parent="VBoxContainer" unique_id=110135054]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer9" unique_id=310572894]
+layout_mode = 2
+text = "Playlist Name:"
+
+[node name="NameInput" type="LineEdit" parent="VBoxContainer/HBoxContainer9" unique_id=1109045438]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=998866955]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer" unique_id=1965120622]
+layout_mode = 2
+text = "URL:"
+
+[node name="UrlInput" type="LineEdit" parent="VBoxContainer/HBoxContainer" unique_id=1290243954]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer" unique_id=552892277]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer2" unique_id=838937134]
+layout_mode = 2
+text = "Download Path:"
+
+[node name="DownloadPathButton" type="Button" parent="VBoxContainer/HBoxContainer2" unique_id=1778634578]
+layout_mode = 2
+theme_override_styles/pressed = ExtResource("2_iu3an")
+theme_override_styles/hover = ExtResource("3_xf5im")
+text = "Browse"
+
+[node name="DownloadPathInput" type="LineEdit" parent="VBoxContainer/HBoxContainer2" unique_id=121323208]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer" unique_id=299798510]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer3" unique_id=1404351751]
+layout_mode = 2
+text = "Backup Upload Path:"
+
+[node name="BackupPathButton" type="Button" parent="VBoxContainer/HBoxContainer3" unique_id=577285441]
+layout_mode = 2
+theme_override_styles/pressed = ExtResource("2_iu3an")
+theme_override_styles/hover = ExtResource("3_xf5im")
+text = "Browse"
+
+[node name="BackupPathInput" type="LineEdit" parent="VBoxContainer/HBoxContainer3" unique_id=152944265]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="VBoxContainer" unique_id=272871718]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer4" unique_id=1130064365]
+layout_mode = 2
+text = "Remote Upload Path:"
+
+[node name="RemotePathInput" type="LineEdit" parent="VBoxContainer/HBoxContainer4" unique_id=134707847]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="VBoxContainer" unique_id=630688905]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer5" unique_id=1315785400]
+layout_mode = 2
+text = "Download Archive File Name:"
+
+[node name="DownloadArchiveFileNameInput" type="LineEdit" parent="VBoxContainer/HBoxContainer5" unique_id=1811834309]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer6" type="HBoxContainer" parent="VBoxContainer" unique_id=516928852]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer6" unique_id=788768365]
+layout_mode = 2
+text = "Cookies From Browser:"
+
+[node name="CookiesFromBrowserInput" type="OptionButton" parent="VBoxContainer/HBoxContainer6" unique_id=1611184706]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+selected = 0
+item_count = 2
+popup/item_0/text = "firefox"
+popup/item_0/id = 0
+popup/item_1/text = "chrome"
+popup/item_1/id = 1
+
+[node name="HBoxContainer7" type="HBoxContainer" parent="VBoxContainer" unique_id=740759275]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer7" unique_id=373871632]
+layout_mode = 2
+text = "Delete Download After Upload:"
+
+[node name="DeleteDownloadInput" type="CheckBox" parent="VBoxContainer/HBoxContainer7" unique_id=1465689548]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer8" type="HBoxContainer" parent="VBoxContainer" unique_id=766019987]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer8" unique_id=1473376312]
+layout_mode = 2
+text = "Preview Unarchived Videos On Startup:"
+
+[node name="PreviewUnarchivedOnStartupInput" type="CheckBox" parent="VBoxContainer/HBoxContainer8" unique_id=1149875628]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="DeleteButton" type="Button" parent="VBoxContainer" unique_id=204930210]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_styles/normal = ExtResource("4_41tws")
+theme_override_styles/pressed = ExtResource("5_qfdyh")
+theme_override_styles/hover = ExtResource("6_ukuiu")
+text = "Delete Playlist"
+
+[node name="DeletePlaylistConfirmationDialog" type="ConfirmationDialog" parent="." unique_id=822571339]
+initial_position = 2
+
+[node name="DownloadPathDialog" type="FileDialog" parent="." unique_id=138947709]
+oversampling_override = 1.0
+title = "Open a Directory"
+initial_position = 2
+size = Vector2i(1280, 720)
+file_mode = 2
+access = 2
+show_hidden_files = true
+
+[node name="BackupUploadPathDialog" type="FileDialog" parent="." unique_id=1717159765]
+oversampling_override = 1.0
+title = "Open a Directory"
+initial_position = 2
+size = Vector2i(1280, 720)
+file_mode = 2
+access = 2
+show_hidden_files = true
+
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer9/NameInput" to="." method="_on_name_input_text_changed"]
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer/UrlInput" to="." method="_on_url_input_text_changed"]
+[connection signal="button_up" from="VBoxContainer/HBoxContainer2/DownloadPathButton" to="." method="_on_download_path_button_button_up"]
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer2/DownloadPathInput" to="." method="_on_download_path_input_text_changed"]
+[connection signal="button_up" from="VBoxContainer/HBoxContainer3/BackupPathButton" to="." method="_on_backup_path_button_button_up"]
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer3/BackupPathInput" to="." method="_on_backup_path_input_text_changed"]
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer4/RemotePathInput" to="." method="_on_remote_path_input_text_changed"]
+[connection signal="text_changed" from="VBoxContainer/HBoxContainer5/DownloadArchiveFileNameInput" to="." method="_on_download_archive_file_name_input_text_changed"]
+[connection signal="item_selected" from="VBoxContainer/HBoxContainer6/CookiesFromBrowserInput" to="." method="_on_cookies_from_browser_input_item_selected"]
+[connection signal="toggled" from="VBoxContainer/HBoxContainer7/DeleteDownloadInput" to="." method="_on_delete_download_input_toggled"]
+[connection signal="toggled" from="VBoxContainer/HBoxContainer8/PreviewUnarchivedOnStartupInput" to="." method="_on_preview_unarchived_on_startup_input_toggled"]
+[connection signal="button_up" from="VBoxContainer/DeleteButton" to="." method="_on_delete_button_button_up"]
+[connection signal="confirmed" from="DeletePlaylistConfirmationDialog" to="." method="_on_delete_playlist_confirmation_dialog_confirmed"]
+[connection signal="dir_selected" from="DownloadPathDialog" to="." method="_on_download_path_dialog_dir_selected"]
+[connection signal="dir_selected" from="BackupUploadPathDialog" to="." method="_on_backup_upload_path_dialog_dir_selected"]

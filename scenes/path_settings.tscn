@@ -1,0 +1,53 @@
+[gd_scene format=3 uid="uid://ckgdhixfte4lu"]
+
+[ext_resource type="Script" uid="uid://bv4vvsk2pwjqc" path="res://scripts/path_settings.gd" id="1_wf3h5"]
+[ext_resource type="Texture2D" uid="uid://b63se3blxpcee" path="res://assets/youtube-logo.png" id="2_24ulp"]
+
+[node name="PathSettings" type="HBoxContainer" unique_id=837135334]
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -15.5
+offset_bottom = 15.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_constants/separation = 20
+script = ExtResource("1_wf3h5")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=836601442]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="TextureRect" type="TextureRect" parent="HBoxContainer" unique_id=1316612303]
+layout_mode = 2
+texture = ExtResource("2_24ulp")
+expand_mode = 2
+stretch_mode = 4
+
+[node name="NameLabel" type="Label" parent="HBoxContainer" unique_id=1662971384]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="BrowseButton" type="Button" parent="." unique_id=761373128]
+layout_mode = 2
+text = "Browse"
+
+[node name="PathInput" type="LineEdit" parent="." unique_id=574691828]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PathFileDialog" type="FileDialog" parent="." unique_id=1272399075]
+unique_name_in_owner = true
+title = "Open a File or Directory"
+initial_position = 2
+ok_button_text = "Select"
+file_mode = 3
+access = 2
+show_hidden_files = true
+
+[connection signal="button_up" from="BrowseButton" to="." method="_on_browse_button_button_up"]
+[connection signal="file_selected" from="PathFileDialog" to="." method="_on_path_file_dialog_file_selected"]

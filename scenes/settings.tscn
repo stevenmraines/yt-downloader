@@ -1,0 +1,172 @@
+[gd_scene format=3 uid="uid://dnr15c0xrfsob"]
+
+[ext_resource type="Script" uid="uid://buvub042tkhvy" path="res://scripts/settings.gd" id="1_5p8wc"]
+[ext_resource type="StyleBox" uid="uid://co4550p76db2k" path="res://styles/default_button_pressed.tres" id="2_am25x"]
+[ext_resource type="StyleBox" uid="uid://8kxj1vqhxwsv" path="res://styles/secondary_button_normal.tres" id="2_f4mfi"]
+[ext_resource type="StyleBox" uid="uid://caorea2ay4rb4" path="res://styles/default_button_hover.tres" id="3_4ppmf"]
+[ext_resource type="StyleBox" uid="uid://3i0ogs0x15df" path="res://styles/secondary_button_pressed.tres" id="3_es4n0"]
+[ext_resource type="StyleBox" uid="uid://binch188kfmsf" path="res://styles/secondary_button_hover.tres" id="4_gis3k"]
+[ext_resource type="StyleBox" uid="uid://b5cwgpibw4xld" path="res://styles/success_button_normal.tres" id="4_uhhto"]
+[ext_resource type="StyleBox" uid="uid://cyjp84k0pbqf3" path="res://styles/success_button_pressed.tres" id="5_1g033"]
+[ext_resource type="StyleBox" uid="uid://caep6kc0fjn86" path="res://styles/success_button_hover.tres" id="6_01roj"]
+[ext_resource type="Texture2D" uid="uid://dbnlvbkdmoeqk" path="res://assets/undo.png" id="7_4ppmf"]
+[ext_resource type="Texture2D" uid="uid://crtpaxvrxb566" path="res://assets/save.png" id="11_uhhto"]
+
+[node name="Settings" type="Window" unique_id=1145338180]
+oversampling_override = 1.0
+title = "Settings"
+initial_position = 2
+size = Vector2i(1000, 1000)
+script = ExtResource("1_5p8wc")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="." unique_id=1253496648]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+horizontal_scroll_mode = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="ScrollContainer" unique_id=1302454306]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 25
+
+[node name="SettingsBlockContainer" type="VBoxContainer" parent="ScrollContainer/MarginContainer" unique_id=152017159]
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="PathSettingsContainer" type="MarginContainer" parent="ScrollContainer/MarginContainer/SettingsBlockContainer" unique_id=1603536986]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 3
+theme_override_constants/margin_right = 3
+
+[node name="FoldableContainer" type="FoldableContainer" parent="ScrollContainer/MarginContainer/SettingsBlockContainer" unique_id=1291451037]
+layout_mode = 2
+title = "Server Settings"
+
+[node name="MarginContainer" type="MarginContainer" parent="ScrollContainer/MarginContainer/SettingsBlockContainer/FoldableContainer" unique_id=2087048400]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer/MarginContainer/SettingsBlockContainer/FoldableContainer/MarginContainer" unique_id=851252543]
+layout_mode = 2
+
+[node name="ServerSettingsContainer" type="VBoxContainer" parent="ScrollContainer/MarginContainer/SettingsBlockContainer/FoldableContainer/MarginContainer/VBoxContainer" unique_id=391619626]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="NewServerButton" type="Button" parent="ScrollContainer/MarginContainer/SettingsBlockContainer/FoldableContainer/MarginContainer/VBoxContainer" unique_id=1357626315]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_styles/normal = ExtResource("2_f4mfi")
+theme_override_styles/pressed = ExtResource("3_es4n0")
+theme_override_styles/hover = ExtResource("4_gis3k")
+text = "New Server"
+
+[node name="FoldableContainer2" type="FoldableContainer" parent="ScrollContainer/MarginContainer/SettingsBlockContainer" unique_id=153497827]
+layout_mode = 2
+title = "Channel Settings"
+
+[node name="MarginContainer" type="MarginContainer" parent="ScrollContainer/MarginContainer/SettingsBlockContainer/FoldableContainer2" unique_id=72973440]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer/MarginContainer/SettingsBlockContainer/FoldableContainer2/MarginContainer" unique_id=138171081]
+layout_mode = 2
+
+[node name="ChannelSettingsContainer" type="VBoxContainer" parent="ScrollContainer/MarginContainer/SettingsBlockContainer/FoldableContainer2/MarginContainer/VBoxContainer" unique_id=1433867625]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="NewChannelButton" type="Button" parent="ScrollContainer/MarginContainer/SettingsBlockContainer/FoldableContainer2/MarginContainer/VBoxContainer" unique_id=2046988613]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_styles/normal = ExtResource("2_f4mfi")
+theme_override_styles/pressed = ExtResource("3_es4n0")
+theme_override_styles/hover = ExtResource("4_gis3k")
+text = "New Channel"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/MarginContainer/SettingsBlockContainer" unique_id=1493418844]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 20
+
+[node name="Control" type="Control" parent="ScrollContainer/MarginContainer/SettingsBlockContainer/HBoxContainer" unique_id=424650958]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="UndoChangesButton" type="Button" parent="ScrollContainer/MarginContainer/SettingsBlockContainer/HBoxContainer/Control" unique_id=106767484]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -178.0
+offset_top = -19.0
+offset_bottom = 15.0
+grow_horizontal = 0
+grow_vertical = 2
+theme_override_styles/pressed = ExtResource("2_am25x")
+theme_override_styles/hover = ExtResource("3_4ppmf")
+text = "Undo Changes"
+icon = ExtResource("7_4ppmf")
+expand_icon = true
+
+[node name="Control2" type="Control" parent="ScrollContainer/MarginContainer/SettingsBlockContainer/HBoxContainer" unique_id=1792610490]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SaveConfigButton" type="Button" parent="ScrollContainer/MarginContainer/SettingsBlockContainer/HBoxContainer/Control2" unique_id=646708312]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -19.0
+offset_right = 171.0
+offset_bottom = 15.0
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+theme_override_styles/normal = ExtResource("4_uhhto")
+theme_override_styles/pressed = ExtResource("5_1g033")
+theme_override_styles/hover = ExtResource("6_01roj")
+text = "Save Changes"
+icon = ExtResource("11_uhhto")
+expand_icon = true
+
+[node name="SaveChangesConfirmationDialog" type="ConfirmationDialog" parent="." unique_id=125510168]
+unique_name_in_owner = true
+oversampling_override = 1.0
+initial_position = 2
+size = Vector2i(527, 100)
+dialog_text = "Are you sure you want to save changes to the config?"
+
+[node name="UndoChangesConfirmationDialog" type="ConfirmationDialog" parent="." unique_id=2104599585]
+unique_name_in_owner = true
+oversampling_override = 1.0
+initial_position = 2
+size = Vector2i(527, 100)
+dialog_text = "Are you sure you want to undo changes to the config?"
+
+[connection signal="button_up" from="ScrollContainer/MarginContainer/SettingsBlockContainer/FoldableContainer/MarginContainer/VBoxContainer/NewServerButton" to="." method="_on_new_server_button_button_up"]
+[connection signal="button_up" from="ScrollContainer/MarginContainer/SettingsBlockContainer/FoldableContainer2/MarginContainer/VBoxContainer/NewChannelButton" to="." method="_on_new_channel_button_button_up"]
+[connection signal="button_up" from="ScrollContainer/MarginContainer/SettingsBlockContainer/HBoxContainer/Control/UndoChangesButton" to="." method="_on_undo_changes_button_button_up"]
+[connection signal="button_up" from="ScrollContainer/MarginContainer/SettingsBlockContainer/HBoxContainer/Control2/SaveConfigButton" to="." method="_on_save_config_button_button_up"]
+[connection signal="confirmed" from="SaveChangesConfirmationDialog" to="." method="_on_save_config_confirmation_dialog_confirmed"]
+[connection signal="confirmed" from="UndoChangesConfirmationDialog" to="." method="_on_undo_changes_confirmation_dialog_confirmed"]

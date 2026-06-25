@@ -1,18 +1,6 @@
 extends PanelContainer
 
-@export var yt_dlp_path := "":
-	set(value):
-		yt_dlp_path = value
-		yt_dlp_path_input.text = yt_dlp_path
-		yt_dlp_wrapper.yt_dlp_path = yt_dlp_path
-		console_signal_bus.add_line("yt-dlp path set to " + yt_dlp_path)
-
-@onready var save_config_confirmation_dialog := %SaveConfigConfirmationDialog
-@onready var yt_dlp_path_input := %YtDlpPathInput
-@onready var yt_dlp_path_file_dialog := %YtDlpPathFileDialog
-@onready var ssh_key_path_input := %SSHKeyPathInput
-@onready var ssh_key_path_file_dialog := %SSHKeyPathFileDialog
-@onready var remote_user_input := %RemoteUserInput
+@onready var servers_input := %ServersInput
 @onready var channel_container := %ChannelContainer
 @onready var process_container := %ProcessContainer
 @onready var process_queue_background_panel := %ProcessQueueBackgroundPanel
@@ -22,39 +10,63 @@ extends PanelContainer
 @onready var config_loader := $ConfigLoader
 @onready var yt_dlp_wrapper := $YtDlpWrapper
 @onready var process_queue := $ProcessQueue
+@onready var exit_confirmation_dialog := $ExitConfirmationDialog
+@onready var settings := $Settings
 @onready var channel_scene := load("res://scenes/channel.tscn")
 @onready var process_scene := load("res://scenes/process.tscn")
 @onready var process_queue_background_style := load("res://styles/process_queue_background.tres")
 @onready var process_queue_background_paused_style := load("res://styles/process_queue_background_paused.tres")
 @onready var parent_process_container_style := load("res://styles/parent_process_container.tres")
 
+var yt_dlp_path := "":
+	set(value):
+		yt_dlp_path = value
+		yt_dlp_wrapper.yt_dlp_path = yt_dlp_path
+		console_signal_bus.add_line("yt-dlp path set to " + yt_dlp_path)
+
+var selected_server : Dictionary:
+	set(value):
+		selected_server = value
+		process_queue.selected_server = selected_server
+		console_signal_bus.add_line("Server credentials set to %s@%s" % [selected_server.user, selected_server.ip])
+		console_signal_bus.add_line("SSH Key Path set to %s" % selected_server.ssh_key_path)
+
 
 func _ready() -> void:
+	_initialize()
+
+
+func _initialize() -> void:
 	for config_path in config_loader.get_paths():
 		if config_path.name == "yt-dlp":
 			yt_dlp_path = config_path.path
 	
 	_populate_channels()
 	_create_archive_files()
-	
-	var server = config_loader.get_servers()[0]
-	var creds = config_loader.get_credentials()[0]
-	ssh_key_path_input.text = creds.ssh_key_path
-	remote_user_input.text = creds.user
-	process_queue.remote_ip = server.ip
-	process_queue.remote_user = creds.user
-	process_queue.ssh_key_path = creds.ssh_key_path
+	_populate_servers()
+	_setup_settings()
 
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("Escape"):
-		# TODO Add a confirm dialog before exiting
 		get_viewport().set_input_as_handled()
-		get_tree().quit(0)
+		exit_confirmation_dialog.visible = true
+	elif event.is_action_pressed("Settings"):
+		get_viewport().set_input_as_handled()
+		settings.visible = true
+	elif event.is_action_released("Toggle Pause"):
+		get_viewport().set_input_as_handled()
+		_toggle_pause_process_queue()
 
 
 func _populate_channels() -> void:
-	for channel in config_loader.get_channels():
+	for child in channel_container.get_children():
+		channel_container.remove_child(child)
+		child.queue_free()
+	
+	var channels = config_loader.get_channels()
+	
+	for channel in channels:
 		var channel_node = channel_scene.instantiate()
 		channel_container.add_child(channel_node)
 		channel_node.yt_dlp_wrapper = yt_dlp_wrapper
@@ -89,28 +101,66 @@ func _create_archive_files() -> void:
 			archive_file.close()
 
 
-func _on_update_yt_dlp_button_button_up():
-	process_queue.queue_update()
+func _populate_servers() -> void:
+	var servers = config_loader.get_servers()
+	var default_server_found = false
+	servers_input.clear()
+	
+	for i in servers.size():
+		var server = servers[i]
+		servers_input.add_item(server.name)
+		
+		if server.is_default:
+			servers_input.select(i)
+			selected_server = server
+			default_server_found = true
+			console_signal_bus.add_line("Default server %s selected" % selected_server.name)
+	
+	if ! default_server_found:
+		console_signal_bus.add_warning("No default server found")
+	elif selected_server.ip == "" or selected_server.user == "":
+		console_signal_bus.add_warning("Missing server ip or user name")
+
+
+func _setup_settings() -> void:
+	settings.config_loader = config_loader
+	# Use duplicate so we don't pass by ref, otherwise any unsaved changes to
+	# settings will be persisted here even when undo changes is clicked.
+	settings.paths = config_loader.get_paths().duplicate(true)
+	settings.servers = config_loader.get_servers().duplicate(true)
+	settings.channels = config_loader.get_channels().duplicate(true)
+	settings.playlists = config_loader.get_playlists().duplicate(true)
+
+
+func _toggle_pause_process_queue() -> void:
+	var paused = process_queue.process_mode == Node.PROCESS_MODE_DISABLED
+	_pause_process_queue(! paused)
+
+
+func _pause_process_queue(pause := true) -> void:
+	if pause:
+		process_queue.process_mode = Node.PROCESS_MODE_DISABLED
+		console_signal_bus.add_line("Process queue paused")
+		process_queue_background_panel.add_theme_stylebox_override("panel", process_queue_background_paused_style)
+		pause_status_label.visible = true
+	else:
+		process_queue.process_mode = Node.PROCESS_MODE_INHERIT
+		console_signal_bus.add_line("Process queue resumed")
+		process_queue_background_panel.add_theme_stylebox_override("panel", process_queue_background_style)
+		pause_status_label.visible = false
 
 
 func _on_playlist_marked_as_archived(playlist : Dictionary) -> void:
 	process_queue.queue_mark_playlist_as_archived(playlist)
 
 
-func _on_playlist_unarchived_videos_downloaded(playlist : Dictionary) -> void:
-	process_queue.queue_download_playlist(playlist)
+func _on_playlist_unarchived_videos_downloaded(playlist : Dictionary, start_index : String, end_index : String) -> void:
+	# TODO Also add custom filename formatting string option
+	process_queue.queue_download_playlist(playlist, start_index, end_index)
 
 
-func _on_playlist_single_video_downloaded(url : String, playlist : Dictionary, delete_download : bool) -> void:
-	process_queue.queue_download_single_video(url, playlist, delete_download)
-
-
-func _on_yt_dlp_browse_files_button_button_up() -> void:
-	yt_dlp_path_file_dialog.visible = true
-
-
-func _on_yt_dlp_path_file_dialog_file_selected(path: String) -> void:
-	yt_dlp_path = path
+func _on_playlist_single_video_downloaded(url : String, playlist : Dictionary, copy_to_backup : bool, copy_to_remote : bool, delete_download : bool) -> void:
+	process_queue.queue_download_single_video(url, playlist, copy_to_backup, copy_to_remote, delete_download)
 
 
 func _on_channel_folding_changed(is_folded : bool, container : FoldableContainer):
@@ -118,54 +168,6 @@ func _on_channel_folding_changed(is_folded : bool, container : FoldableContainer
 		container.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 	else:
 		container.size_flags_vertical = Control.SIZE_EXPAND_FILL
-
-
-func _on_save_config_button_button_up():
-	save_config_confirmation_dialog.visible = true
-
-
-func _on_save_config_confirmation_dialog_confirmed():
-	# There aren't really going to be any changes to look out for in channels rn
-	# TODO Update servers/creds
-	var changes = {
-		"paths": [],
-		"channels": [],
-		"playlists": [],
-	}
-	
-	for config_path in config_loader.get_paths():
-		if config_path.name == "yt-dlp" and config_path.path != yt_dlp_path:
-			config_path.path = yt_dlp_path
-			changes["paths"].append(config_path)
-	
-	for config_playlist in config_loader.get_playlists():
-		# Need to find the node matching this playlist
-		for channel_node in channel_container.get_children():
-			if channel_node.channel_name != config_playlist.channel:
-				continue
-			
-			for playlist_node in channel_node.get_playlist_nodes():
-				if playlist_node.playlist_name != config_playlist.name:
-					continue
-				
-				# Everything matches, now overwrite the vars if anything has changed
-				if config_playlist.url != playlist_node.url \
-						or config_playlist.download_path != playlist_node.download_path \
-						or config_playlist.backup_upload_path != playlist_node.backup_upload_path \
-						or config_playlist.remote_upload_path != playlist_node.remote_upload_path \
-						or config_playlist.download_archive_file_name != playlist_node.download_archive_file_name \
-						or config_playlist.cookies_from_browser != playlist_node.cookies_from_browser \
-						or config_playlist.delete_download != playlist_node.delete_download:
-					config_playlist.url = playlist_node.url
-					config_playlist.download_path = playlist_node.download_path
-					config_playlist.backup_upload_path = playlist_node.backup_upload_path
-					config_playlist.remote_upload_path = playlist_node.remote_upload_path
-					config_playlist.download_archive_file_name = playlist_node.download_archive_file_name
-					config_playlist.cookies_from_browser = playlist_node.cookies_from_browser
-					config_playlist.delete_download = playlist_node.delete_download
-					changes["playlists"].append(config_playlist)
-	
-	config_loader.save_changes(changes)
 
 
 func _on_process_queue_queue_changed(processes):
@@ -202,24 +204,46 @@ func _on_process_killed(process : Process) -> void:
 
 
 func _on_pause_button_button_up():
-	process_queue.process_mode = Node.PROCESS_MODE_DISABLED
-	console_signal_bus.add_line("Process queue paused")
-	process_queue_background_panel.add_theme_stylebox_override("panel", process_queue_background_paused_style)
-	pause_status_label.visible = true
+	_pause_process_queue()
 
 
 func _on_play_button_button_up():
-	process_queue.process_mode = Node.PROCESS_MODE_INHERIT
-	console_signal_bus.add_line("Process queue resumed")
-	process_queue_background_panel.add_theme_stylebox_override("panel", process_queue_background_style)
-	pause_status_label.visible = false
+	_pause_process_queue(false)
 
 
-func _on_ssh_key_browse_files_button_button_up():
-	ssh_key_path_file_dialog.visible = true
+func _on_file_menu_index_pressed(index: int) -> void:
+	if index == 0:
+		OS.shell_open(OS.get_user_data_dir())
+	elif index == 1:
+		settings.visible = true
 
 
-func _on_ssh_key_path_file_dialog_file_selected(path):
-	ssh_key_path_input.text = path
-	process_queue.ssh_key_path = path
-	console_signal_bus.add_line("SSH key path set to " + path)
+func _on_yt_dlp_menu_index_pressed(_index: int) -> void:
+	# Again, there's only one yt-dlp menu item
+	process_queue.queue_update()
+
+
+func _on_settings_close_requested() -> void:
+	settings.visible = false
+
+
+func _on_settings_settings_saved(new_settings: Dictionary) -> void:
+	console_signal_bus.add_line("Saving changes to settings")
+	config_loader.save_changes(new_settings)
+	_initialize()
+
+
+func _on_settings_settings_reset() -> void:
+	console_signal_bus.add_line("Undoing changes to settings")
+	_setup_settings()
+
+
+func _on_servers_input_item_selected(index):
+	for server in config_loader.get_servers():
+		if server.name == servers_input.get_item_text(index):
+			selected_server = server
+			break
+
+
+func _on_confirmation_dialog_confirmed() -> void:
+	get_tree().quit(0)
