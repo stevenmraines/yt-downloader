@@ -110,6 +110,12 @@ static func rm_multi(files : Array) -> int:
 	return OS.create_process("cmd.exe", ["/c", "del \"" + files_str + "\""], true)
 
 
+static func restart_mini_dlna(ip : String, user : String, ssh_key_path : String) -> void:
+	OS.create_process("cmd.exe", [
+		"/k", "ssh -i \"%s\" %s@%s \"sudo systemctl restart minidlna\"" % [ssh_key_path, user, ip]
+	], true)
+
+
 static func get_archive_file_path(playlist : Dictionary) -> String:
 	return OS.get_user_data_dir() + "/archived/" + playlist.channel \
 		+ "/" + playlist.download_archive_file_name

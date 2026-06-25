@@ -219,8 +219,12 @@ func _on_file_menu_index_pressed(index: int) -> void:
 
 
 func _on_yt_dlp_menu_index_pressed(_index: int) -> void:
-	# Again, there's only one yt-dlp menu item
+	# There's only one yt-dlp menu item
 	process_queue.queue_update()
+
+
+func _on_dlna_menu_index_pressed(_index: int) -> void:
+	Util.restart_mini_dlna(selected_server.ip, selected_server.user, selected_server.ssh_key_path)
 
 
 func _on_settings_close_requested() -> void:

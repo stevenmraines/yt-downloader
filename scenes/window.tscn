@@ -51,6 +51,12 @@ item_count = 1
 item_0/text = "Update"
 item_0/id = 0
 
+[node name="DLNAMenu" type="PopupMenu" parent="VBoxContainer/MenuBar" unique_id=1149662886]
+title = "DLNA"
+item_count = 1
+item_0/text = "Restart MiniDLNA"
+item_0/id = 0
+
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer" unique_id=1479611663]
 layout_mode = 2
 size_flags_vertical = 3
@@ -264,6 +270,7 @@ metadata/_custom_type_script = "uid://duwsp24mpyihb"
 
 [connection signal="index_pressed" from="VBoxContainer/MenuBar/FileMenu" to="." method="_on_file_menu_index_pressed"]
 [connection signal="index_pressed" from="VBoxContainer/MenuBar/YtDlpMenu" to="." method="_on_yt_dlp_menu_index_pressed"]
+[connection signal="index_pressed" from="VBoxContainer/MenuBar/DLNAMenu" to="." method="_on_dlna_menu_index_pressed"]
 [connection signal="item_selected" from="VBoxContainer/MarginContainer/HSplitContainer/ChannelPlaylistContainer/VBoxContainer/HBoxContainer/ServersInput" to="." method="_on_servers_input_item_selected"]
 [connection signal="button_up" from="VBoxContainer/MarginContainer/HSplitContainer/ProcessQueueContainer/VBoxContainer/MarginContainer/VBoxContainer/PlayPauseButtonContainer/PauseButton" to="." method="_on_pause_button_button_up"]
 [connection signal="button_up" from="VBoxContainer/MarginContainer/HSplitContainer/ProcessQueueContainer/VBoxContainer/MarginContainer/VBoxContainer/PlayPauseButtonContainer/PlayButton" to="." method="_on_play_button_button_up"]
