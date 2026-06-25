@@ -91,7 +91,7 @@ func kill_process(process : Process) -> void:
 		kill_exit_code = error_string(OS.kill(process.pid))
 	process.status = Process.ProcessState.KILLED
 	
-	console_signal_bus.add_warning("Process %s (%d) killed with exit code %s" % [process.process_name, process.pid, kill_exit_code])
+	console_signal_bus.add_warning("Process %s killed with exit code %s" % [process.process_name, kill_exit_code])
 	
 	var yt_dlp_processes = [
 		Process.DOWNLOAD_PLAYLIST_PROCESS,
@@ -107,7 +107,7 @@ func kill_process(process : Process) -> void:
 			var process_name = os_processes[os_pid]
 			if process_name == "yt-dlp.exe" and os_pid != process.pid:
 				var second_kill_exit_code = error_string(OS.kill(os_pid))
-				console_signal_bus.add_warning("Secondary process %s (%d) killed with exit code %s" % [process_name, os_pid, second_kill_exit_code])
+				console_signal_bus.add_warning("Secondary process %s killed with exit code %s" % [process_name, second_kill_exit_code])
 	
 	queue_changed.emit(processes)
 
@@ -256,10 +256,11 @@ func _on_process_progress_timer_timeout(process : Process) -> void:
 		
 		if exit_code == 0:
 			process.status = Process.ProcessState.COMPLETE
-			console_signal_bus.add_line("Process %s (%d) complete" % [process.process_name, process.pid])
+			console_signal_bus.add_line("Process %s complete" % process.process_name)
 		else:
 			process.status = Process.ProcessState.FAILED
-			console_signal_bus.add_error("Process %s (%d) completed with error code %s" % [process.process_name, process.pid, error_string(exit_code)])
+			# TODO Use the new Util error string methods on our exit_code here
+			console_signal_bus.add_error("Process %s completed with error code %d" % [process.process_name, exit_code])
 		
 		process.progress_timer.stop()
 		queue_changed.emit(processes)
