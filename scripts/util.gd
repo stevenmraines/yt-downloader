@@ -128,6 +128,30 @@ static func yt_dlp_error_string(code : int) -> String:
 	return YT_DLP_ERRORS.get(code, "Unknown error code: %d" % code)
 
 
+# FIXME These methods are a nice idea, but I don't think they're working, other than maybe the yt-dlp one
+static func robocopy_error_string(code: int) -> String:
+	if code == 0:
+		return "No errors occurred and no copying was done. Source and destination are synchronized."
+	if code >= 16:
+		return "FATAL ERROR: Robocopy did not copy any files. Either a usage error or insufficient access privileges on the source or destination."
+	
+	var parts := []
+	
+	if code & 0x08:
+		parts.append("FAIL: Some files or directories could not be copied. Retry limit was exceeded.")
+	if code & 0x04:
+		parts.append("MISMATCHES: Some mismatched files or directories were detected. Housekeeping may be required.")
+	if code & 0x02:
+		parts.append("XTRA: Extra files or directories detected in destination. No files were copied.")
+	if code & 0x01:
+		parts.append("OKCOPY: One or more files were copied successfully.")
+	
+	var success = not (code & 0x08)
+	var prefix = ("Completed with notices: " if success else "Completed with failures: ")
+	
+	return prefix + " | ".join(parts)
+
+
 # https://learn.microsoft.com/en-us/windows/win32/debug/system-error-codes--0-499-
 static func windows_error_string(code : int) -> String:
 	const WINDOWS_ERRORS := {

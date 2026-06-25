@@ -93,13 +93,7 @@ func kill_process(process : Process) -> void:
 	
 	console_signal_bus.add_warning("Process %s killed with exit code %s" % [process.process_name, kill_exit_code])
 	
-	var yt_dlp_processes = [
-		Process.DOWNLOAD_PLAYLIST_PROCESS,
-		Process.DOWNLOAD_SINGLE_VIDEO_PROCESS,
-		Process.MARK_PLAYLIST_AS_ARCHIVED_PROCESS
-	]
-	
-	if yt_dlp_processes.has(process.process_name):
+	if Process.YT_DLP_PROCESSES.has(process.process_name):
 		# yt-dlp sometimes spawns two processes with the same name, for some reason.
 		# Both need to be killed.
 		var os_processes = Util.get_processes()
@@ -259,8 +253,12 @@ func _on_process_progress_timer_timeout(process : Process) -> void:
 			console_signal_bus.add_line("Process %s complete" % process.process_name)
 		else:
 			process.status = Process.ProcessState.FAILED
-			# TODO Use the new Util error string methods on our exit_code here
-			console_signal_bus.add_error("Process %s completed with error code %d" % [process.process_name, exit_code])
+			var exit_code_str = Util.windows_error_string(exit_code)
+			if Process.YT_DLP_PROCESSES.has(process.process_name):
+				exit_code_str = Util.yt_dlp_error_string(exit_code)
+			elif process.process_name == Process.COPY_MULTIPLE_TO_BACKUP_PROCESS:
+				exit_code_str = Util.robocopy_error_string(exit_code)
+			console_signal_bus.add_error("Process %s completed with exit code %d - %s" % [process.process_name, exit_code, exit_code_str])
 		
 		process.progress_timer.stop()
 		queue_changed.emit(processes)
@@ -431,7 +429,10 @@ func _copy_multiple_to_backup(process : Process) -> int:
 	if backup_path:
 		if DirAccess.dir_exists_absolute(backup_path):
 			console_signal_bus.add_line("Copying downloads to %s" % backup_path)
-			pid = Util.cp_multi(filenames, download_path, backup_path)
+			if filenames.size() > 1:
+				pid = Util.cp_multi(filenames, download_path, backup_path)
+			elif filenames.size() == 1:
+				pid = Util.cp(filenames[0], backup_path)
 			if pid == -1:
 				console_signal_bus.add_error("Error copying downloads to %s, process could not be created" % backup_path)
 		else:
@@ -460,7 +461,10 @@ func _copy_multiple_to_remote(process : Process) -> int:
 	var pid = -1
 	
 	if remote_path:
-		pid = Util.scp_multi(filenames, remote_path, selected_server.ip, selected_server.user, selected_server.ssh_key_path)
+		if filenames.size() > 1:
+			pid = Util.scp_multi(filenames, remote_path, selected_server.ip, selected_server.user, selected_server.ssh_key_path)
+		elif filenames.size() == 1:
+			pid = Util.scp(filenames[0], remote_path, selected_server.ip, selected_server.user, selected_server.ssh_key_path)
 		if pid == -1:
 			console_signal_bus.add_error("Error uploading to %s, process could not be created" % remote_path)
 	
@@ -483,7 +487,13 @@ func _delete_single_download(process : Process) -> int:
 func _delete_multiple_downloads(process : Process) -> int:
 	var download_path = process.playlist.download_path
 	var filenames = process.parent_process.data.filenames
-	var pid = Util.rm_multi(filenames)
+	
+	var pid = -1
+	
+	if filenames.size() > 1:
+		pid = Util.rm_multi(filenames)
+	elif filenames.size() == 1:
+		pid = Util.rm(filenames[0])
 	
 	if pid == -1:
 		console_signal_bus.add_error("Error deleting downloads from %s, process could not be created" % download_path)
