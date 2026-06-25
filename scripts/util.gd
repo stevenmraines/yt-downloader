@@ -81,6 +81,7 @@ static func cp_multi(files : Array, origin : String, destination : String) -> in
 	return OS.create_process("cmd.exe", ["/c", "robocopy \"%s\" \"%s\" %s" % [origin, destination, files_str]], true)
 
 
+# TODO Skip download if it already exists at the destination? Might need to use rsync with --ignore-existing
 static func scp(file : String, destination : String, ip : String, user : String, ssh_key_path : String) -> int:
 	return OS.create_process("cmd.exe", [
 		"/c", "scp -i \"%s\" \"%s\" %s@%s:%s" % [ssh_key_path, file, user, ip, destination]
