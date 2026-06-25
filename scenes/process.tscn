@@ -88,9 +88,20 @@ theme_override_styles/disabled = ExtResource("5_7l6q0")
 disabled = true
 text = "KILL"
 
+[node name="ProgressBar" type="ProgressBar" parent="VBoxContainer" unique_id=1009825617]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+
 [node name="KillConfirmationDialog" type="ConfirmationDialog" parent="." unique_id=188507200]
 oversampling_override = 1.0
 initial_position = 2
 
+[node name="ProgressTimer" type="Timer" parent="." unique_id=938161044]
+wait_time = 0.5
+
 [connection signal="button_up" from="VBoxContainer/HBoxContainer/KillButton" to="." method="_on_kill_button_button_up"]
 [connection signal="confirmed" from="KillConfirmationDialog" to="." method="_on_kill_confirmation_dialog_confirmed"]
+[connection signal="timeout" from="ProgressTimer" to="." method="_on_progress_timer_timeout"]

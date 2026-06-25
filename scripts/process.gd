@@ -10,6 +10,8 @@ signal process_killed(process : Process)
 @onready var status_label := %StatusLabel
 @onready var kill_button := %KillButton
 @onready var kill_confirmation_dialog := $KillConfirmationDialog
+@onready var progress_bar := %ProgressBar
+@onready var progress_timer := $ProgressTimer
 
 var process : Process:
 	set(value):
@@ -31,6 +33,11 @@ var process : Process:
 		is_child_process_icon.visible = process.parent_process != null
 		parent_labels_container.visible = process.parent_process == null
 		child_process_type_label.visible = process.parent_process != null
+		
+		progress_bar.visible = process.data.has("progress")
+		
+		if progress_bar.visible:
+			progress_timer.start()
 
 var status_colors := {
 	Process.ProcessState.QUEUED: Color.AQUA,
@@ -51,6 +58,13 @@ var status_messages := {
 }
 
 
+func _process(_delta):
+	if ! progress_bar.visible and process.data.has("progress"):
+		progress_bar.visible = true
+		if progress_timer.is_stopped():
+			progress_timer.start()
+
+
 func _on_kill_button_button_up():
 	kill_confirmation_dialog.dialog_text = "Are you sure you want to kill the process %s (%d)" % [process.name, process.pid]
 	kill_confirmation_dialog.visible = true
@@ -58,3 +72,9 @@ func _on_kill_button_button_up():
 
 func _on_kill_confirmation_dialog_confirmed():
 	process_killed.emit(process)
+
+
+func _on_progress_timer_timeout():
+	progress_bar.value = process.data.progress
+	if process.data.progress == 100.0 or process.status != Process.ProcessState.IN_PROGRESS:
+		progress_timer.stop()

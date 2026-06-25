@@ -113,7 +113,56 @@ func download_single_video(process : Process) -> int:
 		temp_file
 	])
 	
+	var progress_timer = Timer.new()
+	add_child(progress_timer)
+	progress_timer.wait_time = 0.5
+	progress_timer.connect("timeout", _on_progress_timer_timeout.bind(progress_timer, process, temp_file))
+	progress_timer.start()
+	
 	return OS.create_process("cmd.exe", ["/c", command_str], true)
+
+
+func _on_progress_timer_timeout(timer : Timer, process : Process, file : String) -> void:
+	var progress = 0.0
+	
+	if ! process.data.has("progress"):
+		process.data.progress = progress
+	
+	var file_handle = FileAccess.open(file, FileAccess.READ)
+	var last_download_line = ""
+	
+	while ! file_handle.eof_reached():
+		var line = file_handle.get_line()
+		if line.begins_with("[download]") and "Destination:" in line and line.ends_with(".m4a"):
+			# The file will output progress for the video and audio separately,
+			# so we need to make sure we don't go recording both.
+			break
+		if line.begins_with("[download]") and "%" in line and "ETA" in line:
+			# TODO How will this work with multiple downloads?
+			last_download_line = line
+	
+	file_handle.close()
+	
+	if last_download_line == "":
+		return
+	
+	var regex = RegEx.new()
+	regex.compile("(?<percentage>\\d+\\.\\d+)%")
+	var result = regex.search(last_download_line)
+	
+	if result:
+		var percentage = result.get_string("percentage")
+		if percentage.is_valid_float():
+			progress = percentage.to_float()
+		else:
+			console_signal_bus.add_warning("Could not parse %s for download percentage (%s found)" % [file, percentage])
+			return
+	
+	process.data.progress = progress
+	
+	if progress == 100.0 or process.status != Process.ProcessState.IN_PROGRESS:
+		timer.stop()
+		timer.queue_free()
 
 
 func get_unarchived_video_details(playlist : Dictionary) -> Array:
