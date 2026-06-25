@@ -467,6 +467,7 @@ func _copy_multiple_to_remote(process : Process) -> int:
 
 
 # TODO What should happen to the delete processes if backup/remote upload fail? Should they be skipped so that the download can be copied manually?
+# FIXME If you download a playlist and kill the copies, delete says COMPLETE but the file still exists
 func _delete_single_download(process : Process) -> int:
 	var download_path = process.playlist.download_path
 	var filename = process.parent_process.data.filename
