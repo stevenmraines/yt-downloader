@@ -158,6 +158,7 @@ func queue_download_playlist(playlist : Dictionary, start_index : String, end_in
 	queue_changed.emit(processes)
 
 
+# FIXME Tried downloading 2 videos back to back from Astrogoblin, the program acted like I pasted the same link for both downloads even though I didn't
 func queue_download_single_video(url : String, playlist : Dictionary, copy_to_backup : bool, copy_to_remote : bool, delete_download : bool) -> void:
 	var process = Process.new()
 	process.process_name = Process.DOWNLOAD_SINGLE_VIDEO_PROCESS
