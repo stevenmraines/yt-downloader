@@ -2,6 +2,7 @@ extends Window
 
 signal download_single_video_form_submitted(options : Dictionary)
 
+# TODO Add option to download w/o checking archive file
 @onready var single_video_url_input := %SingleVideoUrlInput
 @onready var copy_to_backup_input := %CopyToBackupInput
 @onready var copy_to_remote_input := %CopyToRemoteInput

@@ -2,7 +2,7 @@ extends Window
 
 signal download_clicked(start_index : String, end_index : String)
 
-# TODO Give focus when made visible
+# TODO Add option to download w/o checking archive file
 @onready var start_input := %StartInput
 @onready var end_input := %EndInput
 
