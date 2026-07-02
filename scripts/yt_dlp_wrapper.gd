@@ -119,6 +119,7 @@ func download_single_video(process : Process) -> int:
 	progress_timer.connect("timeout", _on_progress_timer_timeout.bind(progress_timer, process, temp_file))
 	progress_timer.start()
 	
+	# TODO Probably will have to do something like "terminal" instead of cmd.exe for Mac, if that's something I care about
 	return OS.create_process("cmd.exe", ["/c", command_str], true)
 
 
