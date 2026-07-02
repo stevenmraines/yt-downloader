@@ -6,6 +6,7 @@
 [ext_resource type="StyleBox" uid="uid://binch188kfmsf" path="res://styles/secondary_button_hover.tres" id="3_66bny"]
 [ext_resource type="StyleBox" uid="uid://co4550p76db2k" path="res://styles/default_button_pressed.tres" id="5_8votw"]
 [ext_resource type="Texture2D" uid="uid://cyjon24xssqf2" path="res://assets/download-playlist.png" id="5_ddivu"]
+[ext_resource type="StyleBox" uid="uid://dxmvs46tbggvl" path="res://styles/success_button_disabled.tres" id="5_h8pfb"]
 [ext_resource type="StyleBox" uid="uid://caorea2ay4rb4" path="res://styles/default_button_hover.tres" id="6_wdmaq"]
 [ext_resource type="StyleBox" uid="uid://b5cwgpibw4xld" path="res://styles/success_button_normal.tres" id="7_r2mhf"]
 [ext_resource type="StyleBox" uid="uid://cyjp84k0pbqf3" path="res://styles/success_button_pressed.tres" id="8_xais8"]
@@ -46,7 +47,8 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="DownloadUnarchivedVideosButton" type="Button" parent="VBoxContainer/HBoxContainer7/Control" unique_id=91942933]
+[node name="DownloadPlaylistButton" type="Button" parent="VBoxContainer/HBoxContainer7/Control" unique_id=91942933]
+unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 6
 anchor_left = 1.0
@@ -62,6 +64,7 @@ grow_vertical = 2
 theme_override_styles/normal = ExtResource("7_r2mhf")
 theme_override_styles/pressed = ExtResource("8_xais8")
 theme_override_styles/hover = ExtResource("9_8605i")
+theme_override_styles/disabled = ExtResource("5_h8pfb")
 text = "Download Playlist"
 icon = ExtResource("5_ddivu")
 expand_icon = true
@@ -145,7 +148,7 @@ oversampling_override = 1.0
 initial_position = 2
 size = Vector2i(976, 100)
 
-[connection signal="button_up" from="VBoxContainer/HBoxContainer7/Control/DownloadUnarchivedVideosButton" to="." method="_on_download_unarchived_videos_button_button_up"]
+[connection signal="button_up" from="VBoxContainer/HBoxContainer7/Control/DownloadPlaylistButton" to="." method="_on_download_unarchived_videos_button_button_up"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer7/Control/DownloadSingleVideoButton" to="." method="_on_download_single_video_button_pressed"]
 [connection signal="button_up" from="VBoxContainer/HBoxContainer7/Control/MarkAsArchivedButton" to="." method="_on_mark_as_archived_button_button_up"]
 [connection signal="download_clicked" from="DownloadPlaylistWindow" to="." method="_on_download_playlist_window_download_clicked"]

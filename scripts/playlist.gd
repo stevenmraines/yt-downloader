@@ -10,11 +10,14 @@ signal download_single_video_button_clicked(url : String, list : Dictionary, cop
 @onready var label := %Label
 @onready var preview_parent_container := %PreviewParentContainer
 @onready var preview_container := %PreviewContainer
+@onready var download_playlist_button := %DownloadPlaylistButton
 @onready var archive_confirmation_dialog := $ArchiveConfirmationDialog
 @onready var download_unarchived_videos_confirmation_dialog := $DownloadUnarchivedVideosConfirmationDialog
 @onready var download_playlist_window := $DownloadPlaylistWindow
 @onready var download_single_video_window := $DownloadSingleVideoWindow
 @onready var preview_scene := load("res://scenes/preview.tscn")
+@onready var success_button_normal_style := load("res://styles/success_button_normal.tres")
+@onready var success_button_disabled_style := load("res://styles/success_button_disabled.tres")
 
 var playlist : Dictionary:
 	set(value):
@@ -23,6 +26,9 @@ var playlist : Dictionary:
 		# Set labels and inputs
 		label.text = playlist.name
 		preview_parent_container.visible = playlist.preview_unarchived_on_startup
+		
+		download_playlist_button.disabled = playlist.url.containsn("patreon")
+		download_playlist_button.tooltip_text = "This is a Patreon playlist" if playlist.url.containsn("patreon") else ""
 		
 		download_playlist_window.playlist = playlist
 		download_single_video_window.playlist = playlist
