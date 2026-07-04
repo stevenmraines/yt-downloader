@@ -106,6 +106,7 @@ func kill_process(process : Process) -> void:
 	queue_changed.emit(processes)
 
 
+# FIXME Had a weird issue just now where the archive file appeared to have been wiped clean when a new video was added by AG to the other/main content playlist, even though I'm pretty sure I'd marked that playlist as archived
 # FIXME This is breaking on the Trash Island playlist, for some reason. Maybe others too.
 func queue_download_playlist(playlist : Dictionary, start_index : String, end_index : String) -> void:
 	var process = Process.new()
