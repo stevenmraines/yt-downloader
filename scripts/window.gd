@@ -154,13 +154,28 @@ func _on_playlist_marked_as_archived(playlist : Dictionary) -> void:
 	process_queue.queue_mark_playlist_as_archived(playlist)
 
 
-func _on_playlist_unarchived_videos_downloaded(playlist : Dictionary, start_index : String, end_index : String) -> void:
+func _on_playlist_unarchived_videos_downloaded(playlist : Dictionary, options : Dictionary) -> void:
 	# TODO Also add custom filename formatting string option
-	process_queue.queue_download_playlist(playlist, start_index, end_index)
+	process_queue.queue_download_playlist(
+		playlist,
+		options.start_index,
+		options.end_index,
+		options.use_archive_file,
+		options.copy_to_backup,
+		options.copy_to_remote,
+		options.delete_download
+	)
 
 
-func _on_playlist_single_video_downloaded(url : String, playlist : Dictionary, copy_to_backup : bool, copy_to_remote : bool, delete_download : bool) -> void:
-	process_queue.queue_download_single_video(url, playlist, copy_to_backup, copy_to_remote, delete_download)
+func _on_playlist_single_video_downloaded(playlist : Dictionary, options : Dictionary) -> void:
+	process_queue.queue_download_single_video(
+		playlist,
+		options.url,
+		options.use_archive_file,
+		options.copy_to_backup,
+		options.copy_to_remote,
+		options.delete_download
+	)
 
 
 func _on_channel_folding_changed(is_folded : bool, container : FoldableContainer):
@@ -185,6 +200,7 @@ func _on_process_queue_queue_changed(processes):
 		if process.child_processes.size() > 0:
 			parent_process = process
 			var parent_container = PanelContainer.new()
+			# TODO Just always use this style, even if there are no children, just looks more consistent that way
 			parent_container.add_theme_stylebox_override("panel", parent_process_container_style)
 			vbox = VBoxContainer.new()
 			parent_container.add_child(vbox)

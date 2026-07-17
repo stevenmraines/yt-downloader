@@ -51,67 +51,79 @@ func mark_playlist_as_archived(process : Process) -> int:
 	return OS.create_process("cmd.exe", args, true)
 
 
-func download_playlist(process : Process, start_index : String, end_index : String) -> int:
-	var archive_file = Util.get_archive_file_path(process.playlist)
+func download_playlist(process : Process) -> int:
+	var start_index = process.data.start_index
+	var end_index = process.data.end_index
+	var use_archive_file = process.data.use_archive_file
 	var output = process.playlist.download_path + "/%(upload_date>%Y-%m-%d)s %(title)s.%(ext)s"
-	var temp_file = process.data.temp_file
+	
+	console_signal_bus.add_line("Downloading playlist %s (%s)" % [process.playlist.name, process.playlist.channel])
 	
 	# Pass our args as one big string so that we don't have to escape a bunch of stuff for cmd.exe
-	var command_str = ("\"%s\" \"%s\" %s \"%s\" %s %s %s \"%s\" \"%s\" %s \"mp4\" %s \"%s\" > \"%s\"" % [
+	var interp_str = "\"%s\" \"%s\" %s %s %s \"%s\" \"%s\" %s \"mp4\" %s \"%s\""
+	var interp_str_values = [
 		yt_dlp_path,
 		process.playlist.url,
-		OPTS.archive, archive_file,
 		OPTS.cookies, process.playlist.cookies_from_browser,
 		OPTS.restrict,
 		OPTS.output, output,
 		OPTS.output_format,
-		OPTS.format, FORMAT_STRING,
-		temp_file
-	])
+		OPTS.format, FORMAT_STRING
+	]
 	
 	if start_index != "" and end_index != "":
-		command_str = ("\"%s\" \"%s\" %s \"%s\" %s %s %s \"%s\" \"%s\" %s \"mp4\" %s \"%s\" %s %d:%d > \"%s\"" % [
-			yt_dlp_path,
-			process.playlist.url,
-			OPTS.archive, archive_file,
-			OPTS.cookies, process.playlist.cookies_from_browser,
-			OPTS.restrict,
-			OPTS.output, output,
-			OPTS.output_format,
-			OPTS.format, FORMAT_STRING,
-			OPTS.items, start_index.to_int(), end_index.to_int(),
-			temp_file
-		])
-		console_signal_bus.add_line("Downloading playlist %s (%s) items %d to %d" % [process.playlist.name, process.playlist.channel, start_index, end_index])
-	else:
-		console_signal_bus.add_line("Downloading playlist %s (%s)" % [process.playlist.name, process.playlist.channel])
+		interp_str += " %s %d:%d"
+		interp_str_values.append(OPTS.items)
+		interp_str_values.append(start_index.to_int())
+		interp_str_values.append(end_index.to_int())
+		console_signal_bus.add_line("Restricting playlist items from %d to %d" % [start_index, end_index])
 	
+	if use_archive_file:
+		var archive_file = Util.get_archive_file_path(process.playlist)
+		interp_str += " %s \"%s\""
+		interp_str_values.append(OPTS.archive)
+		interp_str_values.append(archive_file)
+		console_signal_bus.add_line("Using archive file: %s" % archive_file)
+	
+	var temp_file = process.data.temp_file
+	interp_str += " > \"%s\""
+	interp_str_values.append(temp_file)
 	console_signal_bus.add_line("Writing output to temp file: %s" % temp_file)
 	
+	var command_str = (interp_str % interp_str_values)
 	return OS.create_process("cmd.exe", ["/c", command_str], true)
 
 
 # FIXME If video is already in archive file, terminal closes immediately and process remains in queue
 func download_single_video(process : Process) -> int:
 	console_signal_bus.add_line("Downloading single video using %s (%s) playlist settings" % [process.playlist.name, process.playlist.channel])
-	var archive_file = Util.get_archive_file_path(process.playlist)
+	var use_archive_file = process.data.use_archive_file
 	var output = process.playlist.download_path + "/%(upload_date>%Y-%m-%d)s %(title)s.%(ext)s"
-	var temp_file = process.data.temp_file
-	console_signal_bus.add_line("Writing output to temp file: %s" % temp_file)
 	
 	# Pass our args as one big string so that we don't have to escape a bunch of stuff for cmd.exe
-	var command_str = ("\"%s\" \"%s\" %s \"%s\" %s %s %s \"%s\" \"%s\" %s \"mp4\" %s \"%s\" %s > \"%s\"" % [
+	var interp_str = "\"%s\" \"%s\" %s %s %s \"%s\" \"%s\" %s \"mp4\" %s \"%s\" %s"
+	var interp_str_values = [
 		yt_dlp_path,
-		process.playlist.url,
-		OPTS.archive, archive_file,
+		process.data.url,
 		OPTS.cookies, process.playlist.cookies_from_browser,
 		OPTS.restrict,
 		OPTS.output, output,
 		OPTS.output_format,
 		OPTS.format, FORMAT_STRING,
-		OPTS.no_playlist,
-		temp_file
-	])
+		OPTS.no_playlist
+	]
+	
+	if use_archive_file:
+		var archive_file = Util.get_archive_file_path(process.playlist)
+		interp_str += " %s \"%s\""
+		interp_str_values.append(OPTS.archive)
+		interp_str_values.append(archive_file)
+		console_signal_bus.add_line("Using archive file: %s" % archive_file)
+	
+	var temp_file = process.data.temp_file
+	interp_str += " > \"%s\""
+	interp_str_values.append(temp_file)
+	console_signal_bus.add_line("Writing output to temp file: %s" % temp_file)
 	
 	var progress_timer = Timer.new()
 	add_child(progress_timer)
@@ -120,6 +132,7 @@ func download_single_video(process : Process) -> int:
 	progress_timer.start()
 	
 	# TODO Probably will have to do something like "terminal" instead of cmd.exe for Mac, if that's something I care about
+	var command_str = (interp_str % interp_str_values)
 	return OS.create_process("cmd.exe", ["/c", command_str], true)
 
 

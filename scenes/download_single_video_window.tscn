@@ -9,7 +9,7 @@
 oversampling_override = 1.0
 title = "Download Single Video"
 initial_position = 2
-size = Vector2i(500, 200)
+size = Vector2i(500, 225)
 script = ExtResource("1_npt0x")
 
 [node name="Control" type="Control" parent="." unique_id=2051830573]
@@ -48,6 +48,19 @@ text = "URL:"
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="Control/MarginContainer/VBoxContainer" unique_id=921743412]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="Control/MarginContainer/VBoxContainer/HBoxContainer5" unique_id=1962231283]
+layout_mode = 2
+text = "Use Archive File:"
+
+[node name="UseArchiveFileInput" type="CheckBox" parent="Control/MarginContainer/VBoxContainer/HBoxContainer5" unique_id=1897548984]
+unique_name_in_owner = true
+layout_mode = 2
+button_pressed = true
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="Control/MarginContainer/VBoxContainer" unique_id=705235345]
 layout_mode = 2
@@ -97,9 +110,6 @@ theme_override_styles/pressed = ExtResource("2_npt0x")
 theme_override_styles/hover = ExtResource("3_6r44x")
 text = "Download"
 
-[connection signal="text_changed" from="Control/MarginContainer/VBoxContainer/HBoxContainer/SingleVideoUrlInput" to="." method="_on_single_video_url_input_text_changed"]
+[connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
 [connection signal="text_submitted" from="Control/MarginContainer/VBoxContainer/HBoxContainer/SingleVideoUrlInput" to="." method="_on_single_video_url_input_text_submitted"]
-[connection signal="toggled" from="Control/MarginContainer/VBoxContainer/HBoxContainer2/CopyToBackupInput" to="." method="_on_copy_to_backup_input_toggled"]
-[connection signal="toggled" from="Control/MarginContainer/VBoxContainer/HBoxContainer3/CopyToRemoteInput" to="." method="_on_copy_to_remote_input_toggled"]
-[connection signal="toggled" from="Control/MarginContainer/VBoxContainer/HBoxContainer4/DeleteSingleDownloadInput" to="." method="_on_delete_single_download_input_toggled"]
 [connection signal="button_up" from="Control/MarginContainer/VBoxContainer/DownloadSingleVideoConfirmButton" to="." method="_on_download_single_video_confirm_button_button_up"]

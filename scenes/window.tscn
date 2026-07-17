@@ -67,6 +67,8 @@ theme_override_constants/margin_bottom = 10
 
 [node name="HSplitContainer" type="HSplitContainer" parent="VBoxContainer/MarginContainer" unique_id=326715573]
 layout_mode = 2
+split_offsets = PackedInt32Array(-2)
+split_offset = -2
 
 [node name="ChannelPlaylistContainer" type="Control" parent="VBoxContainer/MarginContainer/HSplitContainer" unique_id=1769635895]
 layout_mode = 2

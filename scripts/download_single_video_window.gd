@@ -2,14 +2,15 @@ extends Window
 
 signal download_single_video_form_submitted(options : Dictionary)
 
-# TODO Add option to download w/o checking archive file
 @onready var single_video_url_input := %SingleVideoUrlInput
+@onready var use_archive_file_input := %UseArchiveFileInput
 @onready var copy_to_backup_input := %CopyToBackupInput
 @onready var copy_to_remote_input := %CopyToRemoteInput
 @onready var delete_single_download_input := %DeleteSingleDownloadInput
 
 var options = {
 	"url": "",
+	"use_archive_file": true,
 	"copy_to_backup": true,
 	"copy_to_remote": true,
 	"delete_download": true,
@@ -18,9 +19,7 @@ var options = {
 var playlist : Dictionary:
 	set(value):
 		playlist = value
-		copy_to_backup_input.button_pressed = playlist.backup_upload_path != ""
-		copy_to_remote_input.button_pressed = playlist.remote_upload_path != ""
-		delete_single_download_input.button_pressed = playlist.delete_download
+		_reset()
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -29,26 +28,36 @@ func _unhandled_input(event: InputEvent) -> void:
 		visible = false
 
 
-func _on_single_video_url_input_text_changed(new_text: String) -> void:
-	options.url = new_text
+func _reset() -> void:
+	use_archive_file_input.button_pressed = true
+	copy_to_backup_input.button_pressed = playlist.backup_upload_path != ""
+	copy_to_remote_input.button_pressed = playlist.remote_upload_path != ""
+	delete_single_download_input.button_pressed = playlist.delete_download
+	options.url = ""
+	options.use_archive_file = true
+	options.copy_to_backup = true
+	options.copy_to_remote = true
+	options.delete_download = true
 
 
-func _on_single_video_url_input_text_submitted(new_text: String) -> void:
-	options.url = new_text
+func _submit_form() -> void:
+	options.url = single_video_url_input.text
+	options.use_archive_file = use_archive_file_input.button_pressed
+	options.copy_to_backup = copy_to_backup_input.button_pressed
+	options.copy_to_remote = copy_to_remote_input.button_pressed
+	options.delete_download = delete_single_download_input.button_pressed
 	download_single_video_form_submitted.emit(options)
 
 
-func _on_copy_to_backup_input_toggled(toggled_on: bool) -> void:
-	options.copy_to_backup = toggled_on
-
-
-func _on_copy_to_remote_input_toggled(toggled_on: bool) -> void:
-	options.copy_to_remote = toggled_on
-
-
-func _on_delete_single_download_input_toggled(toggled_on: bool) -> void:
-	options.delete_download = toggled_on
+func _on_single_video_url_input_text_submitted(_new_text: String) -> void:
+	_submit_form()
 
 
 func _on_download_single_video_confirm_button_button_up() -> void:
-	download_single_video_form_submitted.emit(options)
+	_submit_form()
+
+
+func _on_visibility_changed():
+	if visible:
+		single_video_url_input.grab_focus.call_deferred()
+		_reset()

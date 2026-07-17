@@ -11,6 +11,7 @@ signal process_killed(process : Process)
 @onready var kill_button := %KillButton
 @onready var kill_confirmation_dialog := $KillConfirmationDialog
 @onready var progress_bar := %ProgressBar
+@onready var use_archive_file_label := %UseArchiveFileLabel
 @onready var progress_timer := $ProgressTimer
 
 var process : Process:
@@ -38,6 +39,8 @@ var process : Process:
 		
 		if progress_bar.visible:
 			progress_timer.start()
+		
+		use_archive_file_label.visible = process.data.has("use_archive_file") and process.data.use_archive_file
 
 var status_colors := {
 	Process.ProcessState.QUEUED: Color.AQUA,

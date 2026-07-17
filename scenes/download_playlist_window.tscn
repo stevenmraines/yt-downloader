@@ -9,7 +9,7 @@
 oversampling_override = 1.0
 title = "Download Playlist"
 initial_position = 2
-size = Vector2i(500, 90)
+size = Vector2i(500, 225)
 script = ExtResource("1_yspac")
 
 [node name="Control" type="Control" parent="." unique_id=174442963]
@@ -56,6 +56,58 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
+[node name="HBoxContainer2" type="HBoxContainer" parent="Control/MarginContainer/VBoxContainer" unique_id=667900896]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="Control/MarginContainer/VBoxContainer/HBoxContainer2" unique_id=1575211765]
+layout_mode = 2
+text = "Use Archive File:"
+
+[node name="UseArchiveFileInput" type="CheckBox" parent="Control/MarginContainer/VBoxContainer/HBoxContainer2" unique_id=2022862687]
+unique_name_in_owner = true
+layout_mode = 2
+button_pressed = true
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="Control/MarginContainer/VBoxContainer" unique_id=1463455126]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="Control/MarginContainer/VBoxContainer/HBoxContainer3" unique_id=1673486446]
+layout_mode = 2
+text = "Copy To Backup:"
+
+[node name="CopyToBackupInput" type="CheckBox" parent="Control/MarginContainer/VBoxContainer/HBoxContainer3" unique_id=1493954996]
+unique_name_in_owner = true
+layout_mode = 2
+button_pressed = true
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="Control/MarginContainer/VBoxContainer" unique_id=738995770]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="Control/MarginContainer/VBoxContainer/HBoxContainer4" unique_id=1900986243]
+layout_mode = 2
+text = "Copy To Remote:"
+
+[node name="CopyToRemoteInput" type="CheckBox" parent="Control/MarginContainer/VBoxContainer/HBoxContainer4" unique_id=1480137585]
+unique_name_in_owner = true
+layout_mode = 2
+button_pressed = true
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="Control/MarginContainer/VBoxContainer" unique_id=295749070]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="Control/MarginContainer/VBoxContainer/HBoxContainer5" unique_id=1882828620]
+layout_mode = 2
+text = "Delete Download After Upload:"
+
+[node name="DeleteDownloadInput" type="CheckBox" parent="Control/MarginContainer/VBoxContainer/HBoxContainer5" unique_id=1221955335]
+unique_name_in_owner = true
+layout_mode = 2
+button_pressed = true
+
 [node name="Button" type="Button" parent="Control/MarginContainer/VBoxContainer" unique_id=808480935]
 layout_mode = 2
 size_flags_horizontal = 4
@@ -66,9 +118,7 @@ text = "Download"
 
 [connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
 [connection signal="focus_entered" from="Control/MarginContainer/VBoxContainer/HBoxContainer/StartInput" to="." method="_on_start_input_focus_entered"]
-[connection signal="text_changed" from="Control/MarginContainer/VBoxContainer/HBoxContainer/StartInput" to="." method="_on_start_input_text_changed"]
 [connection signal="text_submitted" from="Control/MarginContainer/VBoxContainer/HBoxContainer/StartInput" to="." method="_on_text_submitted"]
 [connection signal="focus_entered" from="Control/MarginContainer/VBoxContainer/HBoxContainer/EndInput" to="." method="_on_end_input_focus_entered"]
-[connection signal="text_changed" from="Control/MarginContainer/VBoxContainer/HBoxContainer/EndInput" to="." method="_on_end_input_text_changed"]
 [connection signal="text_submitted" from="Control/MarginContainer/VBoxContainer/HBoxContainer/EndInput" to="." method="_on_text_submitted"]
 [connection signal="button_up" from="Control/MarginContainer/VBoxContainer/Button" to="." method="_on_button_button_up"]

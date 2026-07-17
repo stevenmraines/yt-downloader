@@ -56,6 +56,13 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 13
 
+[node name="UseArchiveFileLabel" type="Label" parent="VBoxContainer/HBoxContainer/ParentLabelsContainer" unique_id=488776543]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "(use_archive_file == true)"
+
 [node name="ChildProcessTypeLabel" type="Label" parent="VBoxContainer/HBoxContainer" unique_id=1380540141]
 unique_name_in_owner = true
 visible = false

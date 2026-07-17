@@ -50,7 +50,7 @@ func _start_queued_process(process : Process) -> void:
 		pid = yt_dlp_wrapper.update()
 	elif process.process_name == Process.DOWNLOAD_PLAYLIST_PROCESS:
 		process.data.temp_file = OS.get_user_data_dir() + "/download_playlist_temp.txt"
-		pid = yt_dlp_wrapper.download_playlist(process, process.data.start_index, process.data.end_index)
+		pid = yt_dlp_wrapper.download_playlist(process)
 	elif process.process_name == Process.GET_VIDEO_FILENAMES_PROCESS:
 		_get_video_filenames(process)
 	elif process.process_name == Process.DOWNLOAD_SINGLE_VIDEO_PROCESS:
@@ -108,44 +108,48 @@ func kill_process(process : Process) -> void:
 
 # FIXME Had a weird issue just now where the archive file appeared to have been wiped clean when a new video was added by AG to the other/main content playlist, even though I'm pretty sure I'd marked that playlist as archived
 # FIXME This is breaking on the Trash Island playlist, for some reason. Maybe others too.
-func queue_download_playlist(playlist : Dictionary, start_index : String, end_index : String) -> void:
+func queue_download_playlist(playlist : Dictionary, start_index : String, end_index : String, use_archive_file : bool, copy_to_backup : bool, copy_to_remote : bool, delete_download : bool) -> void:
 	var process = Process.new()
 	process.process_name = Process.DOWNLOAD_PLAYLIST_PROCESS
 	process.playlist = playlist
 	process.data.start_index = start_index
 	process.data.end_index = end_index
+	process.data.use_archive_file = use_archive_file
 	process.progress_timer_timeout.connect(_on_process_progress_timer_timeout)
 	processes.append(process)
 	add_child(process)
 	
-	var get_video_filenames_process = Process.new()
-	get_video_filenames_process.process_name = Process.GET_VIDEO_FILENAMES_PROCESS
-	get_video_filenames_process.playlist = playlist
-	get_video_filenames_process.killable = false
-	get_video_filenames_process.parent_process = process
-	processes.append(get_video_filenames_process)
-	process.child_processes.append(get_video_filenames_process)
-	add_child(get_video_filenames_process)
+	if copy_to_backup or copy_to_remote or delete_download:
+		var get_video_filenames_process = Process.new()
+		get_video_filenames_process.process_name = Process.GET_VIDEO_FILENAMES_PROCESS
+		get_video_filenames_process.playlist = playlist
+		get_video_filenames_process.killable = false
+		get_video_filenames_process.parent_process = process
+		processes.append(get_video_filenames_process)
+		process.child_processes.append(get_video_filenames_process)
+		add_child(get_video_filenames_process)
 	
-	var copy_multiple_to_backup_process = Process.new()
-	copy_multiple_to_backup_process.process_name = Process.COPY_MULTIPLE_TO_BACKUP_PROCESS
-	copy_multiple_to_backup_process.playlist = playlist
-	copy_multiple_to_backup_process.progress_timer_timeout.connect(_on_process_progress_timer_timeout)
-	copy_multiple_to_backup_process.parent_process = process
-	processes.append(copy_multiple_to_backup_process)
-	process.child_processes.append(copy_multiple_to_backup_process)
-	add_child(copy_multiple_to_backup_process)
+	if copy_to_backup:
+		var copy_multiple_to_backup_process = Process.new()
+		copy_multiple_to_backup_process.process_name = Process.COPY_MULTIPLE_TO_BACKUP_PROCESS
+		copy_multiple_to_backup_process.playlist = playlist
+		copy_multiple_to_backup_process.progress_timer_timeout.connect(_on_process_progress_timer_timeout)
+		copy_multiple_to_backup_process.parent_process = process
+		processes.append(copy_multiple_to_backup_process)
+		process.child_processes.append(copy_multiple_to_backup_process)
+		add_child(copy_multiple_to_backup_process)
 	
-	var copy_multiple_to_remote_process = Process.new()
-	copy_multiple_to_remote_process.process_name = Process.COPY_MULTIPLE_TO_REMOTE_PROCESS
-	copy_multiple_to_remote_process.playlist = playlist
-	copy_multiple_to_remote_process.progress_timer_timeout.connect(_on_process_progress_timer_timeout)
-	copy_multiple_to_remote_process.parent_process = process
-	processes.append(copy_multiple_to_remote_process)
-	process.child_processes.append(copy_multiple_to_remote_process)
-	add_child(copy_multiple_to_remote_process)
+	if copy_to_remote:
+		var copy_multiple_to_remote_process = Process.new()
+		copy_multiple_to_remote_process.process_name = Process.COPY_MULTIPLE_TO_REMOTE_PROCESS
+		copy_multiple_to_remote_process.playlist = playlist
+		copy_multiple_to_remote_process.progress_timer_timeout.connect(_on_process_progress_timer_timeout)
+		copy_multiple_to_remote_process.parent_process = process
+		processes.append(copy_multiple_to_remote_process)
+		process.child_processes.append(copy_multiple_to_remote_process)
+		add_child(copy_multiple_to_remote_process)
 	
-	if process.playlist.delete_download:
+	if delete_download:
 		var delete_multiple_downloads_process = Process.new()
 		delete_multiple_downloads_process.process_name = Process.DELETE_MULTIPLE_DOWNLOADS_PROCESS
 		delete_multiple_downloads_process.playlist = playlist
@@ -159,26 +163,25 @@ func queue_download_playlist(playlist : Dictionary, start_index : String, end_in
 	queue_changed.emit(processes)
 
 
-# FIXME Tried downloading 2 videos back to back from Astrogoblin, the program acted like I pasted the same link for both downloads even though I didn't
-func queue_download_single_video(url : String, playlist : Dictionary, copy_to_backup : bool, copy_to_remote : bool, delete_download : bool) -> void:
+func queue_download_single_video(playlist : Dictionary, url : String, use_archive_file : bool, copy_to_backup : bool, copy_to_remote : bool, delete_download : bool) -> void:
 	var process = Process.new()
 	process.process_name = Process.DOWNLOAD_SINGLE_VIDEO_PROCESS
-	# Overwrite the playlist's delete_download option for this single video
-	playlist.delete_download = delete_download
-	playlist.url = url
 	process.playlist = playlist
+	process.data.url = url
+	process.data.use_archive_file = use_archive_file
 	process.progress_timer_timeout.connect(_on_process_progress_timer_timeout)
 	processes.append(process)
 	add_child(process)
 	
-	var get_filename_process = Process.new()
-	get_filename_process.process_name = Process.GET_SINGLE_VIDEO_FILENAME_PROCESS
-	get_filename_process.playlist = playlist
-	get_filename_process.killable = false
-	get_filename_process.parent_process = process
-	processes.append(get_filename_process)
-	process.child_processes.append(get_filename_process)
-	add_child(get_filename_process)
+	if copy_to_backup or copy_to_remote or delete_download:
+		var get_filename_process = Process.new()
+		get_filename_process.process_name = Process.GET_SINGLE_VIDEO_FILENAME_PROCESS
+		get_filename_process.playlist = playlist
+		get_filename_process.killable = false
+		get_filename_process.parent_process = process
+		processes.append(get_filename_process)
+		process.child_processes.append(get_filename_process)
+		add_child(get_filename_process)
 	
 	if copy_to_backup:
 		var copy_single_to_backup_process = Process.new()

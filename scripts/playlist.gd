@@ -1,8 +1,8 @@
 extends MarginContainer
 
 signal mark_as_archived_clicked(list : Dictionary)
-signal download_unarchived_videos_button_clicked(list : Dictionary, start_index : String, end_index : String)
-signal download_single_video_button_clicked(url : String, list : Dictionary, copy_to_backup : bool, copy_to_remote : bool, delete_download : bool)
+signal download_unarchived_videos_button_clicked(list : Dictionary, options : Dictionary)
+signal download_single_video_button_clicked(list : Dictionary, options : Dictionary)
 
 @export var folded_minimum_height := 50.0
 @export var unfolded_minimum_height := 450.0
@@ -88,16 +88,9 @@ func _on_download_single_video_window_download_single_video_form_submitted(optio
 		console_signal_bus.add_error("No video URL provided")
 		return
 	
-	download_single_video_button_clicked.emit(
-		options.url,
-		playlist,
-		options.copy_to_backup,
-		options.copy_to_remote,
-		options.delete_download
-	)
-	
+	download_single_video_button_clicked.emit(playlist, options)
 	download_single_video_window.visible = false
 
 
-func _on_download_playlist_window_download_clicked(start_index: String, end_index: String) -> void:
-	download_unarchived_videos_button_clicked.emit(playlist, start_index, end_index)
+func _on_download_playlist_window_download_clicked(options : Dictionary) -> void:
+	download_unarchived_videos_button_clicked.emit(playlist, options)
